@@ -129,7 +129,6 @@
         display: flex;
         flex-direction: column;
         background: transparent;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .site-header {
@@ -790,12 +789,22 @@
         padding: 60px 0 30px;
         border-top: 1px solid rgba(255, 255, 255, 0.08);
         background: linear-gradient(180deg, transparent 0%, rgba(3, 8, 20, 0.8) 100%);
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
       }
 
       .footer-grid {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 24px;
         display: grid;
         grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr;
         gap: 32px;
+        box-sizing: border-box;
       }
 
       .footer-brand {
@@ -2267,7 +2276,7 @@
         thumb: { width: 700, quality: 80 },    // tarjetas de la grilla de catálogo
         hero: { width: 1600, quality: 85 },    // imagen destacada grande del hero
         modal: { width: 1400, quality: 85 },   // vista ampliada del producto (modal)
-        cartThumb: { width: 160, quality: 75 } // miniatura dentro del carrito
+        cartThumb: { width: 450, quality: 85 } // miniatura dentro del carrito
       };
 
       function getSiteBaseUrl() {
@@ -3118,7 +3127,9 @@
         showToast("Carrito vaciado.");
       });
 
-      instagramOrderBtn.addEventListener('click', async () => {
+      instagramOrderBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+
         if (cart.length === 0) {
           showToast("El carrito está vacío.");
           return;
