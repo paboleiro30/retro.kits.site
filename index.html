@@ -2256,6 +2256,51 @@
         return fileName ? `${IMAGES_FOLDER}${fileName}` : null;
       }
 
+      // OPTIMIZACIÓN AUTOMÁTICA DE IMÁGENES (vía wsrv.nl)
+      // Las fotos viven en tu propia carpeta "imagenes/", pero se piden a
+      // través de wsrv.nl (servicio gratuito de redimensionado/compresión)
+      // para no descargar el archivo pesado original en cada visita.
+      // No depende de ningún dominio fijo: se arma dinámicamente con
+      // window.location, así que funciona igual en la URL de GitHub Pages
+      // (usuario.github.io/repo/) como en tu dominio propio, sin tocar código.
+      const IMG_SIZES = {
+        thumb: { width: 700, quality: 80 },    // tarjetas de la grilla de catálogo
+        hero: { width: 1600, quality: 85 },    // imagen destacada grande del hero
+        modal: { width: 1400, quality: 85 },   // vista ampliada del producto (modal)
+        cartThumb: { width: 160, quality: 75 } // miniatura dentro del carrito
+      };
+
+      function getSiteBaseUrl() {
+        const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+        return window.location.origin + path;
+      }
+
+      function getOptimizedImageUrl(localPath, sizeConfig) {
+        if (!localPath) return null;
+
+        // Si se está probando el archivo directo en la compu (file://) o la
+        // ruta ya es de otro dominio, no hay forma de optimizarla: se usa tal cual.
+        if (window.location.protocol !== 'http:' && window.location.protocol !== 'https:') {
+          return localPath;
+        }
+
+        const absoluteUrl = getSiteBaseUrl() + localPath;
+        const urlSinProtocolo = absoluteUrl.replace(/^https?:\/\//i, '');
+
+        const params = new URLSearchParams();
+        params.set('url', urlSinProtocolo);
+        if (sizeConfig && sizeConfig.width) params.set('w', sizeConfig.width);
+        params.set('q', (sizeConfig && sizeConfig.quality) || 80);
+        params.set('output', 'webp');
+
+        return `https://wsrv.nl/?${params.toString()}`;
+      }
+
+      // Atajo: resuelve el nombre del archivo Y lo optimiza en un solo paso.
+      function getProductImage(url, sizeConfig) {
+        return getOptimizedImageUrl(getLocalImageUrl(url), sizeConfig);
+      }
+
       heroImage.addEventListener('error', function() {
         this.src = fallbackPlaceholder;
       });
@@ -2509,7 +2554,7 @@
               <div class="product-image">
                 <img
                   class="stock-image"
-                  src="${getLocalImageUrl(product.image_id || product.image_url) || fallbackPlaceholder}"
+                  src="${getProductImage(product.image_id || product.image_url, IMG_SIZES.thumb) || fallbackPlaceholder}"
                   alt="${product.name}"
                   loading="${isPriority ? 'eager' : 'lazy'}"
                   fetchpriority="${isPriority ? 'high' : 'auto'}"
@@ -2550,7 +2595,7 @@
           const preloadCardModalImages = () => {
             if (cardImagesPreloaded) return;
             cardImagesPreloaded = true;
-            [getLocalImageUrl(product.image_id || product.image_url), getLocalImageUrl(product.image_id_2 || product.image_url_2)].forEach(preloadImageUrl);
+            [getProductImage(product.image_id || product.image_url, IMG_SIZES.modal), getProductImage(product.image_id_2 || product.image_url_2, IMG_SIZES.modal)].forEach(preloadImageUrl);
           };
           imageWrap.addEventListener('mouseenter', preloadCardModalImages, { passive: true });
           imageWrap.addEventListener('touchstart', preloadCardModalImages, { passive: true });
@@ -2675,7 +2720,7 @@
 
       function updateHeroFeature(featured) {
         if (!featured) return;
-        heroImage.src = getLocalImageUrl(featured.image_id || featured.image_url) || fallbackPlaceholder;
+        heroImage.src = getProductImage(featured.image_id || featured.image_url, IMG_SIZES.hero) || fallbackPlaceholder;
         heroLabel.textContent = `${featured.category}`;
         featureTitle.textContent = featured.name;
         heroDescription.textContent = featured.description || 'Una pieza histórica única con calidad premium garantizada.';
@@ -2688,8 +2733,8 @@
       function prefetchAllProductImages(items) {
         const queue = [];
         items.forEach(product => {
-          const img1 = getLocalImageUrl(product.image_id || product.image_url);
-          const img2 = getLocalImageUrl(product.image_id_2 || product.image_url_2);
+          const img1 = getProductImage(product.image_id || product.image_url, IMG_SIZES.modal);
+          const img2 = getProductImage(product.image_id_2 || product.image_url_2, IMG_SIZES.modal);
           if (img1) queue.push(img1);
           if (img2 && img2 !== img1) queue.push(img2);
         });
@@ -2749,8 +2794,8 @@
 
         modalImagesList = [];
         
-        const rawImg1 = getLocalImageUrl(product.image_id || product.image_url);
-        const rawImg2 = getLocalImageUrl(product.image_id_2 || product.image_url_2);
+        const rawImg1 = getProductImage(product.image_id || product.image_url, IMG_SIZES.modal);
+        const rawImg2 = getProductImage(product.image_id_2 || product.image_url_2, IMG_SIZES.modal);
         if (rawImg1 && rawImg1.trim() !== '') modalImagesList.push(rawImg1);
         if (rawImg2 && rawImg2.trim() !== '' && rawImg2 !== rawImg1) modalImagesList.push(rawImg2);
         
@@ -2944,7 +2989,7 @@
             name: selectedProduct.name,
             price: finalPrice,
             size: selectedSize,
-            image: getLocalImageUrl(selectedProduct.image_id || selectedProduct.image_url),
+            image: getProductImage(selectedProduct.image_id || selectedProduct.image_url, IMG_SIZES.cartThumb),
             quantity: 1
           });
           showToast(`Añadido: ${selectedProduct.name} [Talla ${selectedSize}]`);
