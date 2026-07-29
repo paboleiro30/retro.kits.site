@@ -1144,7 +1144,7 @@
         width: 100%;
       }
 
-      #clearCart, .btn-instagram {
+      #clearCart, .btn-whatsapp {
         width: 100% !important;
         height: 52px !important;
         min-height: 52px !important;
@@ -1176,24 +1176,24 @@
         color: #ef4444 !important;
       }
 
-      .btn-instagram {
+      .btn-whatsapp {
         border: none !important;
-        background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%) !important;
+        background: #25D366 !important;
         color: #ffffff !important;
         gap: 10px !important;
-        box-shadow: 0 8px 24px rgba(214, 36, 159, 0.3) !important;
+        box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3) !important;
         text-decoration: none !important;
       }
 
-      .btn-instagram svg {
+      .btn-whatsapp svg {
         width: 20px;
         height: 20px;
         fill: currentColor;
       }
 
-      .btn-instagram:hover {
+      .btn-whatsapp:hover {
         transform: translate3d(0, -2px, 0);
-        box-shadow: 0 10px 28px rgba(214, 36, 159, 0.45) !important;
+        box-shadow: 0 10px 28px rgba(37, 211, 102, 0.45) !important;
         filter: brightness(1.08);
       }
 
@@ -1945,11 +1945,11 @@
        </div>
         <div class="cart-actions">
           <button id="clearCart" type="button">Limpiar carrito</button>
-          <a class="btn-instagram" id="instagramOrder" href="https://ig.me/m/retrokits.fc" target="_blank" rel="noopener noreferrer">
+          <a class="btn-whatsapp" id="whatsappOrder" href="https://wa.me/526624677901" target="_blank" rel="noopener noreferrer">
             <svg viewBox="0 0 24 24">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+              <path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.77.46 3.45 1.27 4.9L2 22l5.25-1.38c1.4.76 2.99 1.19 4.79 1.19 5.52 0 10-4.48 10-10s-4.48-10-10-10zm5.86 14.29c-.25.7-1.23 1.28-2 1.44-.55.11-1.26.2-3.66-.79-2.99-1.24-4.91-4.24-5.06-4.44-.15-.19-1.2-1.6-1.2-3.06 0-1.46.76-2.17 1.03-2.47.27-.3.6-.37.8-.37.2 0 .4 0 .58.01.19.01.43-.07.67.51.25.6.85 2.07.92 2.22.07.15.12.32.02.51-.1.19-.15.3-.3.46-.15.16-.31.36-.44.48-.15.14-.3.3-.13.59.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.05.17-.18.72-.84.91-1.13.19-.29.38-.24.64-.15.26.1 1.65.78 1.94.92.29.14.48.21.55.33.07.12.07.68-.18 1.38z"/>
             </svg>
-            Hacer pedido vía Instagram
+            Hacer pedido vía WhatsApp
           </a>
         </div>
       </div>
@@ -2216,7 +2216,7 @@
       const cartTotal = document.getElementById('cartTotal');
       const cartCount = document.getElementById('cartCount');
       const clearCartBtn = document.getElementById('clearCart');
-      const instagramOrderBtn = document.getElementById('instagramOrder');
+      const whatsappOrderBtn = document.getElementById('whatsappOrder');
       
       const searchInput = document.getElementById('searchInput');
       const searchSubmit = document.getElementById('searchSubmit');
@@ -3126,7 +3126,7 @@
         showToast("Carrito vaciado.");
       });
 
-      instagramOrderBtn.addEventListener('click', async (event) => {
+      whatsappOrderBtn.addEventListener('click', async (event) => {
         event.preventDefault();
 
         if (cart.length === 0) {
@@ -3177,45 +3177,10 @@
 
         msg += `\n*Total a pagar: $${total.toFixed(2)}*`;
 
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(msg)
-            .then(() => {
-              showToast("¡Pedido copiado! Pégalo en el chat de Instagram.");
-              window.open('https://ig.me/m/retrokits.fc', '_blank');
-            })
-            .catch((err) => {
-              console.error("Error al copiar texto: ", err);
-              useFallbackClipboard(msg);
-            });
-        } else {
-          useFallbackClipboard(msg);
-        }
+        const whatsappUrl = `https://wa.me/526624677901?text=${encodeURIComponent(msg)}`;
+        showToast("¡Abriendo WhatsApp con tu pedido!");
+        window.open(whatsappUrl, '_blank');
       });
-
-      function useFallbackClipboard(text) {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        textArea.style.position = "fixed"; 
-        textArea.style.opacity = "0";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        
-        try {
-          const successful = document.execCommand('copy');
-          if (successful) {
-            showToast("¡Pedido copiado! Pégalo en el chat.");
-          } else {
-            showToast("No se pudo copiar automáticamente. Por favor copia manualmente.");
-          }
-        } catch (err) {
-          console.error('Fallo en fallback', err);
-          showToast("Abriendo Instagram...");
-        }
-        
-        document.body.removeChild(textArea);
-        window.open('https://ig.me/m/retrokits.fc', '_blank');
-      }
 
       cartButton.addEventListener('click', () => cartDrawer.classList.add('open'));
       closeCart.addEventListener('click', () => cartDrawer.classList.remove('open'));
