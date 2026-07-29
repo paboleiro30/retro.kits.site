@@ -3181,7 +3181,7 @@
           navigator.clipboard.writeText(msg)
             .then(() => {
               showToast("¡Pedido copiado! Pégalo en el chat de Instagram.");
-              window.open('https://www.instagram.com/retrokits.fc/', '_blank');
+              window.open('https://ig.me/m/retrokits.fc', '_blank');
             })
             .catch((err) => {
               console.error("Error al copiar texto: ", err);
@@ -3214,7 +3214,7 @@
         }
         
         document.body.removeChild(textArea);
-        window.open('https://www.instagram.com/retrokits.fc/', '_blank');
+        window.open('https://ig.me/m/retrokits.fc', '_blank');
       }
 
       cartButton.addEventListener('click', () => cartDrawer.classList.add('open'));
