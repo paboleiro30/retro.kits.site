@@ -2239,7 +2239,13 @@
       const heroMeta = document.getElementById('heroMeta');
       const promoBar = document.getElementById('promoBar');
 
-      const fallbackPlaceholder = 'https://via.placeholder.com/300x400?text=Retro+Jersey';
+      // Antes esto era una imagen fea de via.placeholder.com que se veía
+      // cuando una imagen aún no cargaba (por ejemplo, justo después de
+      // añadir un producto en Supabase, mientras el archivo todavía no
+      // está disponible). Ahora es un pixel transparente: mientras la
+      // imagen real no carga, simplemente no se ve nada y queda visible
+      // el fondo oscuro del contenedor (que ya se ve bien de por sí).
+      const fallbackPlaceholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
       // IMÁGENES LOCALES (carpeta "imagenes/", junto al index.html)
       // Los productos siguen viniendo de la base de datos de Supabase, pero
