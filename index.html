@@ -1348,6 +1348,18 @@
         min-height: 1em;
       }
 
+      .auth-success {
+        color: var(--success, #4ade80);
+        font-size: 0.85rem;
+        text-align: center;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      .auth-success:empty {
+        display: none;
+      }
+
       .account-logged-view.hidden {
         display: none;
       }
@@ -2312,6 +2324,7 @@
 
         <!-- VISTA: LOGIN -->
         <form class="auth-view" id="loginView">
+          <p class="auth-success" id="loginNotice"></p>
           <div class="auth-field">
             <label for="loginEmail">Correo</label>
             <input type="email" id="loginEmail" name="email" autocomplete="email" required />
@@ -2673,6 +2686,7 @@
       const loggedView = document.getElementById('loggedView');
       const loggedFooter = document.getElementById('loggedFooter');
       const loginError = document.getElementById('loginError');
+      const loginNotice = document.getElementById('loginNotice');
       const registerError = document.getElementById('registerError');
       const loginSubmitBtn = document.getElementById('loginSubmitBtn');
       const registerSubmitBtn = document.getElementById('registerSubmitBtn');
@@ -3786,6 +3800,7 @@
       function showRegisterView() {
         loginError.textContent = '';
         registerError.textContent = '';
+        loginNotice.textContent = '';
         registerView.classList.remove('hidden');
         loginView.classList.add('hidden');
         loggedView.classList.add('hidden');
@@ -3794,6 +3809,7 @@
       }
 
       function showLoggedView() {
+        loginNotice.textContent = '';
         loginView.classList.add('hidden');
         registerView.classList.add('hidden');
         loggedView.classList.remove('hidden');
@@ -3888,8 +3904,9 @@
             showToast('¡Cuenta creada! Ya iniciaste sesión.');
           } else {
             // Confirmación de correo activada: debe revisar su bandeja.
-            showToast('¡Cuenta creada! Revisa tu correo para confirmar tu cuenta.');
+            showToast('¡Cuenta creada! Revisa tu correo (y la carpeta de spam) para confirmar tu cuenta.');
             showLoginView();
+            loginNotice.textContent = 'Te mandamos un correo de confirmación. Si no lo ves en unos minutos, revisa tu carpeta de spam o promociones.';
           }
         } catch (err) {
           registerError.textContent = (err.message || '').includes('already registered')
