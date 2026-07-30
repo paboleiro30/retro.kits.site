@@ -1144,7 +1144,7 @@
         width: 100%;
       }
 
-      #clearCart, .btn-whatsapp {
+      #clearCart, .btn-whatsapp, #logoutBtn {
         width: 100% !important;
         height: 52px !important;
         min-height: 52px !important;
@@ -1164,13 +1164,13 @@
         will-change: transform, background, box-shadow;
       }
 
-      #clearCart {
+      #clearCart, #logoutBtn {
         background: rgba(239, 68, 68, 0.1) !important;
         border: 1px solid rgba(239, 68, 68, 0.4) !important;
         color: #f87171 !important;
       }
 
-      #clearCart:hover {
+      #clearCart:hover, #logoutBtn:hover {
         border-color: rgba(239, 68, 68, 0.8) !important;
         background: rgba(239, 68, 68, 0.2) !important;
         color: #ef4444 !important;
@@ -1223,6 +1223,339 @@
         min-width: 20px;
         text-align: center;
         font-weight: 700;
+      }
+
+      /* CUENTA / LOGIN */
+      .account-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        padding: 10px 18px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: border-color 0.15s ease, background 0.15s ease;
+        max-width: 170px;
+      }
+
+      .account-action:hover {
+        border-color: var(--accent);
+        background: rgba(212, 175, 55, 0.1);
+      }
+
+      .account-action svg {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+      }
+
+      .account-action span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .account-drawer .cart-items {
+        gap: 0;
+      }
+
+      .auth-view {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 4px 2px 16px;
+      }
+
+      .auth-view.hidden {
+        display: none;
+      }
+
+      .auth-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .auth-field label {
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.78rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .auth-field input {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 12px;
+        padding: 12px 14px;
+        color: var(--text);
+        font-size: 0.95rem;
+      }
+
+      .auth-field input:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      .auth-submit-btn {
+        width: 100%;
+        height: 52px;
+        border-radius: 999px;
+        border: none;
+        background: var(--accent);
+        color: #0d131a;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-top: 4px;
+        transition: filter 0.15s ease, transform 0.15s ease;
+      }
+
+      .auth-submit-btn:hover {
+        filter: brightness(1.1);
+      }
+
+      .auth-submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .auth-switch-text {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .auth-switch-text a {
+        color: var(--accent);
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      .auth-error {
+        color: #f87171;
+        font-size: 0.85rem;
+        text-align: center;
+        min-height: 1em;
+      }
+
+      .account-logged-view.hidden {
+        display: none;
+      }
+
+      .account-profile-summary {
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        margin-bottom: 18px;
+      }
+
+      .account-profile-summary strong {
+        display: block;
+        font-family: 'Oswald', sans-serif;
+        letter-spacing: 0.03em;
+        margin-bottom: 2px;
+      }
+
+      .account-profile-summary span {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .order-history-title {
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 12px 2px;
+      }
+
+      /* CORAZÓN DE WISHLIST SOBRE LA IMAGEN DEL PRODUCTO */
+      .wishlist-heart-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(3, 8, 20, 0.55);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2;
+        transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease, border-color 0.15s ease;
+      }
+
+      .wishlist-heart-btn:hover {
+        transform: scale(1.08);
+        border-color: var(--discount-tag);
+      }
+
+      .wishlist-heart-btn svg {
+        width: 19px;
+        height: 19px;
+        stroke: #f0f4f8;
+        fill: none;
+        transition: fill 0.15s ease, stroke 0.15s ease;
+      }
+
+      .wishlist-heart-btn.active svg {
+        fill: var(--discount-tag);
+        stroke: var(--discount-tag);
+      }
+
+      .modal-wishlist-heart {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 10px 16px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 4px;
+        width: fit-content;
+        transition: border-color 0.15s ease, background 0.15s ease;
+      }
+
+      .modal-wishlist-heart:hover {
+        border-color: var(--discount-tag);
+      }
+
+      .modal-wishlist-heart svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        fill: none;
+        transition: fill 0.15s ease;
+      }
+
+      .modal-wishlist-heart.active svg {
+        fill: var(--discount-tag);
+        stroke: var(--discount-tag);
+      }
+
+      .modal-wishlist-heart.active {
+        border-color: var(--discount-tag);
+        color: var(--discount-tag);
+      }
+
+      .wishlist-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        margin-bottom: 12px;
+      }
+
+      .wishlist-card-thumb {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        background: #0f1721;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+
+      .wishlist-card-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .wishlist-card-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .wishlist-card-info strong {
+        display: block;
+        font-size: 0.9rem;
+        line-height: 1.3;
+      }
+
+      .wishlist-card-info span {
+        color: var(--accent);
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+
+      .wishlist-card-remove {
+        background: transparent;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        padding: 6px;
+        flex-shrink: 0;
+      }
+
+      .wishlist-card-remove:hover {
+        color: var(--discount-tag);
+      }
+
+      .wishlist-card-buttons {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+        align-self: center;
+      }
+
+      .wishlist-card-add {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background: rgba(212, 175, 55, 0.12);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        color: var(--accent);
+        border-radius: 50%;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .wishlist-card-add svg {
+        width: 17px;
+        height: 17px;
+      }
+
+      .wishlist-card-add:hover {
+        background: rgba(212, 175, 55, 0.22);
+      }
+
+      .wishlist-card-add:disabled {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: var(--muted);
+        cursor: not-allowed;
+      }
+
+      .empty-orders-msg {
+        color: var(--muted);
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 30px 10px;
       }
 
       .modal-backdrop {
@@ -1571,6 +1904,8 @@
         .brand-logo-header { height: 42px !important; }
         .cart-action { padding: 10px 18px !important; font-size: 0.9rem !important; }
         .cart-action svg { width: 20px !important; height: 20px !important; }
+        .account-action { padding: 10px 14px !important; font-size: 0.9rem !important; max-width: 140px; }
+        .account-action svg { width: 20px !important; height: 20px !important; }
         .catalog-title-row { flex-direction: column; align-items: center; }
         .modal-content { grid-template-columns: 1fr; }
         .brand-logo-hero { height: 45px; top: 16px; right: 16px; }
@@ -1787,6 +2122,14 @@
           <span class="brand-text">RETRO<span>KITS</span></span>
         </a>
         <div class="actions-panel">
+          <button class="account-action" type="button" id="accountButton" aria-label="Mi cuenta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+            <span id="accountButtonLabel">Iniciar sesión</span>
+          </button>
+          <button class="cart-action" type="button" id="wishlistButton" aria-label="Ver mi wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+            <span class="cart-badge" id="wishlistCount">0</span>
+          </button>
           <button class="cart-action" type="button" id="cartButton" aria-label="Abrir carrito de compras">
             <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-13L4 3H1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <span class="cart-badge" id="cartCount">0</span>
@@ -1956,7 +2299,79 @@
       </div>
     </aside>
 
+    <!-- PANEL DE CUENTA: LOGIN / REGISTRO / HISTORIAL DE PEDIDOS -->
+    <aside class="cart-drawer account-drawer" id="accountDrawer">
+      <div class="cart-header">
+        <h3 id="accountDrawerTitle">Iniciar sesión</h3>
+        <button class="close-drawer" id="closeAccount">
+          <span>Cerrar</span>
+        </button>
+      </div>
+
+      <div class="cart-items" id="accountDrawerBody">
+
+        <!-- VISTA: LOGIN -->
+        <form class="auth-view" id="loginView">
+          <div class="auth-field">
+            <label for="loginEmail">Correo</label>
+            <input type="email" id="loginEmail" name="email" autocomplete="email" required />
+          </div>
+          <div class="auth-field">
+            <label for="loginPassword">Contraseña</label>
+            <input type="password" id="loginPassword" name="current-password" autocomplete="current-password" required />
+          </div>
+          <p class="auth-error" id="loginError"></p>
+          <button type="submit" class="auth-submit-btn" id="loginSubmitBtn">Entrar</button>
+          <p class="auth-switch-text">¿No tienes cuenta? <a id="goToRegister">Regístrate</a></p>
+        </form>
+
+        <!-- VISTA: REGISTRO -->
+        <form class="auth-view hidden" id="registerView">
+          <div class="auth-field">
+            <label for="registerName">Nombre completo</label>
+            <input type="text" id="registerName" name="name" autocomplete="name" required />
+          </div>
+          <div class="auth-field">
+            <label for="registerPhone">Teléfono</label>
+            <input type="tel" id="registerPhone" name="tel" autocomplete="tel" required />
+          </div>
+          <div class="auth-field">
+            <label for="registerEmail">Correo</label>
+            <input type="email" id="registerEmail" name="email" autocomplete="email" required />
+          </div>
+          <div class="auth-field">
+            <label for="registerPassword">Contraseña</label>
+            <input type="password" id="registerPassword" name="new-password" autocomplete="new-password" minlength="6" required />
+          </div>
+          <p class="auth-error" id="registerError"></p>
+          <button type="submit" class="auth-submit-btn" id="registerSubmitBtn">Crear cuenta</button>
+          <p class="auth-switch-text">¿Ya tienes cuenta? <a id="goToLogin">Inicia sesión</a></p>
+        </form>
+
+        <!-- VISTA: SESIÓN INICIADA (perfil + wishlist) -->
+        <div class="account-logged-view hidden" id="loggedView">
+          <div class="account-profile-summary">
+            <strong id="loggedUserName">—</strong>
+            <span id="loggedUserEmail">—</span>
+          </div>
+
+          <p class="order-history-title">Mi wishlist</p>
+          <div id="wishlistList">
+            <p class="empty-orders-msg">Cargando favoritos...</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="cart-footer-block" id="loggedFooter" style="display: none;">
+        <div class="cart-actions">
+          <button id="logoutBtn" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+    </aside>
+
     <div class="modal-backdrop" id="modalBackdrop"></div>
+
     <div class="product-modal" id="productModal" tabindex="-1">
       <button class="modal-close" id="closeModal" aria-label="Cerrar">×</button>
       <div class="modal-content">
@@ -1973,6 +2388,11 @@
           <div class="modal-price-pill">
             <strong id="modalPrice"></strong>
           </div>
+
+          <button type="button" class="modal-wishlist-heart" id="modalWishlistBtn">
+            <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+            <span id="modalWishlistLabel">Guardar en favoritos</span>
+          </button>
           
           <div class="modal-dorsal-tag" id="modalDorsalTag">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -2176,6 +2596,7 @@
       let selectedSize = '';
       const cart = [];
       let activePromoCode = null;
+      const wishlistIds = new Set(); // ids (como string) de los productos que el usuario tiene en favoritos
 
       let modalImagesList = [];
       let currentModalImgIndex = 0;
@@ -2226,6 +2647,8 @@
       const modalBackdrop = document.getElementById('modalBackdrop');
       const closeModalBtn = document.getElementById('closeModal');
       const addToCartModalBtn = document.getElementById('addToCartModal');
+      const modalWishlistBtn = document.getElementById('modalWishlistBtn');
+      const modalWishlistLabel = document.getElementById('modalWishlistLabel');
 
       const modalProductImg = document.getElementById('modalProductImg');
       const modalPrevBtn = document.getElementById('modalPrevBtn');
@@ -2238,6 +2661,29 @@
       const heroDescription = document.getElementById('heroDescription');
       const heroMeta = document.getElementById('heroMeta');
       const promoBar = document.getElementById('promoBar');
+
+      // CUENTA / LOGIN
+      const accountButton = document.getElementById('accountButton');
+      const accountButtonLabel = document.getElementById('accountButtonLabel');
+      const accountDrawer = document.getElementById('accountDrawer');
+      const accountDrawerTitle = document.getElementById('accountDrawerTitle');
+      const closeAccountBtn = document.getElementById('closeAccount');
+      const loginView = document.getElementById('loginView');
+      const registerView = document.getElementById('registerView');
+      const loggedView = document.getElementById('loggedView');
+      const loggedFooter = document.getElementById('loggedFooter');
+      const loginError = document.getElementById('loginError');
+      const registerError = document.getElementById('registerError');
+      const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+      const registerSubmitBtn = document.getElementById('registerSubmitBtn');
+      const loggedUserName = document.getElementById('loggedUserName');
+      const loggedUserEmail = document.getElementById('loggedUserEmail');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      // WISHLIST
+      const wishlistButton = document.getElementById('wishlistButton');
+      const wishlistCountEl = document.getElementById('wishlistCount');
+      const wishlistList = document.getElementById('wishlistList');
 
       // Antes esto era una imagen fea de via.placeholder.com que se veía
       // cuando una imagen aún no cargaba (por ejemplo, justo después de
@@ -2395,6 +2841,21 @@
           console.error("Error obtuvo productos de Supabase:", err.message);
           showToast("Error al conectar con la base de datos.");
           productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 40px 0;">Error al cargar las camisetas.</p>`;
+          return;
+        }
+
+        // Los corazones de wishlist dependen de que el catálogo ya esté en
+        // memoria (para poder mostrar nombre/imagen/precio). Si el usuario
+        // ya inició sesión y esos datos llegaron antes que el catálogo, los
+        // volvemos a aplicar aquí para no perder la sincronía sin importar
+        // qué terminó de cargar primero. Aislado en su propio try/catch
+        // para que un fallo aquí NUNCA pueda tumbar el catálogo ya cargado.
+        try {
+          if (currentUser) {
+            updateAllWishlistHearts();
+          }
+        } catch (err) {
+          console.error("Error sincronizando wishlist con el catálogo:", err.message);
         }
       }
 
@@ -2565,6 +3026,9 @@
           card.style.setProperty('--card-delay', `${staggerDelay}ms`);
           card.innerHTML = `
             <div class="product-image-wrap" data-product-id="${product.id}">
+              <button class="wishlist-heart-btn" type="button" data-wishlist-id="${product.id}" aria-label="Guardar en favoritos">
+                <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </button>
               <div class="product-image">
                 <img
                   class="stock-image"
@@ -2604,6 +3068,13 @@
 
           const imageWrap = card.querySelector('.product-image-wrap');
           imageWrap.addEventListener('click', () => openModal(product));
+
+          const heartBtn = card.querySelector('.wishlist-heart-btn');
+          if (wishlistIds.has(String(product.id))) heartBtn.classList.add('active');
+          heartBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            toggleWishlist(product, heartBtn);
+          });
 
           let cardImagesPreloaded = false;
           const preloadCardModalImages = () => {
@@ -2805,6 +3276,8 @@
         } else {
           modalPriceElement.textContent = `$${product.price}`;
         }
+
+        updateModalWishlistUI();
 
         modalImagesList = [];
         
@@ -3132,22 +3605,14 @@
         showToast("Carrito vaciado.");
       });
 
-      whatsappOrderBtn.addEventListener('click', async (event) => {
-        event.preventDefault();
-
-        if (cart.length === 0) {
-          showToast("El carrito está vacío.");
-          return;
-        }
-
+      // Calcula subtotal, descuento y total del carrito actual (con el
+      // código promocional activo, si hay uno).
+      function calculateCartTotals() {
         let subtotal = 0;
         let calculatedDiscount = 0;
-        let msg = `¡Hola! Me gustaría hacer un pedido de Retrokits:\n\n`;
 
         cart.forEach((item) => {
-          const itemSub = item.price * item.quantity;
-          subtotal += itemSub;
-          msg += `• ${item.quantity}x ${item.name} [Talla ${item.size}] ($${itemSub})\n`;
+          subtotal += item.price * item.quantity;
         });
 
         if (activePromoCode) {
@@ -3156,7 +3621,7 @@
           if (activePromoCode.product_id) {
             const targetProductId = String(activePromoCode.product_id).toLowerCase();
             const targetItem = cart.find(i => String(i.id).toLowerCase() === targetProductId);
-            
+
             if (targetItem) {
               const singleItemPrice = targetItem.price;
               if (discType === 'percentage') {
@@ -3176,12 +3641,38 @@
         }
 
         const total = Math.max(0, subtotal - calculatedDiscount);
+        return { subtotal, calculatedDiscount, total };
+      }
+
+      whatsappOrderBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        if (cart.length === 0) {
+          showToast("El carrito está vacío.");
+          return;
+        }
+
+        const { subtotal, calculatedDiscount, total } = calculateCartTotals();
+
+        let msg = `¡Hola! Me gustaría hacer un pedido de Retrokits:\n\n`;
+        cart.forEach((item) => {
+          const itemSub = item.price * item.quantity;
+          msg += `• ${item.quantity}x ${item.name} [Talla ${item.size}] ($${itemSub})\n`;
+        });
 
         if (activePromoCode && calculatedDiscount > 0) {
           msg += `\n*Código de Descuento (${activePromoCode.code}): -$${calculatedDiscount.toFixed(2)}*`;
         }
 
         msg += `\n*Total a pagar: $${total.toFixed(2)}*`;
+
+        // Si el cliente inició sesión, guardamos el pedido en Supabase (para
+        // que quede registrado). Si no inició sesión, el pedido se sigue
+        // enviando por WhatsApp normalmente, solo que no queda registrado
+        // (no hay a qué usuario asociarlo).
+        if (currentUser) {
+          await saveOrderToSupabase(cart, subtotal, calculatedDiscount, total, activePromoCode);
+        }
 
         const whatsappUrl = `https://wa.me/526624677901?text=${encodeURIComponent(msg)}`;
         showToast("¡Abriendo WhatsApp con tu pedido!");
@@ -3266,6 +3757,372 @@
         container.appendChild(toast);
         setTimeout(() => toast.remove(), 3500);
       }
+
+      /* =========================================================
+         CUENTA DE CLIENTE: LOGIN, REGISTRO E HISTORIAL DE PEDIDOS
+         (Supabase Auth + tablas "profiles" y "orders" con RLS)
+         ========================================================= */
+
+      let currentUser = null; // objeto de sesión de Supabase Auth (o null)
+
+      function openAccountDrawer() {
+        accountDrawer.classList.add('open');
+      }
+
+      function closeAccountDrawer() {
+        accountDrawer.classList.remove('open');
+      }
+
+      function showLoginView() {
+        loginError.textContent = '';
+        registerError.textContent = '';
+        loginView.classList.remove('hidden');
+        registerView.classList.add('hidden');
+        loggedView.classList.add('hidden');
+        loggedFooter.style.display = 'none';
+        accountDrawerTitle.textContent = 'Iniciar sesión';
+      }
+
+      function showRegisterView() {
+        loginError.textContent = '';
+        registerError.textContent = '';
+        registerView.classList.remove('hidden');
+        loginView.classList.add('hidden');
+        loggedView.classList.add('hidden');
+        loggedFooter.style.display = 'none';
+        accountDrawerTitle.textContent = 'Crear cuenta';
+      }
+
+      function showLoggedView() {
+        loginView.classList.add('hidden');
+        registerView.classList.add('hidden');
+        loggedView.classList.remove('hidden');
+        loggedFooter.style.display = 'block';
+        accountDrawerTitle.textContent = 'Mi cuenta';
+      }
+
+      // Actualiza el botón del header y decide qué vista mostrar dentro del panel
+      function refreshAccountUI() {
+        if (currentUser) {
+          const displayName = (currentUser.user_metadata && currentUser.user_metadata.full_name) || currentUser.email;
+          accountButtonLabel.textContent = displayName.split(' ')[0];
+          loggedUserName.textContent = displayName;
+          loggedUserEmail.textContent = currentUser.email;
+          showLoggedView();
+          loadWishlist();
+        } else {
+          accountButtonLabel.textContent = 'Iniciar sesión';
+          showLoginView();
+          wishlistIds.clear();
+          updateAllWishlistHearts();
+          updateWishlistBadge();
+        }
+      }
+
+      accountButton.addEventListener('click', () => {
+        openAccountDrawer();
+      });
+      closeAccountBtn.addEventListener('click', closeAccountDrawer);
+
+      document.getElementById('goToRegister').addEventListener('click', (e) => {
+        e.preventDefault();
+        showRegisterView();
+      });
+      document.getElementById('goToLogin').addEventListener('click', (e) => {
+        e.preventDefault();
+        showLoginView();
+      });
+
+      loginView.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        loginError.textContent = '';
+        loginSubmitBtn.disabled = true;
+        loginSubmitBtn.textContent = 'Entrando...';
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+          const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+
+          currentUser = data.user;
+          refreshAccountUI();
+          showToast('¡Sesión iniciada!');
+        } catch (err) {
+          loginError.textContent = 'Correo o contraseña incorrectos.';
+        } finally {
+          loginSubmitBtn.disabled = false;
+          loginSubmitBtn.textContent = 'Entrar';
+        }
+      });
+
+      registerView.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        registerError.textContent = '';
+        registerSubmitBtn.disabled = true;
+        registerSubmitBtn.textContent = 'Creando...';
+
+        const fullName = document.getElementById('registerName').value.trim();
+        const phone = document.getElementById('registerPhone').value.trim();
+        const email = document.getElementById('registerEmail').value.trim();
+        const password = document.getElementById('registerPassword').value;
+
+        try {
+          const { data, error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+              data: { full_name: fullName, phone: phone }
+            }
+          });
+          if (error) throw error;
+
+          // El trigger "handle_new_user" (ver SQL) crea automáticamente
+          // la fila en "profiles" a partir de estos mismos datos.
+
+          if (data.session) {
+            // Confirmación de correo desactivada: ya queda con sesión activa.
+            currentUser = data.user;
+            refreshAccountUI();
+            showToast('¡Cuenta creada! Ya iniciaste sesión.');
+          } else {
+            // Confirmación de correo activada: debe revisar su bandeja.
+            showToast('¡Cuenta creada! Revisa tu correo para confirmar tu cuenta.');
+            showLoginView();
+          }
+        } catch (err) {
+          registerError.textContent = (err.message || '').includes('already registered')
+            ? 'Ese correo ya tiene una cuenta registrada.'
+            : 'No se pudo crear la cuenta. Intenta de nuevo.';
+        } finally {
+          registerSubmitBtn.disabled = false;
+          registerSubmitBtn.textContent = 'Crear cuenta';
+        }
+      });
+
+      logoutBtn.addEventListener('click', async () => {
+        await supabaseClient.auth.signOut();
+        currentUser = null;
+        refreshAccountUI();
+        closeAccountDrawer();
+        showToast('Cerraste sesión.');
+      });
+
+      async function saveOrderToSupabase(cartItems, subtotal, discount, total, promoCode) {
+        try {
+          const itemsPayload = cartItems.map(i => ({
+            product_id: i.id,
+            name: i.name,
+            size: i.size,
+            price: i.price,
+            quantity: i.quantity
+          }));
+
+          const { data, error } = await supabaseClient.from('orders').insert({
+            user_id: currentUser.id,
+            items: itemsPayload,
+            subtotal: subtotal,
+            discount: discount,
+            total: total,
+            promo_code: promoCode ? promoCode.code : null
+          }).select('id').single();
+
+          if (error) throw error;
+          return data ? data.id : null;
+        } catch (err) {
+          // No bloqueamos el pedido si esto falla; solo avisamos.
+          console.error('Error guardando el pedido en Supabase:', err.message);
+          showToast('El pedido se envió, pero no se pudo guardar en la base de datos.');
+          return null;
+        }
+      }
+
+
+
+      // Al cargar la página: revisamos si ya hay una sesión activa (por
+      // ejemplo, si el cliente cerró la pestaña sin cerrar sesión).
+      async function initAuth() {
+        const { data } = await supabaseClient.auth.getSession();
+        currentUser = data.session ? data.session.user : null;
+        refreshAccountUI();
+
+        // Mantiene todo sincronizado si la sesión cambia en otra pestaña
+        // o expira (por ejemplo, token vencido).
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+          currentUser = session ? session.user : null;
+          refreshAccountUI();
+        });
+      }
+
+      /* =========================================================
+         WISHLIST (favoritos): corazón en cada camiseta, guardado
+         por usuario en la tabla "wishlists" de Supabase.
+         ========================================================= */
+
+      function updateWishlistBadge() {
+        wishlistCountEl.textContent = wishlistIds.size;
+      }
+
+      // Sincroniza el corazón de TODAS las tarjetas visibles del catálogo
+      // con el estado actual de wishlistIds (por ejemplo, tras cargarla).
+      function updateAllWishlistHearts() {
+        document.querySelectorAll('.wishlist-heart-btn').forEach((btn) => {
+          const id = btn.getAttribute('data-wishlist-id');
+          btn.classList.toggle('active', wishlistIds.has(String(id)));
+        });
+        updateModalWishlistUI();
+      }
+
+      function updateModalWishlistUI() {
+        if (!selectedProduct) return;
+        const isSaved = wishlistIds.has(String(selectedProduct.id));
+        modalWishlistBtn.classList.toggle('active', isSaved);
+        modalWishlistLabel.textContent = isSaved ? 'Guardado en favoritos' : 'Guardar en favoritos';
+      }
+
+      async function toggleWishlist(product, heartBtnEl) {
+        if (!currentUser) {
+          showToast('Inicia sesión para guardar tus favoritos.');
+          openAccountDrawer();
+          showLoginView();
+          return;
+        }
+
+        const productId = String(product.id);
+        const isSaved = wishlistIds.has(productId);
+
+        // Actualización optimista: se ve instantánea, y si algo falla se revierte.
+        if (isSaved) {
+          wishlistIds.delete(productId);
+        } else {
+          wishlistIds.add(productId);
+        }
+        if (heartBtnEl) heartBtnEl.classList.toggle('active', !isSaved);
+        updateAllWishlistHearts();
+        updateWishlistBadge();
+
+        try {
+          if (isSaved) {
+            const { error } = await supabaseClient
+              .from('wishlists')
+              .delete()
+              .eq('user_id', currentUser.id)
+              .eq('product_id', productId);
+            if (error) throw error;
+          } else {
+            const { error } = await supabaseClient
+              .from('wishlists')
+              .insert({ user_id: currentUser.id, product_id: productId });
+            if (error) throw error;
+            showToast('Guardado en tu wishlist.');
+          }
+          renderWishlistPanel();
+        } catch (err) {
+          console.error('Error actualizando wishlist:', err.message);
+          // Revertimos el cambio optimista si Supabase falló.
+          if (isSaved) { wishlistIds.add(productId); } else { wishlistIds.delete(productId); }
+          updateAllWishlistHearts();
+          updateWishlistBadge();
+          showToast('No se pudo actualizar tu wishlist. Intenta de nuevo.');
+        }
+      }
+
+      modalWishlistBtn.addEventListener('click', () => {
+        if (!selectedProduct) return;
+        toggleWishlist(selectedProduct, null);
+      });
+
+      function renderWishlistPanel() {
+        if (wishlistIds.size === 0) {
+          wishlistList.innerHTML = '<p class="empty-orders-msg">Todavía no tienes camisetas en tu wishlist. Dale corazón a las que te gusten.</p>';
+          return;
+        }
+
+        const savedProducts = products.filter(p => wishlistIds.has(String(p.id)));
+
+        wishlistList.innerHTML = savedProducts.map((product) => {
+          const displayPrice = (product.discount_price && parseFloat(product.discount_price) > 0)
+            ? product.discount_price
+            : product.price;
+          const imgUrl = getProductImage(product.image_id || product.image_url, IMG_SIZES.cartThumb) || fallbackPlaceholder;
+          const hasStock = product.stock && Object.values(product.stock).some(qty => qty > 0);
+
+          return `
+            <div class="wishlist-card">
+              <div class="wishlist-card-thumb">
+                <img src="${imgUrl}" alt="${product.name}" onerror="this.src='${fallbackPlaceholder}'" />
+              </div>
+              <div class="wishlist-card-info">
+                <strong>${product.name}</strong>
+                <span>$${displayPrice}</span>
+                <em style="display:block; font-style:normal; font-size:0.78rem; margin-top:3px; color: ${hasStock ? 'var(--success)' : '#ef4444'};">
+                  ${hasStock ? 'Disponible' : 'Agotado'}
+                </em>
+              </div>
+              <div class="wishlist-card-buttons">
+                <button class="wishlist-card-add" type="button" data-add-id="${product.id}" ${hasStock ? '' : 'disabled'} aria-label="${hasStock ? 'Agregar al carrito' : 'Agotado'}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-13L4 3H1"/></svg>
+                </button>
+                <button class="wishlist-card-remove" type="button" data-remove-id="${product.id}" aria-label="Quitar de favoritos">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" fill="currentColor"/></svg>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        wishlistList.querySelectorAll('[data-add-id]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const product = products.find(p => String(p.id) === btn.getAttribute('data-add-id'));
+            if (product) {
+              closeAccountDrawer();
+              openModal(product);
+            }
+          });
+        });
+
+        wishlistList.querySelectorAll('[data-remove-id]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const product = products.find(p => String(p.id) === btn.getAttribute('data-remove-id'));
+            if (product) toggleWishlist(product, null);
+          });
+        });
+      }
+
+      async function loadWishlist() {
+        if (!currentUser) return;
+
+        try {
+          const { data, error } = await supabaseClient
+            .from('wishlists')
+            .select('product_id')
+            .eq('user_id', currentUser.id);
+
+          if (error) throw error;
+
+          wishlistIds.clear();
+          (data || []).forEach(row => wishlistIds.add(String(row.product_id)));
+
+          updateAllWishlistHearts();
+          updateWishlistBadge();
+          renderWishlistPanel();
+        } catch (err) {
+          console.error('Error cargando wishlist:', err.message);
+        }
+      }
+
+      wishlistButton.addEventListener('click', () => {
+        openAccountDrawer();
+        if (currentUser) {
+          renderWishlistPanel();
+        } else {
+          showLoginView();
+          showToast('Inicia sesión para ver tu wishlist.');
+        }
+      });
+
+      initAuth();
 
       loadPromoFromSupabase();
       loadProductsFromSupabase();
