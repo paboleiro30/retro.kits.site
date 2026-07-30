@@ -1261,36 +1261,28 @@
         white-space: nowrap;
       }
 
-      /* Avatar circular con iniciales: reemplaza el ícono genérico de
-         persona cuando ya hay una sesión iniciada. */
-      .account-avatar {
-        display: none;
-        align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        flex-shrink: 0;
-        background: linear-gradient(145deg, var(--accent), #a3812c);
-        color: #0d131a;
-        font-family: 'Oswald', sans-serif;
-        font-weight: 700;
-        font-size: 0.74rem;
-        letter-spacing: 0.02em;
-        text-transform: uppercase;
-        box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.35), 0 4px 12px rgba(212, 175, 55, 0.25);
-      }
-
-      .account-action.is-logged .account-icon {
-        display: none;
-      }
-
-      .account-action.is-logged .account-avatar {
-        display: inline-flex;
-      }
-
-      .account-drawer .cart-items {
+      .account-drawer .cart-items,
+      .wishlist-drawer .cart-items {
         gap: 0;
+      }
+
+      .wishlist-guest-msg {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 8px 2px 20px;
+      }
+
+      .wishlist-guest-msg.hidden {
+        display: none;
+      }
+
+      #wishlistList.hidden {
+        display: none;
+      }
+
+      .wishlist-guest-msg .auth-submit-btn {
+        height: 48px;
       }
 
       .auth-view {
@@ -1412,73 +1404,121 @@
         font-size: 0.85rem;
       }
 
-      .account-settings-toggle {
+      /* Pestañas dentro del panel "Mi cuenta": Perfil / Ajustes.
+         El indicador se desliza con transición en vez de que el
+         contenido aparezca o desaparezca de golpe. */
+      .account-tabs {
+        position: relative;
+        display: flex;
+        gap: 4px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        padding: 4px;
+        margin-bottom: 18px;
+      }
+
+      .account-tab {
+        position: relative;
+        z-index: 1;
+        flex: 1;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 34px;
-        height: 34px;
-        padding: 0;
+        gap: 6px;
         background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.16);
+        border: none;
         color: var(--muted);
-        border-radius: 50%;
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 10px 12px;
+        border-radius: 999px;
         cursor: pointer;
+        transition: color 0.2s ease;
+      }
+
+      .account-tab svg {
+        width: 15px;
+        height: 15px;
         flex-shrink: 0;
-        transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      .account-settings-toggle svg {
-        width: 17px;
-        height: 17px;
+      .account-tab.is-active {
+        color: #0d131a;
       }
 
-      .account-settings-toggle:hover {
-        border-color: var(--accent);
-        color: var(--accent);
+      .account-tab-indicator {
+        position: absolute;
+        top: 4px;
+        bottom: 4px;
+        left: 4px;
+        width: calc(50% - 4px);
+        background: var(--accent);
+        border-radius: 999px;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 0;
+      }
+
+      .account-tabs[data-active="settings"] .account-tab-indicator {
+        transform: translateX(100%);
+      }
+
+      /* Los paneles se apilan y cambian con fade + slide suave, en vez
+         de un simple display:none / display:block instantáneo. */
+      .account-tab-panel-wrap {
+        position: relative;
+      }
+
+      .account-tab-panel {
+        display: none;
+        animation: accountTabIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .account-tab-panel.is-active {
+        display: block;
+      }
+
+      @keyframes accountTabIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .account-tab-hint {
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.5;
+        margin: 0 0 16px;
+      }
+
+      .account-wishlist-shortcut {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
         background: rgba(212, 175, 55, 0.08);
-      }
-
-      .account-settings-toggle.is-active {
-        border-color: var(--accent);
+        border: 1px solid rgba(212, 175, 55, 0.25);
         color: var(--accent);
-        background: rgba(212, 175, 55, 0.12);
-        transform: rotate(90deg);
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 14px 16px;
+        border-radius: 14px;
+        cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease;
       }
 
-      /* Tarjeta plegable de "Editar cuenta": la altura se anima con
-         grid-template-rows y el contenido hace fade + slide, en vez de
-         aparecer/desaparecer de golpe con display:none. */
-      .account-settings-card {
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      .account-wishlist-shortcut svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
       }
 
-      .account-settings-card.is-open {
-        grid-template-rows: 1fr;
-        margin-bottom: 20px;
-      }
-
-      .account-settings-card-inner {
-        overflow: hidden;
-        min-height: 0;
-      }
-
-      .account-settings-form {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(212, 175, 55, 0.2);
-        border-radius: 18px;
-        padding: 20px 18px 22px;
-        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-        opacity: 0;
-        transform: translateY(-10px) scale(0.98);
-        transition: opacity 0.3s ease 0.05s, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s;
-      }
-
-      .account-settings-card.is-open .account-settings-form {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+      .account-wishlist-shortcut:hover {
+        background: rgba(212, 175, 55, 0.14);
+        border-color: var(--accent);
       }
 
       .order-history-title {
@@ -2015,7 +2055,6 @@
         .cart-action svg { width: 20px !important; height: 20px !important; }
         .account-action { padding: 10px 14px !important; font-size: 0.9rem !important; max-width: 140px; }
         .account-action svg { width: 20px !important; height: 20px !important; }
-        .account-avatar { width: 24px !important; height: 24px !important; font-size: 0.68rem !important; }
         .catalog-title-row { flex-direction: column; align-items: center; }
         .modal-content { grid-template-columns: 1fr; }
         .brand-logo-hero { height: 45px; top: 16px; right: 16px; }
@@ -2233,8 +2272,7 @@
         </a>
         <div class="actions-panel">
           <button class="account-action" type="button" id="accountButton" aria-label="Mi cuenta">
-            <svg class="account-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
-            <span class="account-avatar" id="accountAvatar" aria-hidden="true"></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
             <span id="accountButtonLabel">Iniciar sesión</span>
           </button>
           <button class="cart-action" type="button" id="wishlistButton" aria-label="Ver mi wishlist">
@@ -2434,6 +2472,7 @@
           </div>
           <p class="auth-error" id="loginError"></p>
           <button type="submit" class="auth-submit-btn" id="loginSubmitBtn">Entrar</button>
+          <p class="auth-switch-text"><a id="forgotPasswordLink">¿Olvidaste tu contraseña?</a></p>
           <p class="auth-switch-text">¿No tienes cuenta? <a id="goToRegister">Regístrate</a></p>
         </form>
 
@@ -2460,26 +2499,36 @@
           <p class="auth-switch-text">¿Ya tienes cuenta? <a id="goToLogin">Inicia sesión</a></p>
         </form>
 
-        <!-- VISTA: SESIÓN INICIADA (perfil + wishlist) -->
+        <!-- VISTA: SESIÓN INICIADA (perfil + ajustes en pestañas) -->
         <div class="account-logged-view hidden" id="loggedView">
           <div class="account-profile-summary">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-              <div>
-                <strong id="loggedUserName">—</strong>
-                <span id="loggedUserEmail">—</span>
-              </div>
-              <button type="button" class="account-settings-toggle" id="toggleAccountSettings" aria-label="Editar cuenta" title="Editar cuenta" aria-expanded="false">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="3"/>
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.04.04a2 2 0 1 1-2.83 2.83l-.04-.04a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.04.04a2 2 0 1 1-2.83-2.83l.04-.04a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.04-.04a2 2 0 1 1 2.83-2.83l.04.04a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.04-.04a2 2 0 1 1 2.83 2.83l-.04.04a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                </svg>
-              </button>
-            </div>
+            <strong id="loggedUserName">—</strong>
+            <span id="loggedUserEmail">—</span>
           </div>
 
-          <div class="account-settings-card" id="accountSettingsCard">
-            <div class="account-settings-card-inner">
-              <form class="auth-view account-settings-form" id="accountSettingsForm">
+          <div class="account-tabs" id="accountTabs" data-active="profile" role="tablist">
+            <button type="button" class="account-tab is-active" id="tabProfileBtn" role="tab" aria-selected="true">Perfil</button>
+            <button type="button" class="account-tab" id="tabSettingsBtn" role="tab" aria-selected="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.04.04a2 2 0 1 1-2.83 2.83l-.04-.04a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.04.04a2 2 0 1 1-2.83-2.83l.04-.04a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.04-.04a2 2 0 1 1 2.83-2.83l.04.04a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.04-.04a2 2 0 1 1 2.83 2.83l-.04.04a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              Ajustes
+            </button>
+            <span class="account-tab-indicator"></span>
+          </div>
+
+          <div class="account-tab-panel-wrap">
+            <div class="account-tab-panel is-active" id="profileTabPanel">
+              <p class="account-tab-hint">Tu wishlist vive en su propio panel: guarda camisetas con el corazón y revísalas cuando quieras.</p>
+              <button type="button" class="account-wishlist-shortcut" id="openWishlistFromAccount">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+                Ver mi wishlist
+              </button>
+            </div>
+
+            <div class="account-tab-panel" id="settingsTabPanel">
+              <form class="auth-view" id="accountSettingsForm">
                 <div class="auth-field">
                   <label for="settingsName">Nombre completo</label>
                   <input type="text" id="settingsName" autocomplete="name" required />
@@ -2487,6 +2536,10 @@
                 <div class="auth-field">
                   <label for="settingsPhone">Teléfono</label>
                   <input type="tel" id="settingsPhone" autocomplete="tel" required />
+                </div>
+                <div class="auth-field">
+                  <label for="settingsEmail">Correo electrónico</label>
+                  <input type="email" id="settingsEmail" autocomplete="email" required />
                 </div>
                 <div class="auth-field">
                   <label for="settingsNewPassword">Nueva contraseña (opcional)</label>
@@ -2498,11 +2551,6 @@
               </form>
             </div>
           </div>
-
-          <p class="order-history-title">Mi wishlist</p>
-          <div id="wishlistList">
-            <p class="empty-orders-msg">Cargando favoritos...</p>
-          </div>
         </div>
 
       </div>
@@ -2510,6 +2558,26 @@
       <div class="cart-footer-block" id="loggedFooter" style="display: none;">
         <div class="cart-actions">
           <button id="logoutBtn" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- PANEL DE WISHLIST: independiente del panel de cuenta -->
+    <aside class="cart-drawer wishlist-drawer" id="wishlistDrawer">
+      <div class="cart-header">
+        <h3>Mi wishlist</h3>
+        <button class="close-drawer" id="closeWishlist">
+          <span>Cerrar</span>
+        </button>
+      </div>
+
+      <div class="cart-items" id="wishlistDrawerBody">
+        <div class="wishlist-guest-msg hidden" id="wishlistGuestMsg">
+          <p class="empty-orders-msg">Inicia sesión para guardar y ver tus camisetas favoritas.</p>
+          <button type="button" class="auth-submit-btn" id="wishlistGuestLoginBtn">Iniciar sesión</button>
+        </div>
+        <div id="wishlistList">
+          <p class="empty-orders-msg">Cargando favoritos...</p>
         </div>
       </div>
     </aside>
@@ -2809,7 +2877,6 @@
       // CUENTA / LOGIN
       const accountButton = document.getElementById('accountButton');
       const accountButtonLabel = document.getElementById('accountButtonLabel');
-      const accountAvatarEl = document.getElementById('accountAvatar');
       const accountDrawer = document.getElementById('accountDrawer');
       const accountDrawerTitle = document.getElementById('accountDrawerTitle');
       const closeAccountBtn = document.getElementById('closeAccount');
@@ -2826,20 +2893,31 @@
       const loggedUserEmail = document.getElementById('loggedUserEmail');
 
       // CONFIGURACIÓN DE CUENTA (editar perfil / contraseña)
-      const toggleAccountSettingsBtn = document.getElementById('toggleAccountSettings');
-      const accountSettingsCard = document.getElementById('accountSettingsCard');
+      // CONFIGURACIÓN DE CUENTA (editar perfil / correo / contraseña)
+      const accountTabs = document.getElementById('accountTabs');
+      const tabProfileBtn = document.getElementById('tabProfileBtn');
+      const tabSettingsBtn = document.getElementById('tabSettingsBtn');
+      const profileTabPanel = document.getElementById('profileTabPanel');
+      const settingsTabPanel = document.getElementById('settingsTabPanel');
+      const openWishlistFromAccountBtn = document.getElementById('openWishlistFromAccount');
       const accountSettingsForm = document.getElementById('accountSettingsForm');
       const settingsNameInput = document.getElementById('settingsName');
       const settingsPhoneInput = document.getElementById('settingsPhone');
+      const settingsEmailInput = document.getElementById('settingsEmail');
       const settingsNewPasswordInput = document.getElementById('settingsNewPassword');
       const settingsError = document.getElementById('settingsError');
       const settingsSuccess = document.getElementById('settingsSuccess');
       const settingsSubmitBtn = document.getElementById('settingsSubmitBtn');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
       const logoutBtn = document.getElementById('logoutBtn');
 
-      // WISHLIST
+      // WISHLIST (panel propio, independiente del panel de cuenta)
       const wishlistButton = document.getElementById('wishlistButton');
       const wishlistCountEl = document.getElementById('wishlistCount');
+      const wishlistDrawer = document.getElementById('wishlistDrawer');
+      const closeWishlistBtn = document.getElementById('closeWishlist');
+      const wishlistGuestMsg = document.getElementById('wishlistGuestMsg');
+      const wishlistGuestLoginBtn = document.getElementById('wishlistGuestLoginBtn');
       const wishlistList = document.getElementById('wishlistList');
 
       // Antes esto era una imagen fea de via.placeholder.com que se veía
@@ -3836,7 +3914,11 @@
         window.open(whatsappUrl, '_blank');
       });
 
-      cartButton.addEventListener('click', () => cartDrawer.classList.add('open'));
+      cartButton.addEventListener('click', () => {
+        closeAccountDrawer();
+        closeWishlistDrawer();
+        cartDrawer.classList.add('open');
+      });
       closeCart.addEventListener('click', () => cartDrawer.classList.remove('open'));
 
       function handleSearch() {
@@ -3923,14 +4005,42 @@
       let currentUser = null; // objeto de sesión de Supabase Auth (o null)
 
       function openAccountDrawer() {
+        closeWishlistDrawer();
+        cartDrawer.classList.remove('open');
         accountDrawer.classList.add('open');
       }
 
       function closeAccountDrawer() {
         accountDrawer.classList.remove('open');
-        accountSettingsCard.classList.remove('is-open');
-        toggleAccountSettingsBtn.classList.remove('is-active');
-        toggleAccountSettingsBtn.setAttribute('aria-expanded', 'false');
+        setAccountTab('profile');
+      }
+
+      function openWishlistDrawer() {
+        closeAccountDrawer();
+        cartDrawer.classList.remove('open');
+        wishlistDrawer.classList.add('open');
+      }
+
+      function closeWishlistDrawer() {
+        wishlistDrawer.classList.remove('open');
+      }
+
+      // Cambia entre las pestañas "Perfil" y "Ajustes" del panel de cuenta
+      // con una transición suave, en vez de mostrar/ocultar de golpe.
+      function setAccountTab(tab) {
+        const isSettings = tab === 'settings';
+        accountTabs.dataset.active = tab;
+        tabProfileBtn.classList.toggle('is-active', !isSettings);
+        tabSettingsBtn.classList.toggle('is-active', isSettings);
+        tabProfileBtn.setAttribute('aria-selected', String(!isSettings));
+        tabSettingsBtn.setAttribute('aria-selected', String(isSettings));
+        profileTabPanel.classList.toggle('is-active', !isSettings);
+        settingsTabPanel.classList.toggle('is-active', isSettings);
+        if (!isSettings) {
+          settingsError.textContent = '';
+          settingsSuccess.textContent = '';
+          settingsNewPasswordInput.value = '';
+        }
       }
 
       function showLoginView() {
@@ -3963,40 +4073,27 @@
         accountDrawerTitle.textContent = 'Mi cuenta';
       }
 
-      // Calcula las iniciales a mostrar en el avatar circular del header,
-      // a partir del nombre completo (o del correo si no hay nombre).
-      function getInitials(name) {
-        if (!name) return '?';
-        const parts = name.trim().split(/\s+/).filter(Boolean);
-        if (parts.length === 0) return '?';
-        if (parts.length === 1) {
-          const base = parts[0].includes('@') ? parts[0].split('@')[0] : parts[0];
-          return base.slice(0, 2).toUpperCase();
-        }
-        return (parts[0][0] + parts[1][0]).toUpperCase();
-      }
-
       // Actualiza el botón del header y decide qué vista mostrar dentro del panel
       function refreshAccountUI() {
         if (currentUser) {
           const meta = currentUser.user_metadata || {};
           const displayName = meta.full_name || currentUser.email;
           accountButtonLabel.textContent = displayName.split(' ')[0];
-          accountAvatarEl.textContent = getInitials(displayName);
-          accountButton.classList.add('is-logged');
           loggedUserName.textContent = displayName;
           loggedUserEmail.textContent = currentUser.email;
           settingsNameInput.value = meta.full_name || '';
           settingsPhoneInput.value = meta.phone || '';
+          settingsEmailInput.value = currentUser.email || '';
           showLoggedView();
           loadWishlist();
+          updateWishlistGuestUI();
         } else {
           accountButtonLabel.textContent = 'Iniciar sesión';
-          accountButton.classList.remove('is-logged');
           showLoginView();
           wishlistIds.clear();
           updateAllWishlistHearts();
           updateWishlistBadge();
+          updateWishlistGuestUI();
         }
       }
 
@@ -4005,13 +4102,12 @@
       });
       closeAccountBtn.addEventListener('click', closeAccountDrawer);
 
-      toggleAccountSettingsBtn.addEventListener('click', () => {
-        const isOpen = accountSettingsCard.classList.toggle('is-open');
-        toggleAccountSettingsBtn.classList.toggle('is-active', isOpen);
-        toggleAccountSettingsBtn.setAttribute('aria-expanded', String(isOpen));
-        settingsError.textContent = '';
-        settingsSuccess.textContent = '';
-        settingsNewPasswordInput.value = '';
+      tabProfileBtn.addEventListener('click', () => setAccountTab('profile'));
+      tabSettingsBtn.addEventListener('click', () => setAccountTab('settings'));
+
+      openWishlistFromAccountBtn.addEventListener('click', () => {
+        openWishlistDrawer();
+        if (currentUser) renderWishlistPanel();
       });
 
       accountSettingsForm.addEventListener('submit', async (event) => {
@@ -4025,13 +4121,19 @@
 
         const fullName = settingsNameInput.value.trim();
         const phone = settingsPhoneInput.value.trim();
+        const newEmail = settingsEmailInput.value.trim();
         const newPassword = settingsNewPasswordInput.value;
+        const emailChanged = newEmail && newEmail !== currentUser.email;
 
         try {
           // Actualiza los metadatos del usuario en Auth (de aquí lee el
-          // sitio el nombre a mostrar) y, si escribió una, la contraseña.
+          // sitio el nombre a mostrar), y si cambió, el correo y/o la
+          // contraseña. El cambio de correo requiere confirmación por
+          // link antes de quedar activo (comportamiento estándar de
+          // Supabase Auth).
           const updatePayload = { data: { full_name: fullName, phone: phone } };
           if (newPassword) updatePayload.password = newPassword;
+          if (emailChanged) updatePayload.email = newEmail;
 
           const { data, error } = await supabaseClient.auth.updateUser(updatePayload);
           if (error) throw error;
@@ -4045,9 +4147,10 @@
 
           currentUser = data.user;
           refreshAccountUI();
-          settingsSuccess.textContent = newPassword
-            ? 'Datos y contraseña actualizados.'
-            : 'Datos actualizados.';
+
+          let successMsg = newPassword ? 'Datos y contraseña actualizados.' : 'Datos actualizados.';
+          if (emailChanged) successMsg += ' Revisa tu correo (el actual y el nuevo) para confirmar el cambio.';
+          settingsSuccess.textContent = successMsg;
           settingsNewPasswordInput.value = '';
         } catch (err) {
           console.error('Error actualizando cuenta:', err.message);
@@ -4055,6 +4158,26 @@
         } finally {
           settingsSubmitBtn.disabled = false;
           settingsSubmitBtn.textContent = 'Guardar cambios';
+        }
+      });
+
+      forgotPasswordLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        if (!email) {
+          loginError.textContent = 'Escribe tu correo arriba para poder enviarte el enlace de recuperación.';
+          return;
+        }
+        loginError.textContent = '';
+        loginNotice.textContent = 'Enviando enlace de recuperación...';
+        try {
+          const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+          if (error) throw error;
+          loginNotice.textContent = 'Te enviamos un correo con un enlace para restablecer tu contraseña.';
+        } catch (err) {
+          console.error('Error enviando recuperación de contraseña:', err.message);
+          loginNotice.textContent = '';
+          loginError.textContent = 'No se pudo enviar el correo. Intenta de nuevo.';
         }
       });
 
@@ -4311,7 +4434,7 @@
           btn.addEventListener('click', () => {
             const product = products.find(p => String(p.id) === btn.getAttribute('data-add-id'));
             if (product) {
-              closeAccountDrawer();
+              closeWishlistDrawer();
               openModal(product);
             }
           });
@@ -4347,14 +4470,27 @@
         }
       }
 
+      // Muestra el mensaje de invitado o la lista de favoritos según haya
+      // o no sesión iniciada, dentro del panel propio de wishlist.
+      function updateWishlistGuestUI() {
+        wishlistGuestMsg.classList.toggle('hidden', !!currentUser);
+        wishlistList.classList.toggle('hidden', !currentUser);
+      }
+
       wishlistButton.addEventListener('click', () => {
-        openAccountDrawer();
+        openWishlistDrawer();
+        updateWishlistGuestUI();
         if (currentUser) {
           renderWishlistPanel();
-        } else {
-          showLoginView();
-          showToast('Inicia sesión para ver tu wishlist.');
         }
+      });
+
+      closeWishlistBtn.addEventListener('click', closeWishlistDrawer);
+
+      wishlistGuestLoginBtn.addEventListener('click', () => {
+        closeWishlistDrawer();
+        openAccountDrawer();
+        showLoginView();
       });
 
       initAuth();
