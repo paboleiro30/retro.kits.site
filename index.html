@@ -692,6 +692,52 @@
         font-weight: 600;
       }
 
+      /* SKELETON: misma silueta que una product-card real, para que la
+         primera pintura ya "parezca tienda" en vez de un spinner vacío.
+         Esto es lo que hace que la carga SE SIENTA instantánea aunque
+         la respuesta de la base de datos tarde lo mismo. */
+      .skeleton-card {
+        position: relative;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 32px;
+        overflow: hidden;
+        padding: 28px;
+      }
+
+      .skeleton-card .skeleton-thumb {
+        width: 100%;
+        aspect-ratio: 4 / 5;
+        border-radius: 28px;
+        margin-bottom: 22px;
+      }
+
+      .skeleton-card .skeleton-line {
+        height: 16px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+
+      .skeleton-card .skeleton-line.short {
+        width: 55%;
+        margin-bottom: 0;
+      }
+
+      .skeleton-thumb, .skeleton-line {
+        background: linear-gradient(100deg, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 70%);
+        background-size: 200% 100%;
+        animation: skeletonShimmer 1.4s ease-in-out infinite;
+      }
+
+      @keyframes skeletonShimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .skeleton-thumb, .skeleton-line { animation: none; }
+      }
+
       .product-card {
         position: relative;
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
@@ -2434,7 +2480,7 @@
                 <img class="brand-logo-hero" src="imagenes/RKlogo.png" alt="RETRO KITS" />
                 
                 <div class="jersey-frame" id="heroJerseyFrame">
-                  <img class="jersey-hero-img active" id="heroImage" src="" alt="Camiseta Destacada" decoding="async" fetchpriority="high" />
+                  <img class="jersey-hero-img active rk-optimized-img" id="heroImage" src="" alt="Camiseta Destacada" decoding="async" fetchpriority="high" />
                 </div>
                 <div class="feature-meta" id="heroMeta">
                   <span class="feature-label" id="heroLabel">Cargando...</span>
@@ -2472,11 +2518,15 @@
             </div>
             
             <div class="product-grid" id="productGrid">
-              <!-- SPINNER INDICADOR DE CARGA INICIAL -->
-              <div class="loading-container" id="loadingSpinner">
-                <div class="spinner"></div>
-                <span class="loading-text">Cargando camisetas...</span>
-              </div>
+              <!-- SKELETON INICIAL: se ve como catálogo real desde el primer
+                   frame; JS lo reemplaza en cuanto hay datos (de caché o
+                   de Supabase), así que nunca se ve una pantalla "vacía". -->
+              <div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+              <div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+              <div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+              <div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+              <div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+              <div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
             </div>
 
             <div class="pagination-controls" id="paginationControls"></div>
@@ -2719,7 +2769,7 @@
       <div class="modal-content">
         <div class="modal-image" id="modalImageContainer">
           <button class="modal-arrow prev" id="modalPrevBtn" aria-label="Anterior imagen">‹</button>
-          <img id="modalProductImg" src="" alt="Camiseta" decoding="async" fetchpriority="high" />
+          <img id="modalProductImg" class="rk-optimized-img" src="" alt="Camiseta" decoding="async" fetchpriority="high" />
           <button class="modal-arrow next" id="modalNextBtn" aria-label="Siguiente imagen">›</button>
           <div class="modal-dots" id="modalDotsContainer"></div>
         </div>
@@ -2955,6 +3005,37 @@
       }
 
       let products = [];
+
+      /* =========================================================
+         CACHÉ LOCAL DE PRODUCTOS (stale-while-revalidate)
+         El problema real no es el "pintado" de la página (eso ya es
+         instantáneo), sino el viaje de ida y vuelta a Supabase antes
+         de poder mostrar algo. Guardamos el último catálogo en
+         localStorage: si existe, se pinta al instante mientras, en
+         paralelo, se pide la versión fresca y se actualiza sin que
+         el usuario tenga que volver a esperar el spinner.
+         ========================================================= */
+      const PRODUCTS_CACHE_KEY = 'rk_products_cache_v1';
+
+      function readProductsCache() {
+        try {
+          const raw = localStorage.getItem(PRODUCTS_CACHE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : null;
+        } catch (err) {
+          return null;
+        }
+      }
+
+      function writeProductsCache(data) {
+        try {
+          localStorage.setItem(PRODUCTS_CACHE_KEY, JSON.stringify(data));
+        } catch (err) {
+          // Si localStorage falla (modo privado, cuota llena, etc.) no
+          // pasa nada: simplemente no habrá caché para la próxima visita.
+        }
+      }
       let selectedProduct = null;
       let selectedSize = '';
       let selectedSleeve = 'corta';
@@ -3143,14 +3224,58 @@
         return `https://wsrv.nl/?${params.toString()}`;
       }
 
+      /* =========================================================
+         AUTO-REINTENTO DE IMÁGENES CON CACHE-BUSTING (wsrv.nl)
+         ---------------------------------------------------------
+         Por qué existe esto: cuando agregas una camiseta nueva, la fila
+         del producto en Supabase queda disponible AL INSTANTE, pero el
+         archivo de la foto todavía tiene que llegar a GitHub Pages
+         (build + propagación), lo cual tarda unos minutos. Si alguien
+         visita el sitio en ese ratito, wsrv.nl (el optimizador de
+         imágenes) intenta traer la foto, no la encuentra, y esa
+         respuesta "no encontrada" se queda cacheada en sus servidores
+         durante DÍAS (wsrv no tiene forma de borrar ese caché a
+         propósito). Por eso la imagen nueva "tarda un chingo": no es
+         que GitHub sea lento, es que wsrv se queda con el recuerdo del
+         primer intento fallido.
+
+         La solución: si una imagen falla, la reintentamos varias veces
+         a lo largo de ~2 minutos, cada vez con un parámetro distinto en
+         la URL (cache-busting), para que wsrv.nl la trate como una
+         petición nueva y no como la que ya tiene guardada como "rota".
+         Mientras reintenta, se ve el fondo oscuro (igual que antes),
+         nunca el ícono feo de imagen rota.
+         ========================================================= */
+      const IMG_RETRY_DELAYS_MS = [3000, 6000, 12000, 25000, 45000, 60000]; // ~2.5 min en total
+
+      document.addEventListener('error', function(event) {
+        const img = event.target;
+        if (!img || img.tagName !== 'IMG' || !img.classList || !img.classList.contains('rk-optimized-img')) return;
+
+        if (!img.dataset.baseSrc) img.dataset.baseSrc = img.src;
+        const attempt = parseInt(img.dataset.retryCount || '0', 10);
+
+        // Mientras se reintenta en segundo plano, mostramos el placeholder
+        // transparente en vez del ícono de imagen rota del navegador.
+        if (img.src !== fallbackPlaceholder) img.src = fallbackPlaceholder;
+
+        if (attempt >= IMG_RETRY_DELAYS_MS.length) return; // se agotaron los intentos: se queda en el placeholder
+
+        img.dataset.retryCount = String(attempt + 1);
+        const delay = IMG_RETRY_DELAYS_MS[attempt];
+        const baseSrc = img.dataset.baseSrc;
+
+        setTimeout(() => {
+          if (!document.body.contains(img)) return; // la tarjeta/modal ya no existe (cambió de página, se cerró, etc.)
+          const sep = baseSrc.includes('?') ? '&' : '?';
+          img.src = `${baseSrc}${sep}_retry=${Date.now()}`;
+        }, delay);
+      }, true);
+
       // Atajo: resuelve el nombre del archivo Y lo optimiza en un solo paso.
       function getProductImage(url, sizeConfig) {
         return getOptimizedImageUrl(getLocalImageUrl(url), sizeConfig);
       }
-
-      heroImage.addEventListener('error', function() {
-        this.src = fallbackPlaceholder;
-      });
 
       function scrollToCollection(event) {
         if (event) event.preventDefault();
@@ -3212,25 +3337,7 @@
         }
       }
 
-      async function loadProductsFromSupabase() {
-        try {
-          const { data, error } = await supabaseClient
-            .from('products')
-            .select('*');
-
-          if (error) throw error;
-
-          products = data || [];
-          renderProducts(products);
-          initHeroCarousel();
-          prefetchAllProductImages(products);
-        } catch (err) {
-          console.error("Error obtuvo productos de Supabase:", err.message);
-          showToast("Error al conectar con la base de datos.");
-          productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 40px 0;">Error al cargar las camisetas.</p>`;
-          return;
-        }
-
+      function syncWishlistHeartsIfLoggedIn() {
         // Los corazones de wishlist dependen de que el catálogo ya esté en
         // memoria (para poder mostrar nombre/imagen/precio). Si el usuario
         // ya inició sesión y esos datos llegaron antes que el catálogo, los
@@ -3243,6 +3350,67 @@
           }
         } catch (err) {
           console.error("Error sincronizando wishlist con el catálogo:", err.message);
+        }
+      }
+
+      async function loadProductsFromSupabase() {
+        // 1) CACHE-FIRST: si ya tenemos un catálogo guardado de una visita
+        // anterior, lo pintamos YA, sin esperar ninguna respuesta de red.
+        // Esto es lo que elimina la espera horrible en visitas repetidas.
+        const cached = readProductsCache();
+        const hadCache = !!(cached && cached.length);
+
+        if (hadCache) {
+          products = cached;
+          renderProducts(products);
+          initHeroCarousel();
+          prefetchAllProductImages(products);
+          syncWishlistHeartsIfLoggedIn();
+        }
+
+        // 2) En paralelo (o de entrada si no había caché), pedimos la
+        // versión real y actualizada a Supabase.
+        try {
+          const { data, error } = await supabaseClient
+            .from('products')
+            .select('*');
+
+          if (error) throw error;
+
+          const fresh = data || [];
+          const changed = JSON.stringify(fresh) !== JSON.stringify(cached);
+
+          products = fresh;
+          writeProductsCache(fresh);
+
+          if (!hadCache) {
+            // Primera visita: no había nada que mostrar, así que este es
+            // el pintado inicial (reemplaza el skeleton).
+            renderProducts(products);
+            initHeroCarousel();
+            prefetchAllProductImages(products);
+          } else if (changed) {
+            // Ya se veía el catálogo cacheado; si hubo cambios (precio,
+            // stock, producto nuevo) lo actualizamos con un crossfade
+            // suave en vez de un salto brusco.
+            renderProductsSmooth(products);
+            initHeroCarousel();
+            prefetchAllProductImages(products);
+          }
+          // Si no había cambios, no hacemos nada: el usuario ya está
+          // viendo el catálogo correcto y evitamos un re-render inútil.
+
+          syncWishlistHeartsIfLoggedIn();
+        } catch (err) {
+          console.error("Error obtuvo productos de Supabase:", err.message);
+          if (hadCache) {
+            // Ya se está mostrando el catálogo cacheado: seguimos
+            // funcionando con eso, solo avisamos que no se pudo refrescar.
+            showToast("No se pudo actualizar el catálogo. Mostrando la última versión guardada.");
+          } else {
+            showToast("Error al conectar con la base de datos.");
+            productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 40px 0;">Error al cargar las camisetas.</p>`;
+          }
         }
       }
 
@@ -3418,7 +3586,7 @@
               </button>
               <div class="product-image">
                 <img
-                  class="stock-image"
+                  class="stock-image rk-optimized-img"
                   src="${getProductImage(product.image_id || product.image_url, IMG_SIZES.thumb) || fallbackPlaceholder}"
                   alt="${product.name}"
                   loading="${isPriority ? 'eager' : 'lazy'}"
@@ -4015,7 +4183,7 @@
           el.className = 'cart-item';
           el.innerHTML = `
             <div class="cart-item-thumb">
-              <img class="cart-thumb-img" src="${item.image || fallbackPlaceholder}" alt="${item.name}" />
+              <img class="cart-thumb-img rk-optimized-img" src="${item.image || fallbackPlaceholder}" alt="${item.name}" />
             </div>
             <div class="cart-item-info">
               <strong>${item.name}</strong>
@@ -4654,7 +4822,7 @@
           return `
             <div class="wishlist-card">
               <div class="wishlist-card-thumb">
-                <img src="${imgUrl}" alt="${product.name}" onerror="this.src='${fallbackPlaceholder}'" />
+                <img class="rk-optimized-img" src="${imgUrl}" alt="${product.name}" />
               </div>
               <div class="wishlist-card-info">
                 <strong>${product.name}</strong>
