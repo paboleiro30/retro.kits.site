@@ -103,7 +103,7 @@
       }
 
       /* OPTIMIZACIÓN GLOBAL DE INTERACCIÓN SIN DELAY EN CLICK Y HOVER */
-      button, select, input, a, .brand-block, .cart-action, .btn, .size-btn, .category-select, .btn-search {
+      button, select, input, a, .brand-block, .cart-action, .btn, .option-chip, .category-select, .btn-search {
         font: inherit;
         touch-action: manipulation;
         -webkit-tap-highlight-color: transparent;
@@ -1588,7 +1588,6 @@
         cursor: pointer;
         font-size: 0.85rem;
         font-weight: 600;
-        margin-top: 4px;
         width: fit-content;
         transition: border-color 0.15s ease, background 0.15s ease;
       }
@@ -1754,129 +1753,93 @@
         flex-direction: column;
       }
 
-      .size-selector {
+      .product-options {
         display: grid;
-        gap: 12px;
-        margin: 16px 0 0;
+        gap: 16px;
       }
 
-      .size-selector span {
+      .product-option {
+        display: grid;
+        gap: 12px;
+      }
+
+      .product-option-label {
         letter-spacing: 0.16em;
         font-size: 0.85rem;
         color: var(--muted);
+        text-transform: uppercase;
       }
 
-      .size-options {
+      .option-chip-group {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
       }
 
-      .size-btn {
+      .option-chip {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 46px;
+        padding: 0 20px;
         border: 1px solid rgba(255, 255, 255, 0.12);
         background: rgba(255, 255, 255, 0.03);
         color: var(--text);
-        padding: 14px 20px;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
         border-radius: 999px;
         cursor: pointer;
-        transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+        transition: background 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                    border-color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                    color 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1);
         will-change: transform, background, border-color;
       }
 
-      .size-btn.active,
-      .size-btn:hover {
-        background: rgba(212, 175, 55, 0.14);
-        border-color: var(--accent);
-        color: var(--text);
+      .option-chip svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        stroke: currentColor;
+        transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .option-chip:hover {
+        background: rgba(212, 175, 55, 0.12);
+        border-color: rgba(212, 175, 55, 0.5);
         transform: translate3d(0, -1px, 0);
       }
 
-      .size-btn.no-stock {
+      .option-chip.active {
+        background: linear-gradient(135deg, var(--accent), #f2d17a);
+        border-color: var(--accent);
+        color: #0d131a;
+        box-shadow: 0 6px 18px var(--accent-glow);
+        transform: translate3d(0, -1px, 0);
+      }
+
+      .option-chip.active svg {
+        transform: scale(1.08);
+      }
+
+      .option-chip.no-stock {
         opacity: 0.25;
         text-decoration: line-through;
         cursor: not-allowed;
         background: rgba(0, 0, 0, 0.4);
         border-color: rgba(255, 255, 255, 0.05);
         transform: none !important;
+        box-shadow: none !important;
       }
 
-      .sleeve-selector {
-        display: grid;
-        gap: 12px;
-        margin: 16px 0 0;
-      }
-
-      .sleeve-selector > span {
-        letter-spacing: 0.16em;
-        font-size: 0.85rem;
-        color: var(--muted);
-      }
-
-      .sleeve-toggle {
-        position: relative;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4px;
-        padding: 4px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 999px;
-      }
-
-      .sleeve-toggle-indicator {
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        width: calc(50% - 4px);
-        height: calc(100% - 8px);
-        background: linear-gradient(135deg, var(--accent), #f2d17a);
-        border-radius: 999px;
-        box-shadow: 0 4px 18px var(--accent-glow);
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        will-change: transform;
-        pointer-events: none;
-      }
-
-      .sleeve-toggle[data-selected="larga"] .sleeve-toggle-indicator {
-        transform: translate3d(100%, 0, 0);
-      }
-
-      .sleeve-option {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 12px 14px;
-        background: transparent;
-        border: none;
-        border-radius: 999px;
-        color: var(--muted);
-        font-weight: 600;
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: color 0.2s ease;
-      }
-
-      .sleeve-option svg {
-        width: 19px;
-        height: 19px;
-        flex-shrink: 0;
-        stroke: currentColor;
-        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-
-      .sleeve-option:hover {
-        color: var(--text);
-      }
-
-      .sleeve-option.active {
-        color: #0d131a;
-      }
-
-      .sleeve-option.active svg {
-        transform: scale(1.08);
+      .option-chip.no-stock:hover {
+        background: rgba(0, 0, 0, 0.4);
+        border-color: rgba(255, 255, 255, 0.05);
       }
 
       .product-modal.visible {
@@ -2014,7 +1977,7 @@
       .modal-details {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: 14px;
         overflow-y: auto;
         max-height: 100%;
         padding-right: 10px;
@@ -2090,7 +2053,6 @@
         font-weight: 600;
         letter-spacing: 0.02em;
         width: fit-content;
-        margin-top: 4px;
       }
 
       .toast-container {
@@ -2339,9 +2301,9 @@
           font-size: 1.8rem !important;
         }
 
-        .size-btn,
-        .sleeve-option {
-          padding: 10px 16px !important;
+        .option-chip {
+          padding: 0 16px !important;
+          min-height: 42px !important;
           font-size: 0.85rem !important;
         }
 
@@ -2731,26 +2693,27 @@
             <span id="dorsalText">Incluye dorsal de jugador de leyenda</span>
           </div>
 
-          <div class="size-selector">
-            <span>Talla</span>
-            <div class="size-options" id="sizeOptionsContainer"></div>
-          </div>
-          <div class="sleeve-selector">
-            <span id="sleeveSelectorLabel">Manga</span>
-            <div class="sleeve-toggle" id="sleeveOptionsContainer" role="radiogroup" aria-labelledby="sleeveSelectorLabel" data-selected="corta">
-              <span class="sleeve-toggle-indicator" aria-hidden="true"></span>
-              <button type="button" class="sleeve-option active" data-sleeve="corta" role="radio" aria-checked="true" tabindex="0">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M8.5 3.5 4 6.8V11h2.7v8.3a1 1 0 0 0 1 1h8.6a1 1 0 0 0 1-1V11H20V6.8l-4.5-3.3-1.2 1.3a2.9 2.9 0 0 1-4.6 0Z"/>
-                </svg>
-                <span>Manga corta</span>
-              </button>
-              <button type="button" class="sleeve-option" data-sleeve="larga" role="radio" aria-checked="false" tabindex="-1">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M8.5 3.5 2.5 7.8l1.7 3 2.5-1.4v9.9a1 1 0 0 0 1 1h8.6a1 1 0 0 0 1-1V9.4l2.5 1.4 1.7-3-6-4.3-1.2 1.3a2.9 2.9 0 0 1-4.6 0Z"/>
-                </svg>
-                <span>Manga larga</span>
-              </button>
+          <div class="product-options">
+            <div class="product-option">
+              <span class="product-option-label" id="sizeSelectorLabel">Talla</span>
+              <div class="option-chip-group" id="sizeOptionsContainer" role="radiogroup" aria-labelledby="sizeSelectorLabel"></div>
+            </div>
+            <div class="product-option">
+              <span class="product-option-label" id="sleeveSelectorLabel">Manga</span>
+              <div class="option-chip-group" id="sleeveOptionsContainer" role="radiogroup" aria-labelledby="sleeveSelectorLabel">
+                <button type="button" class="option-chip active" data-sleeve="corta" role="radio" aria-checked="true" tabindex="0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8.5 3.5 4 6.8V11h2.7v8.3a1 1 0 0 0 1 1h8.6a1 1 0 0 0 1-1V11H20V6.8l-4.5-3.3-1.2 1.3a2.9 2.9 0 0 1-4.6 0Z"/>
+                  </svg>
+                  <span>Manga corta</span>
+                </button>
+                <button type="button" class="option-chip" data-sleeve="larga" role="radio" aria-checked="false" tabindex="-1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8.5 3.5 2.5 7.8l1.7 3 2.5-1.4v9.9a1 1 0 0 0 1 1h8.6a1 1 0 0 0 1-1V9.4l2.5 1.4 1.7-3-6-4.3-1.2 1.3a2.9 2.9 0 0 1-4.6 0Z"/>
+                  </svg>
+                  <span>Manga larga</span>
+                </button>
+              </div>
             </div>
           </div>
           <button class="btn btn-primary" id="addToCartModal">AÑADIR AL CARRITO</button>
@@ -3689,12 +3652,16 @@
           const qty = (product.stock && product.stock[size]) ? product.stock[size] : 0;
           const btn = document.createElement('button');
           btn.type = 'button';
-          btn.className = 'size-btn';
+          btn.className = 'option-chip';
           btn.textContent = size;
           btn.dataset.size = size;
+          btn.setAttribute('role', 'radio');
+          btn.setAttribute('aria-checked', 'false');
+          btn.tabIndex = -1;
 
           if (qty <= 0) {
             btn.classList.add('no-stock');
+            btn.setAttribute('aria-disabled', 'true');
           } else {
             if (!firstAvailableSize) firstAvailableSize = size;
           }
@@ -3705,7 +3672,11 @@
         if (firstAvailableSize) {
           selectedSize = firstAvailableSize;
           const activeBtn = optionsContainer.querySelector(`[data-size="${selectedSize}"]`);
-          if (activeBtn) activeBtn.classList.add('active');
+          if (activeBtn) {
+            activeBtn.classList.add('active');
+            activeBtn.setAttribute('aria-checked', 'true');
+            activeBtn.tabIndex = 0;
+          }
           addToCartModalBtn.disabled = false;
           addToCartModalBtn.textContent = 'AÑADIR AL CARRITO';
         } else {
@@ -3841,20 +3812,41 @@
         unlockBackgroundScroll();
       }
 
-      document.getElementById('sizeOptionsContainer').addEventListener('click', (e) => {
-        if (e.target.matches('.size-btn') && !e.target.classList.contains('no-stock')) {
-          document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-          selectedSize = e.target.dataset.size;
-          e.target.classList.add('active');
-        }
+      const sizeToggle = document.getElementById('sizeOptionsContainer');
+
+      function selectSizeChip(size) {
+        selectedSize = size;
+        sizeToggle.querySelectorAll('.option-chip').forEach((btn) => {
+          const isActive = btn.dataset.size === size;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-checked', String(isActive));
+          btn.tabIndex = isActive ? 0 : -1;
+        });
+      }
+
+      sizeToggle.addEventListener('click', (e) => {
+        const btn = e.target.closest('.option-chip');
+        if (btn && !btn.classList.contains('no-stock')) selectSizeChip(btn.dataset.size);
+      });
+
+      // Flechas para moverse entre tallas disponibles (patrón ARIA de radiogroup).
+      sizeToggle.addEventListener('keydown', (e) => {
+        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
+        const chips = Array.from(sizeToggle.querySelectorAll('.option-chip')).filter(b => !b.classList.contains('no-stock'));
+        if (chips.length < 2) return;
+        e.preventDefault();
+        const dir = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1 : -1;
+        const currentIndex = chips.findIndex(b => b.dataset.size === selectedSize);
+        const next = chips[(currentIndex + dir + chips.length) % chips.length];
+        selectSizeChip(next.dataset.size);
+        next.focus();
       });
 
       const sleeveToggle = document.getElementById('sleeveOptionsContainer');
 
       function setSleeveSelection(value) {
         selectedSleeve = value;
-        sleeveToggle.dataset.selected = value;
-        sleeveToggle.querySelectorAll('.sleeve-option').forEach((btn) => {
+        sleeveToggle.querySelectorAll('.option-chip').forEach((btn) => {
           const isActive = btn.dataset.sleeve === value;
           btn.classList.toggle('active', isActive);
           btn.setAttribute('aria-checked', String(isActive));
@@ -3863,7 +3855,7 @@
       }
 
       sleeveToggle.addEventListener('click', (e) => {
-        const btn = e.target.closest('.sleeve-option');
+        const btn = e.target.closest('.option-chip');
         if (btn) setSleeveSelection(btn.dataset.sleeve);
       });
 
