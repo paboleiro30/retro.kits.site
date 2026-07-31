@@ -94,6 +94,14 @@
         padding-top: 140px;
       }
 
+      /* Bloquea el scroll de la colección de fondo mientras el modal de
+         producto está abierto (PC y celular). El body se fija con
+         position:fixed vía JS; aquí solo evitamos cualquier scroll
+         residual del html (rueda del mouse, elastic scroll, etc.). */
+      html:has(body.modal-scroll-locked) {
+        overflow-y: hidden;
+      }
+
       /* OPTIMIZACIÓN GLOBAL DE INTERACCIÓN SIN DELAY EN CLICK Y HOVER */
       button, select, input, a, .brand-block, .cart-action, .btn, .size-btn, .category-select, .btn-search {
         font: inherit;
@@ -964,7 +972,7 @@
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border-left: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: -14px 0 60px rgba(0, 0, 0, 0.6);
+        box-shadow: none;
         padding: 24px;
         display: flex;
         flex-direction: column;
@@ -976,6 +984,7 @@
 
       .cart-drawer.open {
         right: 0;
+        box-shadow: -14px 0 60px rgba(0, 0, 0, 0.6);
       }
 
       .cart-header {
@@ -2196,10 +2205,15 @@
         }
 
         .product-modal {
-          width: calc(100% - 16px) !important;
-          height: 85vh !important;
-          max-height: 85vh !important;
-          border-radius: 24px !important;
+          inset: 0 !important;
+          margin: 0 !important;
+          width: 100vw !important;
+          max-width: none !important;
+          height: 100vh !important;
+          height: 100dvh !important;
+          max-height: 100vh !important;
+          max-height: 100dvh !important;
+          border-radius: 0 !important;
           display: flex;
           flex-direction: column;
           overflow: hidden !important;
@@ -2215,16 +2229,27 @@
         }
 
         .modal-image {
-          min-height: 250px !important;
-          height: 250px !important;
-          border-radius: 24px 24px 0 0 !important;
+          min-height: 42vh !important;
+          height: 42vh !important;
+          border-radius: 0 !important;
           flex-shrink: 0;
+          background-color: #0a0e14 !important;
+        }
+
+        /* Imagen completa, sin recortar (antes usaba object-fit:cover) */
+        .modal-image img {
+          object-fit: contain !important;
+        }
+
+        .modal-close {
+          top: max(18px, env(safe-area-inset-top)) !important;
+          right: max(18px, env(safe-area-inset-right)) !important;
         }
 
         .modal-details {
           flex: 1 !important;
           overflow-y: auto !important;
-          padding: 20px 16px 20px !important; 
+          padding: 20px 16px calc(20px + env(safe-area-inset-bottom)) !important; 
           max-height: none !important;
           display: flex;
           flex-direction: column;
@@ -3590,9 +3615,37 @@
           addToCartModalBtn.textContent = 'AGOTADO';
         }
 
+        lockBackgroundScroll();
+
         productModal.classList.add('visible');
         modalBackdrop.classList.add('visible');
         productModal.focus();
+      }
+
+      // Bloquea el scroll de la página de fondo mientras el modal de
+      // producto está abierto. overflow:hidden por sí solo no evita el
+      // scroll táctil en iOS Safari, por eso fijamos el body con
+      // position:fixed y luego restauramos la posición exacta al cerrar.
+      let savedScrollY = 0;
+
+      function lockBackgroundScroll() {
+        savedScrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${savedScrollY}px`;
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
+        document.body.classList.add('modal-scroll-locked');
+      }
+
+      function unlockBackgroundScroll() {
+        document.body.classList.remove('modal-scroll-locked');
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.width = '';
+        window.scrollTo(0, savedScrollY);
       }
 
       function updateModalCarouselUI() {
@@ -3683,6 +3736,7 @@
         isModalImageTransitioning = false;
         modalPrevBtn.classList.remove('is-disabled');
         modalNextBtn.classList.remove('is-disabled');
+        unlockBackgroundScroll();
       }
 
       document.getElementById('sizeOptionsContainer').addEventListener('click', (e) => {
