@@ -3044,6 +3044,7 @@
       const wishlistIds = new Set(); // ids (como string) de los productos que el usuario tiene en favoritos
 
       let modalImagesList = [];
+      let modalFallbackList = [];
       let currentModalImgIndex = 0;
       let preloadedImagesArray = []; 
       let transitionTimer = null;
@@ -3253,12 +3254,30 @@
         if (!img || img.tagName !== 'IMG' || !img.classList || !img.classList.contains('rk-optimized-img')) return;
 
         if (!img.dataset.baseSrc) img.dataset.baseSrc = img.src;
-        const attempt = parseInt(img.dataset.retryCount || '0', 10);
 
-        // Mientras se reintenta en segundo plano, mostramos el placeholder
-        // transparente en vez del ícono de imagen rota del navegador.
+        // Mientras se resuelve, mostramos el placeholder transparente en
+        // vez del ícono de imagen rota del navegador.
         if (img.src !== fallbackPlaceholder) img.src = fallbackPlaceholder;
 
+        // 1) Si el producto tiene un nombre de archivo ALTERNO registrado
+        // (por ejemplo, image_id y image_url quedaron con nombres
+        // distintos en Supabase — uno viejo/borrado y otro vigente), lo
+        // probamos de inmediato, sin esperar. Esto es lo que resuelve el
+        // caso de un archivo que ya no existe y nunca va a "aparecer" por
+        // más que se reintente con el nombre original.
+        const fallbackSrc = img.dataset.fallbackSrc;
+        if (fallbackSrc && !img.dataset.fallbackTried) {
+          img.dataset.fallbackTried = '1';
+          img.dataset.baseSrc = fallbackSrc;
+          img.dataset.retryCount = '0';
+          img.src = fallbackSrc;
+          return;
+        }
+
+        // 2) Si no hay alterna (o también falló), asumimos que puede ser
+        // un archivo recién subido que todavía se está propagando en
+        // GitHub Pages, y reintentamos con cache-busting.
+        const attempt = parseInt(img.dataset.retryCount || '0', 10);
         if (attempt >= IMG_RETRY_DELAYS_MS.length) return; // se agotaron los intentos: se queda en el placeholder
 
         img.dataset.retryCount = String(attempt + 1);
@@ -3556,6 +3575,9 @@
 
         pageItems.forEach((product, index) => {
           const hasStock = product.stock && Object.values(product.stock).some(qty => qty > 0);
+          const cardPrimaryRaw = product.image_id || product.image_url;
+          const cardFallbackRaw = (product.image_id && product.image_url && product.image_id !== product.image_url) ? product.image_url : null;
+          const cardFallbackSrc = cardFallbackRaw ? (getProductImage(cardFallbackRaw, IMG_SIZES.thumb) || '') : '';
           
           let priceHTML = '';
           if (product.discount_price && parseFloat(product.discount_price) > 0) {
@@ -3587,7 +3609,8 @@
               <div class="product-image">
                 <img
                   class="stock-image rk-optimized-img"
-                  src="${getProductImage(product.image_id || product.image_url, IMG_SIZES.thumb) || fallbackPlaceholder}"
+                  src="${getProductImage(cardPrimaryRaw, IMG_SIZES.thumb) || fallbackPlaceholder}"
+                  data-fallback-src="${cardFallbackSrc}"
                   alt="${product.name}"
                   loading="${isPriority ? 'eager' : 'lazy'}"
                   fetchpriority="${isPriority ? 'high' : 'auto'}"
@@ -3760,7 +3783,13 @@
 
       function updateHeroFeature(featured) {
         if (!featured) return;
-        heroImage.src = getProductImage(featured.image_id || featured.image_url, IMG_SIZES.hero) || fallbackPlaceholder;
+        const heroPrimaryRaw = featured.image_id || featured.image_url;
+        const heroFallbackRaw = (featured.image_id && featured.image_url && featured.image_id !== featured.image_url) ? featured.image_url : null;
+        heroImage.dataset.baseSrc = getProductImage(heroPrimaryRaw, IMG_SIZES.hero) || fallbackPlaceholder;
+        heroImage.dataset.fallbackSrc = heroFallbackRaw ? (getProductImage(heroFallbackRaw, IMG_SIZES.hero) || '') : '';
+        heroImage.dataset.retryCount = '0';
+        delete heroImage.dataset.fallbackTried;
+        heroImage.src = heroImage.dataset.baseSrc;
         heroLabel.textContent = `${featured.category}`;
         featureTitle.textContent = featured.name;
         heroDescription.textContent = featured.description || 'Una pieza histórica única con calidad premium garantizada.';
@@ -3795,6 +3824,20 @@
           : (cb) => setTimeout(() => cb(null), 200);
 
         scheduleIdle(processNext);
+      }
+
+      // Asigna la imagen del modal (por índice) y reinicia el estado de
+      // reintento/respaldo del elemento <img> compartido, para que cada
+      // foto nueva (o cada vez que se reabre el modal) empiece de cero en
+      // vez de arrastrar el estado de la imagen anterior.
+      function setModalImageSrc(index) {
+        const src = modalImagesList[index] || fallbackPlaceholder;
+        const fallbackSrc = modalFallbackList[index] || '';
+        modalProductImg.dataset.baseSrc = src;
+        modalProductImg.dataset.fallbackSrc = fallbackSrc;
+        modalProductImg.dataset.retryCount = '0';
+        delete modalProductImg.dataset.fallbackTried;
+        modalProductImg.src = src;
       }
 
       function forcePreloadImages(urls) {
@@ -3835,14 +3878,29 @@
         updateModalWishlistUI();
 
         modalImagesList = [];
-        
-        const rawImg1 = getProductImage(product.image_id || product.image_url, IMG_SIZES.modal);
-        const rawImg2 = getProductImage(product.image_id_2 || product.image_url_2, IMG_SIZES.modal);
-        if (rawImg1 && rawImg1.trim() !== '') modalImagesList.push(rawImg1);
-        if (rawImg2 && rawImg2.trim() !== '' && rawImg2 !== rawImg1) modalImagesList.push(rawImg2);
+        modalFallbackList = [];
+
+        // Si en Supabase quedaron dos campos con nombres de archivo
+        // distintos para la misma foto (por ejemplo, image_id apunta a un
+        // archivo viejo/borrado e image_url ya tiene el correcto), guardamos
+        // el segundo como respaldo automático en vez de depender de que
+        // alguien limpie el campo viejo a mano.
+        const primaryRaw1 = product.image_id || product.image_url;
+        const fallbackRaw1 = (product.image_id && product.image_url && product.image_id !== product.image_url) ? product.image_url : null;
+        const rawImg1 = getProductImage(primaryRaw1, IMG_SIZES.modal);
+        const fallbackImg1 = fallbackRaw1 ? getProductImage(fallbackRaw1, IMG_SIZES.modal) : null;
+
+        const primaryRaw2 = product.image_id_2 || product.image_url_2;
+        const fallbackRaw2 = (product.image_id_2 && product.image_url_2 && product.image_id_2 !== product.image_url_2) ? product.image_url_2 : null;
+        const rawImg2 = getProductImage(primaryRaw2, IMG_SIZES.modal);
+        const fallbackImg2 = fallbackRaw2 ? getProductImage(fallbackRaw2, IMG_SIZES.modal) : null;
+
+        if (rawImg1 && rawImg1.trim() !== '') { modalImagesList.push(rawImg1); modalFallbackList.push(fallbackImg1); }
+        if (rawImg2 && rawImg2.trim() !== '' && rawImg2 !== rawImg1) { modalImagesList.push(rawImg2); modalFallbackList.push(fallbackImg2); }
         
         if (modalImagesList.length === 0) {
           modalImagesList.push(fallbackPlaceholder);
+          modalFallbackList.push(null);
         }
 
         forcePreloadImages(modalImagesList);
@@ -3852,14 +3910,8 @@
         modalPrevBtn.classList.remove('is-disabled');
         modalNextBtn.classList.remove('is-disabled');
         
-        modalProductImg.className = ''; 
-        modalProductImg.src = modalImagesList[0];
-        
-        modalProductImg.addEventListener('error', function handleModalError() {
-          this.src = fallbackPlaceholder;
-          modalProductImg.removeEventListener('error', handleModalError);
-        });
-        
+        modalProductImg.className = 'rk-optimized-img';
+        setModalImageSrc(0);
         updateModalCarouselUI();
 
         const optionsContainer = document.getElementById('sizeOptionsContainer');
@@ -3968,12 +4020,11 @@
         modalPrevBtn.classList.add('is-disabled');
         modalNextBtn.classList.add('is-disabled');
         currentModalImgIndex = nextIndex;
-        const nextSrc = modalImagesList[currentModalImgIndex];
 
         modalProductImg.classList.add('fade-out');
 
         transitionTimer = setTimeout(() => {
-          modalProductImg.src = nextSrc;
+          setModalImageSrc(currentModalImgIndex);
           updateModalCarouselUI();
           modalProductImg.classList.remove('fade-out');
           isModalImageTransitioning = false;
@@ -4816,13 +4867,16 @@
           const displayPrice = (product.discount_price && parseFloat(product.discount_price) > 0)
             ? product.discount_price
             : product.price;
-          const imgUrl = getProductImage(product.image_id || product.image_url, IMG_SIZES.cartThumb) || fallbackPlaceholder;
+          const wlPrimaryRaw = product.image_id || product.image_url;
+          const wlFallbackRaw = (product.image_id && product.image_url && product.image_id !== product.image_url) ? product.image_url : null;
+          const imgUrl = getProductImage(wlPrimaryRaw, IMG_SIZES.cartThumb) || fallbackPlaceholder;
+          const wlFallbackSrc = wlFallbackRaw ? (getProductImage(wlFallbackRaw, IMG_SIZES.cartThumb) || '') : '';
           const hasStock = product.stock && Object.values(product.stock).some(qty => qty > 0);
 
           return `
             <div class="wishlist-card">
               <div class="wishlist-card-thumb">
-                <img class="rk-optimized-img" src="${imgUrl}" alt="${product.name}" />
+                <img class="rk-optimized-img" src="${imgUrl}" data-fallback-src="${wlFallbackSrc}" alt="${product.name}" />
               </div>
               <div class="wishlist-card-info">
                 <strong>${product.name}</strong>
