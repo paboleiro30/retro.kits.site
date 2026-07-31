@@ -3204,6 +3204,85 @@
         return window.location.origin + path;
       }
 
+      function getSiteBaseNoProtocol() {
+        return getSiteBaseUrl().replace(/^https?:\/\//i, '');
+      }
+
+      /* =========================================================
+         MEMORIA DE IMÁGENES PENDIENTES (localStorage)
+         ---------------------------------------------------------
+         El sistema de reintentos de abajo (IMG_RETRY_DELAYS_MS) sólo
+         funciona MIENTRAS la pestaña sigue abierta: si el usuario
+         refresca la página, se pierde todo ese progreso y el <img>
+         vuelve a pedir la URL "de siempre" a wsrv.nl, que puede seguir
+         teniendo cacheado el "no encontrada" de hace un rato (según el
+         comentario de abajo, ese caché dura DÍAS).
+
+         Por eso guardamos en localStorage (que sí sobrevive a un
+         refresh, o a cerrar y abrir la pestaña) qué imágenes fallaron
+         alguna vez. Mientras sigan marcadas como pendientes, cada vez
+         que se arma su URL le agregamos un parámetro con la hora
+         actual: eso hace que wsrv.nl la trate como una petición nueva
+         y no como la que tiene guardada como rota. En cuanto la imagen
+         carga bien una vez, la quitamos de la lista y vuelve a pedirse
+         normal (rápida, con el caché de wsrv a favor).
+
+         Resultado práctico: subes la foto a GitHub, agregas la camisa
+         en Supabase, la primera vez que cargas la página puede que
+         todavía no aparezca (GitHub Pages tarda un rato en publicar el
+         archivo) — pero desde el SEGUNDO refresh (o el que sea, una
+         vez que el archivo ya esté publicado) sí va a aparecer, en vez
+         de quedarse atorada con el error viejo cacheado.
+         ========================================================= */
+      const IMG_PENDING_KEY = 'rk_img_pending';
+
+      function getPendingImageMap() {
+        try {
+          return JSON.parse(localStorage.getItem(IMG_PENDING_KEY) || '{}');
+        } catch (e) {
+          return {};
+        }
+      }
+
+      function savePendingImageMap(map) {
+        try { localStorage.setItem(IMG_PENDING_KEY, JSON.stringify(map)); } catch (e) { /* localStorage no disponible: no pasa nada, solo perdemos el "recuerdo" entre refrescos */ }
+      }
+
+      function markImagePending(localPath) {
+        if (!localPath) return;
+        const map = getPendingImageMap();
+        if (!(localPath in map)) {
+          map[localPath] = Date.now();
+          savePendingImageMap(map);
+        }
+      }
+
+      function clearImagePending(localPath) {
+        if (!localPath) return;
+        const map = getPendingImageMap();
+        if (localPath in map) {
+          delete map[localPath];
+          savePendingImageMap(map);
+        }
+      }
+
+      // A partir de una URL de wsrv.nl ya armada, recupera el "localPath"
+      // original (la ruta dentro de imagenes/) para poder marcarla o
+      // desmarcarla como pendiente.
+      function extractLocalPathFromWsrvSrc(src) {
+        if (!src) return null;
+        try {
+          const parsed = new URL(src, window.location.href);
+          if (!/(^|\.)wsrv\.nl$/i.test(parsed.hostname)) return null;
+          const encodedUrl = parsed.searchParams.get('url');
+          if (!encodedUrl) return null;
+          const base = getSiteBaseNoProtocol();
+          return encodedUrl.startsWith(base) ? encodedUrl.slice(base.length) : null;
+        } catch (e) {
+          return null;
+        }
+      }
+
       function getOptimizedImageUrl(localPath, sizeConfig) {
         if (!localPath) return null;
 
@@ -3221,6 +3300,13 @@
         if (sizeConfig && sizeConfig.width) params.set('w', sizeConfig.width);
         params.set('q', (sizeConfig && sizeConfig.quality) || 80);
         params.set('output', 'webp');
+
+        // Si esta imagen falló antes (recordado en localStorage entre
+        // refrescos), forzamos una petición nueva a wsrv.nl en vez de
+        // dejar que reuse su caché de "no encontrada".
+        if (localPath in getPendingImageMap()) {
+          params.set('_pending', Date.now());
+        }
 
         return `https://wsrv.nl/?${params.toString()}`;
       }
@@ -3254,6 +3340,12 @@
         if (!img || img.tagName !== 'IMG' || !img.classList || !img.classList.contains('rk-optimized-img')) return;
 
         if (!img.dataset.baseSrc) img.dataset.baseSrc = img.src;
+
+        // Guardamos en localStorage que esta imagen falló, para que si el
+        // usuario refresca la página (perdiendo el progreso de los
+        // reintentos de abajo), el siguiente intento le pida a wsrv.nl una
+        // copia nueva en vez de reusar la que tiene cacheada como rota.
+        markImagePending(extractLocalPathFromWsrvSrc(img.dataset.baseSrc));
 
         // Mientras se resuelve, mostramos el placeholder transparente en
         // vez del ícono de imagen rota del navegador.
@@ -3289,6 +3381,19 @@
           const sep = baseSrc.includes('?') ? '&' : '?';
           img.src = `${baseSrc}${sep}_retry=${Date.now()}`;
         }, delay);
+      }, true);
+
+      // Cuando una imagen SÍ carga bien, la quitamos de la lista de
+      // "pendientes" en localStorage (si estaba ahí). Así, la próxima vez
+      // que se pida, ya no lleva el parámetro de cache-busting y puede
+      // aprovechar el caché rápido de wsrv.nl otra vez con normalidad.
+      document.addEventListener('load', function(event) {
+        const img = event.target;
+        if (!img || img.tagName !== 'IMG' || !img.classList || !img.classList.contains('rk-optimized-img')) return;
+        if (img.src === fallbackPlaceholder) return; // no es una carga real de la foto
+
+        clearImagePending(extractLocalPathFromWsrvSrc(img.src));
+        delete img.dataset.retryCount;
       }, true);
 
       // Atajo: resuelve el nombre del archivo Y lo optimiza en un solo paso.
