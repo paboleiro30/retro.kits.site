@@ -1896,7 +1896,7 @@
         border-color: rgba(255, 255, 255, 0.05);
       }
 
-      /* Los chips de talla (S, M, L, XL) y de manga se reparten el ancho
+      /* Los chips de talla (S, M, L, XL) se reparten el ancho
          disponible en columnas exactamente iguales (grid), en vez de un
          flex-wrap donde cada botón mide lo que su texto pida. Así toda
          la fila queda perfectamente simétrica y pareja, alineada por
@@ -1911,17 +1911,6 @@
       #sizeOptionsContainer .option-chip {
         width: 100%;
         padding: 0;
-      }
-
-      #sleeveOptionsContainer {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-
-      #sleeveOptionsContainer .option-chip {
-        width: 100%;
-        padding: 0 12px;
       }
 
       .product-modal.visible {
@@ -2800,23 +2789,6 @@
               <span class="product-option-label" id="sizeSelectorLabel">Talla</span>
               <div class="option-chip-group" id="sizeOptionsContainer" role="radiogroup" aria-labelledby="sizeSelectorLabel"></div>
             </div>
-            <div class="product-option">
-              <span class="product-option-label" id="sleeveSelectorLabel">Manga</span>
-              <div class="option-chip-group" id="sleeveOptionsContainer" role="radiogroup" aria-labelledby="sleeveSelectorLabel">
-                <button type="button" class="option-chip active" data-sleeve="corta" role="radio" aria-checked="true" tabindex="0">
-                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M8.5 3.5 4 6.8V11h2.7v8.3a1 1 0 0 0 1 1h8.6a1 1 0 0 0 1-1V11H20V6.8l-4.5-3.3-1.2 1.3a2.9 2.9 0 0 1-4.6 0Z"/>
-                  </svg>
-                  <span>Manga corta</span>
-                </button>
-                <button type="button" class="option-chip" data-sleeve="larga" role="radio" aria-checked="false" tabindex="-1">
-                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M8.5 3.5 2.5 7.8l1.7 3 2.5-1.4v9.9a1 1 0 0 0 1 1h8.6a1 1 0 0 0 1-1V9.4l2.5 1.4 1.7-3-6-4.3-1.2 1.3a2.9 2.9 0 0 1-4.6 0Z"/>
-                  </svg>
-                  <span>Manga larga</span>
-                </button>
-              </div>
-            </div>
           </div>
           <button class="btn btn-primary" id="addToCartModal">AÑADIR AL CARRITO</button>
         </div>
@@ -3038,7 +3010,6 @@
       }
       let selectedProduct = null;
       let selectedSize = '';
-      let selectedSleeve = 'corta';
       const cart = [];
       let activePromoCode = null;
       const wishlistIds = new Set(); // ids (como string) de los productos que el usuario tiene en favoritos
@@ -3967,9 +3938,6 @@
           addToCartModalBtn.textContent = 'AGOTADO';
         }
 
-        selectedSleeve = 'corta';
-        setSleeveSelection('corta');
-
         lockBackgroundScroll();
 
         productModal.classList.add('visible');
@@ -4123,38 +4091,11 @@
         next.focus();
       });
 
-      const sleeveToggle = document.getElementById('sleeveOptionsContainer');
-
-      function setSleeveSelection(value) {
-        selectedSleeve = value;
-        sleeveToggle.querySelectorAll('.option-chip').forEach((btn) => {
-          const isActive = btn.dataset.sleeve === value;
-          btn.classList.toggle('active', isActive);
-          btn.setAttribute('aria-checked', String(isActive));
-          btn.tabIndex = isActive ? 0 : -1;
-        });
-      }
-
-      sleeveToggle.addEventListener('click', (e) => {
-        const btn = e.target.closest('.option-chip');
-        if (btn) setSleeveSelection(btn.dataset.sleeve);
-      });
-
-      // Soporte de teclado siguiendo el patrón ARIA de radiogroup:
-      // las flechas mueven la selección entre las dos opciones.
-      sleeveToggle.addEventListener('keydown', (e) => {
-        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
-        e.preventDefault();
-        const next = selectedSleeve === 'corta' ? 'larga' : 'corta';
-        setSleeveSelection(next);
-        sleeveToggle.querySelector(`[data-sleeve="${next}"]`).focus();
-      });
-
       addToCartModalBtn.addEventListener('click', () => {
         if (!selectedProduct || !selectedSize) return;
 
         const maxStock = (selectedProduct.stock && selectedProduct.stock[selectedSize]) ? selectedProduct.stock[selectedSize] : 99;
-        const existing = cart.find(item => item.id === selectedProduct.id && item.size === selectedSize && item.sleeve === selectedSleeve);
+        const existing = cart.find(item => item.id === selectedProduct.id && item.size === selectedSize);
         
         const isTargetedByPromo = activePromoCode && activePromoCode.product_id && String(activePromoCode.product_id).toLowerCase() === String(selectedProduct.id).toLowerCase();
 
@@ -4167,12 +4108,10 @@
           ? parseFloat(selectedProduct.discount_price) 
           : parseFloat(selectedProduct.price);
 
-        const sleeveLabel = selectedSleeve === 'larga' ? 'Manga larga' : 'Manga corta';
-
         if (existing) {
           if (existing.quantity < maxStock) {
             existing.quantity++;
-            showToast(`Aumentada cantidad de ${selectedProduct.name} [Talla ${selectedSize} • ${sleeveLabel}]`);
+            showToast(`Aumentada cantidad de ${selectedProduct.name} [Talla ${selectedSize}]`);
           } else {
             showToast(`Límite de stock alcanzado para la talla ${selectedSize}`);
             return;
@@ -4183,11 +4122,10 @@
             name: selectedProduct.name,
             price: finalPrice,
             size: selectedSize,
-            sleeve: selectedSleeve,
             image: getProductImage(selectedProduct.image_id || selectedProduct.image_url, IMG_SIZES.cartThumb),
             quantity: 1
           });
-          showToast(`Añadido: ${selectedProduct.name} [Talla ${selectedSize} • ${sleeveLabel}]`);
+          showToast(`Añadido: ${selectedProduct.name} [Talla ${selectedSize}]`);
         }
 
         updateCartUI();
@@ -4248,7 +4186,7 @@
             </div>
             <div class="cart-item-info">
               <strong>${item.name}</strong>
-              <small>Talla: ${item.size} • ${item.sleeve === 'larga' ? 'Manga larga' : 'Manga corta'} • $${item.price}</small>
+              <small>Talla: ${item.size} • $${item.price}</small>
               ${(isTargetedByPromoProduct || isFirstItemGeneralPromo) ? `<span class="item-discount-badge">¡Cupón Aplicado (1 jersey)!</span>` : ''}
             </div>
             <div class="cart-item-actions">
@@ -4365,7 +4303,7 @@
         let msg = `¡Hola! Me gustaría hacer un pedido de Retrokits:\n\n`;
         cart.forEach((item) => {
           const itemSub = item.price * item.quantity;
-          msg += `• ${item.quantity}x ${item.name} [Talla ${item.size} • ${item.sleeve === 'larga' ? 'Manga larga' : 'Manga corta'}] ($${itemSub})\n`;
+          msg += `• ${item.quantity}x ${item.name} [Talla ${item.size}] ($${itemSub})\n`;
         });
 
         if (activePromoCode && calculatedDiscount > 0) {
@@ -4746,7 +4684,6 @@
             product_id: i.id,
             name: i.name,
             size: i.size,
-            sleeve: i.sleeve,
             price: i.price,
             quantity: i.quantity
           }));
