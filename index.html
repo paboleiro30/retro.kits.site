@@ -3400,7 +3400,7 @@
         try {
           const { data, error } = await supabaseClient
             .from('products')
-            .select('id, name, category, price, discount_price, image_id, image_url, image_id_2, image_url_2, description, legendary_player, legendary_number, legendary_dorsal, stock');
+            .select('id, name, category, price, discount_price, image_id, image_id_2, description, legendary_player, legendary_number, stock');
 
           if (error) throw error;
 
