@@ -369,7 +369,7 @@
         flex-direction: column;
         gap: 16px;
         box-shadow: var(--shadow);
-        max-width: 440px;
+        max-width: 560px;
         margin-left: auto;
       }
 
@@ -406,13 +406,11 @@
         inset: 0;
         z-index: 1;
         opacity: 0;
-        transform: scale(0.95);
-        transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 0.45s ease-in-out;
       }
 
       .jersey-hero-img.active {
         opacity: 1;
-        transform: scale(1);
       }
 
       .feature-meta {
@@ -2465,15 +2463,12 @@
             </div>
             <div class="hero-visual">
               <div class="feature-card">
-                <img class="brand-logo-hero" src="imagenes/RKlogo.png" alt="RETRO KITS" />
-                
                 <div class="jersey-frame" id="heroJerseyFrame">
                   <img class="jersey-hero-img active rk-optimized-img" id="heroImage" src="" alt="Camiseta Destacada" decoding="async" fetchpriority="high" />
                 </div>
                 <div class="feature-meta" id="heroMeta">
-                  <span class="feature-label" id="heroLabel">Cargando...</span>
                   <h2 id="feature-title">Cargando clásica...</h2>
-                  <p id="heroDescription">Explora lo mejor de nuestra colección retro.</p>
+                  <p id="heroDescription"></p>
                 </div>
               </div>
             </div>
@@ -3072,7 +3067,6 @@
       const modalDotsContainer = document.getElementById('modalDotsContainer');
 
       const heroImage = document.getElementById('heroImage');
-      const heroLabel = document.getElementById('heroLabel');
       const featureTitle = document.getElementById('feature-title');
       const heroDescription = document.getElementById('heroDescription');
       const heroMeta = document.getElementById('heroMeta');
@@ -3745,20 +3739,39 @@
 
         currentHeroIndex = 0;
         updateHeroFeature(products[currentHeroIndex]);
+        preloadNextHeroImage();
 
         heroInterval = setInterval(() => {
           currentHeroIndex = (currentHeroIndex + 1) % products.length;
           const nextProduct = products[currentHeroIndex];
-          
+
           heroImage.classList.remove('active');
           heroMeta.classList.add('fade-out');
 
+          // 450ms = misma duración que la transición CSS de opacidad, así
+          // el fundido de salida termina por completo antes de cambiar la
+          // imagen; si se cambiara antes (a medias del fundido) se ve el
+          // "salto" que reportaste.
           setTimeout(() => {
             updateHeroFeature(nextProduct);
             heroImage.classList.add('active');
             heroMeta.classList.remove('fade-out');
-          }, 200);
-        }, 8000);
+            preloadNextHeroImage();
+          }, 450);
+        }, 4000);
+      }
+
+      // Precarga la imagen que viene después de la actual, para que cuando
+      // le toque su turno ya esté descargada y el fundido sea instantáneo
+      // en vez de mostrarse en blanco mientras carga.
+      function preloadNextHeroImage() {
+        if (products.length === 0) return;
+        const nextIndex = (currentHeroIndex + 1) % products.length;
+        const nextProduct = products[nextIndex];
+        if (!nextProduct) return;
+        const raw = nextProduct.image_id || nextProduct.image_url;
+        const url = getProductImage(raw, IMG_SIZES.hero);
+        if (url) preloadImageUrl(url);
       }
 
       function updateHeroFeature(featured) {
@@ -3770,9 +3783,20 @@
         heroImage.dataset.retryCount = '0';
         delete heroImage.dataset.fallbackTried;
         heroImage.src = heroImage.dataset.baseSrc;
-        heroLabel.textContent = `${featured.category}`;
         featureTitle.textContent = featured.name;
-        heroDescription.textContent = featured.description || 'Una pieza histórica única con calidad premium garantizada.';
+        heroDescription.textContent = truncateSmart(featured.description || 'Una pieza histórica única con calidad premium garantizada.');
+      }
+
+      // Corta la descripción a un largo razonable sin partir palabras a la
+      // mitad: busca el último espacio antes del límite y agrega "…".
+      function truncateSmart(text, maxLen = 100) {
+        if (!text) return '';
+        const clean = text.trim();
+        if (clean.length <= maxLen) return clean;
+        let cut = clean.slice(0, maxLen);
+        const lastSpace = cut.lastIndexOf(' ');
+        if (lastSpace > 40) cut = cut.slice(0, lastSpace);
+        return cut.replace(/[,.;:\-–—]+$/, '') + '…';
       }
 
       // PRECARGA EN SEGUNDO PLANO DE TODAS LAS IMÁGENES DEL CATÁLOGO
