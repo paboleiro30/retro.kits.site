@@ -181,8 +181,8 @@
         height: 65px;
         width: auto;
         object-fit: contain;
-        transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), filter 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-        will-change: transform, filter;
+        opacity: 1;
+        transition: opacity 0.25s ease;
       }
 
       .brand-text {
@@ -192,23 +192,20 @@
         letter-spacing: 0.03em;
         text-transform: uppercase;
         color: var(--text);
-        transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-        will-change: color, text-shadow;
+        transition: color 0.25s ease;
       }
 
       .brand-text span {
         color: var(--accent);
-        transition: opacity 0.15s ease;
+        transition: opacity 0.25s ease;
       }
 
       .brand-block:hover .brand-logo-header {
-        transform: translate3d(0, -2px, 0) scale(1.05);
-        filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.4));
+        opacity: 0.85;
       }
 
       .brand-block:hover .brand-text {
         color: var(--accent);
-        text-shadow: 0 0 16px rgba(212, 175, 55, 0.3);
       }
 
       .actions-panel {
