@@ -6,7 +6,7 @@
     <title>RETRO KITS | Camisetas de Fútbol Retro y de Colección</title>
     <meta name="description" content="Especialistas en camisetas de fútbol retro y de colección: jerseys icónicas de LaLiga, Premier League, Serie A y selecciones nacionales. Envíos desde Hermosillo, México." />
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#030814" />
+    <meta name="theme-color" content="#12305f" />
     <link rel="canonical" href="https://retrokits.com.mx/" />
 
     <!-- Open Graph / redes sociales -->
@@ -32,16 +32,112 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
       :root {
+        color-scheme: light;
+        --bg: #f4f6fb;
+        --panel: #ffffff;
+        --accent: #1a4fa8;
+        --accent-dark: #12305f;
+        --accent-glow: rgba(26, 79, 168, 0.18);
+        --text: #101826;
+        --muted: rgba(var(--text-rgb), 0.65);
+        --shadow: 0 30px 70px rgba(var(--text-rgb), 0.12);
+        --success: #1a5a37;
+        --discount-tag: #d61f3c;
+        --line: rgba(var(--text-rgb), 0.12);
+        --card-bg: #ffffff;
+        --text-rgb: 16, 24, 38;
+      }
+
+      html.dark-mode {
         color-scheme: dark;
-        --bg: #030814; 
-        --panel: #0a1322; 
-        --accent: #d4af37;
-        --accent-glow: rgba(212, 175, 55, 0.25);
-        --text: #f0f4f8; 
-        --muted: rgba(240, 244, 248, 0.7);
-        --shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
-        --success: #2ec4b6;
-        --discount-tag: #e63946; 
+        --bg: #0e131c;
+        --panel: #171e2b;
+        --accent: #3b7ce0;
+        --accent-dark: #0a1526;
+        --accent-glow: rgba(59, 124, 224, 0.25);
+        --text: #eef1f6;
+        --muted: rgba(238, 241, 246, 0.65);
+        --shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+        --success: #3fbf76;
+        --discount-tag: #ff5470;
+        --line: rgba(238, 241, 246, 0.14);
+        --card-bg: #171e2b;
+        --text-rgb: 238, 241, 246;
+      }
+
+      html.dark-mode body {
+        background: var(--bg);
+      }
+
+      /* Ajustes de modo oscuro para paneles y componentes que usan
+         colores fijos en vez de variables (carrito, wishlist, cuenta,
+         tarjetas y modal de producto). */
+      html.dark-mode .cart-drawer {
+        background: rgba(23, 30, 43, 0.98);
+        border-left-color: rgba(238, 241, 246, 0.1);
+      }
+
+      html.dark-mode .cart-header {
+        border-bottom-color: rgba(238, 241, 246, 0.1);
+      }
+
+      html.dark-mode .product-modal {
+        background: rgba(23, 30, 43, 0.98);
+        border-color: rgba(238, 241, 246, 0.1);
+      }
+
+      html.dark-mode .product-card {
+        background: linear-gradient(180deg, rgba(238, 241, 246, 0.06), rgba(238, 241, 246, 0.02));
+        border-color: rgba(238, 241, 246, 0.1);
+      }
+
+      html.dark-mode .product-image-wrap {
+        background: radial-gradient(circle at 50% 45%, rgba(238, 241, 246, 0.08), transparent 30%), #1c2433;
+      }
+
+      html.dark-mode .wishlist-heart-btn {
+        background: rgba(23, 30, 43, 0.85);
+        border-color: rgba(238, 241, 246, 0.14);
+      }
+
+      html.dark-mode .modal-wishlist-heart {
+        border-color: rgba(238, 241, 246, 0.18);
+      }
+
+      html.dark-mode .option-chip {
+        background: rgba(238, 241, 246, 0.05);
+        border-color: rgba(238, 241, 246, 0.16);
+      }
+
+      html.dark-mode .modal-price-pill {
+        background: rgba(59, 124, 224, 0.16);
+        border-color: rgba(59, 124, 224, 0.35);
+      }
+
+      html.dark-mode .auth-field input {
+        background: rgba(238, 241, 246, 0.06);
+        border-color: rgba(238, 241, 246, 0.16);
+      }
+
+      html.dark-mode .modal-image {
+        background: radial-gradient(circle at 50% 40%, rgba(238, 241, 246, 0.08), transparent 30%), #1c2433;
+      }
+
+      html.dark-mode .jersey-frame {
+        background: linear-gradient(180deg, #1c2433 0%, #141b28 100%);
+      }
+
+      html.dark-mode .wishlist-card {
+        background: rgba(238, 241, 246, 0.04);
+        border-color: rgba(238, 241, 246, 0.08);
+      }
+
+      html.dark-mode .wishlist-card-thumb {
+        background: #1c2433;
+      }
+
+      html.dark-mode .cart-item-thumb {
+        background: #1c2433;
       }
 
       * {
@@ -52,21 +148,11 @@
         scroll-behavior: smooth;
       }
 
-      #causticsCanvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: -1;
-        pointer-events: none;
-        display: block;
-      }
-
-      html, body {
+      body {
         margin: 0;
         min-height: 100vh;
         color: var(--text);
+        background: var(--bg);
         font-family: 'Inter', sans-serif;
         position: relative;
         overflow-x: hidden;
@@ -88,10 +174,6 @@
           transition-duration: 0.001ms !important;
           scroll-behavior: auto !important;
         }
-      }
-
-      body {
-        padding-top: 140px;
       }
 
       /* Bloquea el scroll de la colección de fondo mientras el modal de
@@ -129,14 +211,15 @@
 
       /* CABECERA / MENÚ PRINCIPAL */
       .site-header-wrapper {
-        position: fixed;
+        position: sticky;
         top: 0;
         left: 0;
         right: 0;
         z-index: 100;
         display: flex;
         flex-direction: column;
-        background: linear-gradient(180deg, rgba(3, 8, 20, 0.92) 0%, rgba(3, 8, 20, 0.75) 65%, rgba(3, 8, 20, 0) 100%);
+        background: var(--accent-dark);
+        box-shadow: 0 4px 24px rgba(16, 24, 38, 0.15);
       }
 
       .site-header {
@@ -148,17 +231,100 @@
         width: 100%;
       }
 
-      .promo-bar {
+      /* BARRA DE UTILIDADES SUPERIOR (inspirada en CFS) */
+      .utility-bar {
         width: 100%;
+        background: var(--accent-dark);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 8px 24px;
+      }
+
+      .utility-bar-inner {
+        max-width: 1320px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px 32px;
+      }
+
+      .utility-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      a.utility-item:hover {
+        color: #ffffff;
+      }
+
+      .utility-item svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+        color: #dcae54;
+      }
+
+      /* PESTAÑAS DE COLECCIÓN SOBRE EL CATÁLOGO */
+      .collection-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 4px 0 28px;
+      }
+
+      .collection-tab {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--text);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        padding: 10px 20px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+      }
+
+      .collection-tab:hover {
+        transform: translate3d(0, -1px, 0);
+        border-color: var(--accent);
+      }
+
+      .collection-tab.is-active {
         background: var(--accent);
-        color: #0d131a;
+        border-color: var(--accent);
+        color: #ffffff;
+      }
+
+      .promo-bar {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        margin-top: -56px;
+        box-sizing: border-box;
+        background: var(--accent);
+        color: #ffffff;
         text-align: center;
-        padding: 10px 24px;
+        padding: 12px 24px;
         font-size: 0.95rem;
         font-weight: 700;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        box-shadow: 0 4px 20px rgba(212, 175, 55, 0.25);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+        border-radius: 0;
+        margin-bottom: 32px;
         display: none;
         animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
@@ -196,7 +362,7 @@
       }
 
       .brand-text span {
-        color: var(--accent);
+        color: #dcae54;
         transition: opacity 0.25s ease;
       }
 
@@ -205,7 +371,7 @@
       }
 
       .brand-block:hover .brand-text {
-        color: var(--accent);
+        color: #dcae54;
       }
 
       .actions-panel {
@@ -228,8 +394,8 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(var(--text-rgb), 0.12);
+        background: rgba(var(--text-rgb), 0.04);
         color: var(--text);
         padding: 10px 18px;
         border-radius: 999px;
@@ -243,7 +409,7 @@
       }
 
       .cart-action:hover {
-        background: rgba(212, 175, 55, 0.15);
+        background: rgba(26, 79, 168, 0.15);
         border-color: var(--accent);
         transform: translate3d(0, -1px, 0);
       }
@@ -253,6 +419,17 @@
         height: 22px;
       }
 
+      .site-header-wrapper .brand-text,
+      .site-header-wrapper .account-action,
+      .site-header-wrapper .cart-action {
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .site-header-wrapper .account-action:hover,
+      .site-header-wrapper .cart-action:hover {
+        color: #ffffff;
+      }
+
       .cart-badge {
         position: absolute;
         top: -4px;
@@ -260,15 +437,15 @@
         min-width: 20px;
         height: 20px;
         border-radius: 999px;
-        background: var(--accent);
+        background: #dcae54;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         font-size: 0.75rem;
         font-weight: 800;
-        color: #0d131a;
+        color: #12305f;
         padding: 0 6px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        box-shadow: 0 4px 10px rgba(16,24,38,0.25);
       }
 
       .hero-section {
@@ -276,17 +453,48 @@
         grid-template-columns: 1.15fr 0.85fr;
         gap: 40px;
         align-items: center;
-        min-height: 65vh;
-        padding: 20px 0 40px;
+        min-height: 60vh;
+        padding: 60px 24px;
+        background: transparent;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .hero-caustics-canvas {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        background: #0a1a3a;
+      }
+
+      .hero-section > .hero-copy,
+      .hero-section > .hero-visual {
+        position: relative;
+        z-index: 2;
+        max-width: 1320px;
       }
 
       .hero-copy {
         max-width: 580px;
+        margin: 0 auto 0 max(24px, calc(50vw - 660px + 24px));
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
 
       .eyebrow {
         text-transform: uppercase;
-        color: var(--accent);
+        color: #dcae54;
         letter-spacing: 0.4em;
         font-size: 0.78rem;
         margin-bottom: 18px;
@@ -299,16 +507,17 @@
         line-height: 0.95;
         letter-spacing: -0.06em;
         text-transform: uppercase;
+        color: #ffffff;
       }
 
       .hero-copy h1 .accent {
-        color: var(--accent);
+        color: #dcae54;
       }
 
       .hero-copy p {
         margin: 24px 0 0;
         max-width: 520px;
-        color: var(--muted);
+        color: rgba(255, 255, 255, 0.72);
         font-size: 1rem;
         line-height: 1.8;
       }
@@ -320,8 +529,8 @@
       }
 
       .btn {
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(var(--text-rgb), 0.1);
+        background: rgba(var(--text-rgb), 0.04);
         color: var(--text);
         padding: 15px 28px;
         letter-spacing: 0.12em;
@@ -338,34 +547,40 @@
 
       .btn:hover {
         transform: translate3d(0, -2px, 0);
-        background: rgba(212, 175, 55, 0.15);
+        background: rgba(26, 79, 168, 0.15);
         border-color: var(--accent);
       }
 
       .btn-primary {
-        border-color: var(--accent);
-        color: var(--text);
-        box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+        border-color: #dcae54;
+        background: #dcae54;
+        color: #12305f;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-primary:hover {
+        background: #e8c274;
+        border-color: #e8c274;
       }
 
       .hero-visual {
         position: relative;
         width: 100%;
+        margin: 0 max(24px, calc(50vw - 660px + 24px)) 0 auto;
       }
 
       .feature-card {
         position: relative;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(212, 175, 55, 0.03));
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: var(--panel);
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.14);
         border-radius: 32px;
         padding: 24px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         gap: 16px;
-        box-shadow: var(--shadow);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
         max-width: 560px;
         margin-left: auto;
       }
@@ -378,7 +593,7 @@
         width: auto;
         z-index: 5;
         opacity: 0.85;
-        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+        filter: drop-shadow(0 4px 12px rgba(16,24,38,0.18));
         transition: opacity 0.2s ease;
       }
 
@@ -386,10 +601,10 @@
         position: relative;
         width: 100%;
         aspect-ratio: 1 / 1;
-        background: linear-gradient(180deg, #0b1526 0%, #030814 100%);
+        background: linear-gradient(180deg, #edf1f7 0%, #e0e6f0 100%);
         border-radius: 24px;
         overflow: hidden;
-        box-shadow: inset 0 0 140px rgba(255, 255, 255, 0.03), 0 24px 50px rgba(0, 0, 0, 0.45);
+        box-shadow: inset 0 0 60px rgba(16, 24, 38, 0.04), 0 18px 40px rgba(16, 24, 38, 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -442,7 +657,109 @@
         margin: 0;
       }
 
-      /* SECCIÓN FILTROS Y CATEGORÍAS */
+      /* FRANJA DE COLECCIONES (inspirada en CFS) */
+      .collections-section {
+        padding: 56px 0 8px;
+      }
+
+      .collections-section h2 {
+        margin: 0 0 24px;
+        font-family: 'Oswald', sans-serif;
+        font-size: 2.2rem;
+        letter-spacing: -0.05em;
+      }
+
+      .collections-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+      }
+
+      .collection-card {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        min-height: 260px;
+        display: flex;
+        align-items: flex-end;
+        padding: 24px;
+        text-decoration: none;
+        color: #ffffff;
+        cursor: pointer;
+        border: none;
+        text-align: left;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .collection-card:hover {
+        transform: translate3d(0, -4px, 0);
+      }
+
+      .collection-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: var(--card-image, none), var(--card-gradient, linear-gradient(160deg, #1a4fa8, #12305f));
+        background-size: cover, cover;
+        background-position: center, center;
+        background-repeat: no-repeat, no-repeat;
+        z-index: 0;
+      }
+
+      .collection-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+        z-index: 1;
+      }
+
+      .collection-card-inner {
+        position: relative;
+        z-index: 2;
+      }
+
+      .collection-card-inner span.tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      .collection-card-inner h3 {
+        margin: 0 0 14px;
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.5rem;
+        letter-spacing: -0.02em;
+      }
+
+      .collection-card-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #ffffff;
+        color: var(--accent-dark);
+        font-weight: 700;
+        font-size: 0.8rem;
+        padding: 8px 16px;
+        border-radius: 999px;
+        letter-spacing: 0.03em;
+      }
+
+      @media (max-width: 1140px) {
+        .collections-grid { grid-template-columns: repeat(3, 1fr); }
+      }
+
+      @media (max-width: 560px) {
+        .collections-grid { grid-template-columns: 1fr; }
+      }
+
+      /* CATÁLOGO Y CATEGORÍAS */
       .catalog-grid {
         scroll-margin-top: 170px; 
         display: flex;
@@ -475,7 +792,7 @@
 
       .catalog-header-title a:hover {
         color: var(--accent);
-        text-shadow: 0 0 16px rgba(212, 175, 55, 0.3);
+        text-shadow: 0 0 16px rgba(26, 79, 168, 0.3);
       }
 
       .custom-select-wrapper {
@@ -491,8 +808,8 @@
         width: 100%;
         padding: 12px 42px 12px 20px;
         border-radius: 999px;
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        background: rgba(10, 19, 34, 0.75);
+        border: 1px solid rgba(var(--text-rgb), 0.1);
+        background: rgba(var(--text-rgb), 0.04);
         color: var(--text);
         font-weight: 600;
         font-size: 0.88rem;
@@ -503,19 +820,19 @@
         -webkit-backdrop-filter: blur(10px);
         outline: none;
         transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 16px rgba(16, 24, 38, 0.08);
         will-change: transform, background, border-color, box-shadow;
       }
 
       .category-select:hover, .category-select:focus {
         border-color: var(--accent);
-        background: rgba(212, 175, 55, 0.12);
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        background: rgba(var(--text-rgb), 0.06);
+        box-shadow: 0 0 20px rgba(26, 79, 168, 0.15);
         transform: translate3d(0, -1px, 0);
       }
 
       .category-select option {
-        background: #0a1322;
+        background: var(--panel);
         color: var(--text);
         padding: 12px;
         font-weight: 500;
@@ -537,6 +854,51 @@
         transition: transform 0.15s ease;
       }
 
+      /* BOTÓN "TODAS LAS CATEGORÍAS": sustituye al dropdown de categorías,
+         que quedó redundante frente a las tarjetas de "Colecciones". Sirve
+         para volver a ver todo el catálogo y, cuando hay un filtro activo
+         (por liga o por búsqueda), avisa cuál está aplicado. */
+      .btn-reset-category {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 220px;
+        justify-content: center;
+        padding: 12px 20px;
+        border-radius: 999px;
+        border: 1px solid rgba(var(--text-rgb), 0.1);
+        background: rgba(var(--text-rgb), 0.04);
+        color: var(--text);
+        font-weight: 600;
+        font-size: 0.88rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+      }
+
+      .btn-reset-category:hover {
+        border-color: var(--accent);
+        background: rgba(var(--text-rgb), 0.06);
+        transform: translate3d(0, -1px, 0);
+      }
+
+      .btn-reset-category.is-filtered {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #ffffff;
+      }
+
+      .btn-reset-category.is-filtered::after {
+        content: '✕';
+        font-size: 0.75rem;
+        opacity: 0.85;
+      }
+
+      .btn-reset-category.is-filtered:hover {
+        background: var(--accent-dark);
+      }
+
       .catalog-search-inline {
         display: flex;
         gap: 10px;
@@ -545,8 +907,8 @@
 
       .catalog-search-inline input {
         min-width: 260px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(var(--text-rgb), 0.1);
+        background: rgba(var(--text-rgb), 0.04);
         color: var(--text);
         padding: 10px 16px;
         border-radius: 999px;
@@ -561,7 +923,7 @@
 
       .catalog-search-inline .btn-search {
         border: 1px solid var(--accent);
-        background: rgba(212, 175, 55, 0.08);
+        background: rgba(26, 79, 168, 0.08);
         color: var(--text);
         padding: 10px 20px;
         border-radius: 999px;
@@ -575,7 +937,7 @@
       }
 
       .catalog-search-inline .btn-search:hover {
-        background: rgba(212, 175, 55, 0.2);
+        background: rgba(26, 79, 168, 0.2);
         transform: translate3d(0, -1px, 0);
       }
 
@@ -606,8 +968,8 @@
         height: 42px;
         padding: 0 14px;
         border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(var(--text-rgb), 0.12);
+        background: rgba(var(--text-rgb), 0.04);
         color: var(--text);
         font-weight: 600;
         font-size: 0.95rem;
@@ -627,7 +989,7 @@
       .page-btn.active {
         background: var(--accent);
         border-color: var(--accent);
-        color: #0d131a;
+        color: #ffffff;
         cursor: default;
       }
 
@@ -666,11 +1028,11 @@
       .spinner {
         width: 48px;
         height: 48px;
-        border: 4px solid rgba(212, 175, 55, 0.15);
+        border: 4px solid rgba(26, 79, 168, 0.15);
         border-top-color: var(--accent);
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        box-shadow: 0 0 15px rgba(26, 79, 168, 0.2);
       }
 
       @keyframes spin {
@@ -692,8 +1054,8 @@
          la respuesta de la base de datos tarde lo mismo. */
       .skeleton-card {
         position: relative;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: linear-gradient(180deg, rgba(var(--text-rgb), 0.03), rgba(var(--text-rgb), 0.01));
+        border: 1px solid rgba(var(--text-rgb), 0.06);
         border-radius: 32px;
         overflow: hidden;
         padding: 28px;
@@ -718,7 +1080,7 @@
       }
 
       .skeleton-thumb, .skeleton-line {
-        background: linear-gradient(100deg, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 70%);
+        background: linear-gradient(100deg, rgba(var(--text-rgb), 0.05) 30%, rgba(var(--text-rgb), 0.12) 50%, rgba(var(--text-rgb), 0.05) 70%);
         background-size: 200% 100%;
         animation: skeletonShimmer 1.4s ease-in-out infinite;
       }
@@ -734,14 +1096,14 @@
 
       .product-card {
         position: relative;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+        background: linear-gradient(180deg, rgba(var(--text-rgb), 0.03), rgba(var(--text-rgb), 0.01));
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(var(--text-rgb), 0.06);
         border-radius: 32px;
         overflow: hidden;
         padding: 28px;
-        box-shadow: 0 38px 80px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 20px 50px rgba(16, 24, 38, 0.1);
         transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
         will-change: transform, border-color, box-shadow;
         display: flex;
@@ -754,15 +1116,15 @@
 
       .product-card:hover {
         transform: translate3d(0, -6px, 0);
-        border-color: rgba(212, 175, 55, 0.4);
-        box-shadow: 0 45px 90px rgba(0, 0, 0, 0.5), 0 0 30px rgba(212, 175, 55, 0.1);
+        border-color: rgba(26, 79, 168, 0.4);
+        box-shadow: 0 25px 55px rgba(16, 24, 38, 0.14), 0 0 0 1px rgba(26, 79, 168, 0.08);
       }
 
       .product-card::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: radial-gradient(circle at 50% 18%, rgba(212, 175, 55, 0.08), transparent 35%);
+        background: radial-gradient(circle at 50% 18%, rgba(26, 79, 168, 0.08), transparent 35%);
         pointer-events: none;
       }
 
@@ -772,9 +1134,9 @@
         aspect-ratio: 4 / 5;
         border-radius: 28px;
         overflow: hidden;
-        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 16px 40px rgba(16, 24, 38, 0.1);
         margin-bottom: 22px;
-        background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.1), transparent 30%), #0f1721;
+        background: radial-gradient(circle at 50% 45%, rgba(var(--text-rgb), 0.1), transparent 30%), #edf1f7;
         cursor: pointer;
       }
 
@@ -808,7 +1170,7 @@
 
       .original-price {
         font-weight: 600;
-        color: rgba(240, 244, 248, 0.9);
+        color: var(--text);
       }
 
       .original-price.has-discount {
@@ -843,7 +1205,7 @@
       .site-footer {
         margin-top: 100px;
         padding: 60px 0 30px;
-        background: linear-gradient(180deg, transparent 0%, rgba(3, 8, 20, 0.55) 25%, rgba(3, 8, 20, 0.92) 100%);
+        background: var(--accent-dark);
         width: 100vw;
         position: relative;
         left: 50%;
@@ -922,14 +1284,37 @@
       }
 
       .footer-links a:hover {
-        color: var(--text);
+        color: #ffffff;
         transform: translate3d(4px, 0, 0);
+      }
+
+      .site-footer, .footer-logo-wrap span {
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .footer-brand p, .footer-links a, .footer-promo-box p {
+        color: rgba(255, 255, 255, 0.65);
+      }
+
+      .footer-column h4 {
+        color: #dcae54;
+      }
+
+      .footer-promo-box {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .footer-promo-input {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
       }
 
       /* CÓDIGO PROMO FOOTER */
       .footer-promo-box {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px dashed rgba(212, 175, 55, 0.3);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px dashed rgba(255, 255, 255, 0.25);
         border-radius: 20px;
         padding: 20px;
         display: flex;
@@ -940,7 +1325,7 @@
       .footer-promo-box p {
         margin: 0;
         font-size: 0.85rem;
-        color: var(--muted);
+        color: rgba(255, 255, 255, 0.65);
         line-height: 1.4;
       }
 
@@ -951,11 +1336,11 @@
 
       .footer-promo-input {
         flex: 1;
-        background: rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 999px;
         padding: 10px 16px;
-        color: var(--text);
+        color: #ffffff;
         font-size: 0.85rem;
         text-transform: uppercase;
         outline: none;
@@ -963,12 +1348,12 @@
       }
 
       .footer-promo-input:focus {
-        border-color: var(--accent);
+        border-color: #dcae54;
       }
 
       .footer-promo-btn {
         background: var(--accent);
-        color: #0d131a;
+        color: #ffffff;
         border: none;
         border-radius: 999px;
         padding: 10px 18px;
@@ -980,6 +1365,35 @@
         transition: opacity 0.15s ease, transform 0.15s ease;
         will-change: transform, opacity;
       }
+
+      .dark-mode-toggle {
+        position: fixed;
+        left: 24px;
+        bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--text);
+        cursor: pointer;
+        padding: 0;
+        box-shadow: 0 10px 30px rgba(16, 24, 38, 0.25);
+        z-index: 900;
+      }
+
+      .dark-mode-toggle svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .dark-mode-toggle .icon-moon { display: block; }
+      .dark-mode-toggle .icon-sun { display: none; }
+      html.dark-mode .dark-mode-toggle .icon-moon { display: none; }
+      html.dark-mode .dark-mode-toggle .icon-sun { display: block; }
 
       .footer-promo-btn:hover {
         opacity: 0.9;
@@ -1016,10 +1430,10 @@
         right: -380px;
         width: 360px;
         height: 100vh;
-        background: rgba(3, 8, 20, 0.96);
+        background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border-left: 1px solid rgba(255, 255, 255, 0.08);
+        border-left: 1px solid rgba(var(--text-rgb), 0.08);
         box-shadow: none;
         padding: 24px;
         display: flex;
@@ -1040,7 +1454,7 @@
         justify-content: space-between;
         align-items: center;
         padding-bottom: 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(var(--text-rgb), 0.08);
       }
 
       .cart-header h3 {
@@ -1063,7 +1477,7 @@
         gap: 6px;
         padding: 6px 12px;
         border-radius: 999px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(var(--text-rgb), 0.05);
         transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
       }
 
@@ -1092,7 +1506,7 @@
         background: transparent;
       }
       .cart-items::-webkit-scrollbar-thumb {
-        background: rgba(212, 175, 55, 0.3);
+        background: rgba(26, 79, 168, 0.3);
         border-radius: 99px;
       }
 
@@ -1103,8 +1517,8 @@
         text-align: center;
         gap: 12px;
         padding: 16px;
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(var(--text-rgb), 0.02);
+        border: 1px solid rgba(var(--text-rgb), 0.05);
         border-radius: 22px;
         flex-shrink: 0;
         position: relative;
@@ -1114,7 +1528,7 @@
         width: 224px; 
         height: 224px; 
         border-radius: 18px;
-        background: #0f1721;
+        background: #edf1f7;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1155,9 +1569,9 @@
       }
 
       .cart-footer-block {
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 1px solid var(--line);
         padding-top: 20px;
-        background: #09111e;
+        background: var(--panel);
         margin-top: auto;
       }
 
@@ -1173,6 +1587,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+      }
+
+      .summary-row-hidden {
+        display: none !important;
       }
 
       .summary-row span {
@@ -1261,8 +1679,8 @@
       }
 
       .qty-btn {
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(var(--text-rgb), 0.16);
+        background: rgba(var(--text-rgb), 0.06);
         color: var(--text);
         border-radius: 14px;
         padding: 6px 12px;
@@ -1272,7 +1690,7 @@
       }
 
       .qty-btn:hover {
-        background: rgba(212, 175, 55, 0.2);
+        background: rgba(26, 79, 168, 0.2);
         border-color: var(--accent);
       }
 
@@ -1288,8 +1706,8 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(var(--text-rgb), 0.12);
+        background: rgba(var(--text-rgb), 0.04);
         color: var(--text);
         padding: 10px 18px;
         border-radius: 999px;
@@ -1303,7 +1721,7 @@
 
       .account-action:hover {
         border-color: var(--accent);
-        background: rgba(212, 175, 55, 0.1);
+        background: rgba(26, 79, 168, 0.1);
       }
 
       .account-action svg {
@@ -1368,8 +1786,8 @@
       }
 
       .auth-field input {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(var(--text-rgb), 0.04);
+        border: 1px solid rgba(var(--text-rgb), 0.14);
         border-radius: 12px;
         padding: 12px 14px;
         color: var(--text);
@@ -1387,7 +1805,7 @@
         border-radius: 999px;
         border: none;
         background: var(--accent);
-        color: #0d131a;
+        color: #ffffff;
         font-weight: 700;
         font-size: 0.85rem;
         letter-spacing: 0.08em;
@@ -1443,8 +1861,8 @@
 
       .account-profile-summary {
         padding: 14px 16px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(var(--text-rgb), 0.03);
+        border: 1px solid rgba(var(--text-rgb), 0.08);
         border-radius: 16px;
         margin-bottom: 18px;
       }
@@ -1468,8 +1886,8 @@
         position: relative;
         display: flex;
         gap: 4px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(var(--text-rgb), 0.03);
+        border: 1px solid rgba(var(--text-rgb), 0.08);
         border-radius: 999px;
         padding: 4px;
         margin-bottom: 18px;
@@ -1504,7 +1922,7 @@
       }
 
       .account-tab.is-active {
-        color: #0d131a;
+        color: #ffffff;
       }
 
       .account-tab-indicator {
@@ -1556,8 +1974,8 @@
         align-items: center;
         justify-content: center;
         gap: 10px;
-        background: rgba(212, 175, 55, 0.08);
-        border: 1px solid rgba(212, 175, 55, 0.25);
+        background: rgba(26, 79, 168, 0.08);
+        border: 1px solid rgba(26, 79, 168, 0.25);
         color: var(--accent);
         font-weight: 600;
         font-size: 0.9rem;
@@ -1574,7 +1992,7 @@
       }
 
       .account-wishlist-shortcut:hover {
-        background: rgba(212, 175, 55, 0.14);
+        background: rgba(26, 79, 168, 0.14);
         border-color: var(--accent);
       }
 
@@ -1595,8 +2013,8 @@
         width: 38px;
         height: 38px;
         border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        background: rgba(3, 8, 20, 0.55);
+        border: 1px solid rgba(var(--text-rgb), 0.1);
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(6px);
         display: flex;
         align-items: center;
@@ -1614,7 +2032,7 @@
       .wishlist-heart-btn svg {
         width: 19px;
         height: 19px;
-        stroke: #f0f4f8;
+        stroke: var(--text);
         fill: none;
         transition: fill 0.15s ease, stroke 0.15s ease;
       }
@@ -1629,7 +2047,7 @@
         align-items: center;
         gap: 8px;
         background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(var(--text-rgb), 0.14);
         color: var(--text);
         border-radius: 999px;
         padding: 10px 16px;
@@ -1667,8 +2085,8 @@
         align-items: flex-start;
         gap: 14px;
         padding: 12px;
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(var(--text-rgb), 0.02);
+        border: 1px solid rgba(var(--text-rgb), 0.05);
         border-radius: 16px;
         margin-bottom: 12px;
       }
@@ -1677,7 +2095,7 @@
         width: 64px;
         height: 64px;
         border-radius: 12px;
-        background: #0f1721;
+        background: #edf1f7;
         overflow: hidden;
         flex-shrink: 0;
       }
@@ -1732,8 +2150,8 @@
         justify-content: center;
         width: 36px;
         height: 36px;
-        background: rgba(212, 175, 55, 0.12);
-        border: 1px solid rgba(212, 175, 55, 0.4);
+        background: rgba(26, 79, 168, 0.12);
+        border: 1px solid rgba(26, 79, 168, 0.4);
         color: var(--accent);
         border-radius: 50%;
         cursor: pointer;
@@ -1746,12 +2164,12 @@
       }
 
       .wishlist-card-add:hover {
-        background: rgba(212, 175, 55, 0.22);
+        background: rgba(26, 79, 168, 0.22);
       }
 
       .wishlist-card-add:disabled {
-        background: rgba(255, 255, 255, 0.04);
-        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(var(--text-rgb), 0.04);
+        border-color: rgba(var(--text-rgb), 0.1);
         color: var(--muted);
         cursor: not-allowed;
       }
@@ -1786,12 +2204,12 @@
         margin: auto;
         width: min(1350px, calc(100% - 32px));
         height: min(92vh, 850px);
-        background: rgba(3, 8, 20, 0.96);
+        background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(var(--text-rgb), 0.08);
         border-radius: 30px;
-        box-shadow: 0 48px 120px rgba(0, 0, 0, 0.7);
+        box-shadow: 0 30px 80px rgba(16, 24, 38, 0.22);
         z-index: 1005;
         opacity: 0;
         pointer-events: none;
@@ -1832,8 +2250,8 @@
         gap: 8px;
         min-height: 46px;
         padding: 0 20px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(var(--text-rgb), 0.12);
+        background: rgba(var(--text-rgb), 0.03);
         color: var(--text);
         font-family: inherit;
         font-weight: 600;
@@ -1858,15 +2276,15 @@
       }
 
       .option-chip:hover {
-        background: rgba(212, 175, 55, 0.12);
-        border-color: rgba(212, 175, 55, 0.5);
+        background: rgba(26, 79, 168, 0.12);
+        border-color: rgba(26, 79, 168, 0.5);
         transform: translate3d(0, -1px, 0);
       }
 
       .option-chip.active {
-        background: linear-gradient(135deg, var(--accent), #f2d17a);
+        background: linear-gradient(135deg, var(--accent), #3f7fd6);
         border-color: var(--accent);
-        color: #0d131a;
+        color: #ffffff;
         box-shadow: 0 6px 18px var(--accent-glow);
         transform: translate3d(0, -1px, 0);
       }
@@ -1879,15 +2297,15 @@
         opacity: 0.25;
         text-decoration: line-through;
         cursor: not-allowed;
-        background: rgba(0, 0, 0, 0.4);
-        border-color: rgba(255, 255, 255, 0.05);
+        background: rgba(var(--text-rgb), 0.06);
+        border-color: rgba(var(--text-rgb), 0.05);
         transform: none !important;
         box-shadow: none !important;
       }
 
       .option-chip.no-stock:hover {
-        background: rgba(0, 0, 0, 0.4);
-        border-color: rgba(255, 255, 255, 0.05);
+        background: rgba(var(--text-rgb), 0.06);
+        border-color: rgba(var(--text-rgb), 0.05);
       }
 
       /* Los chips de talla (S, M, L, XL) se reparten el ancho
@@ -1940,7 +2358,7 @@
       }
 
       .modal-image {
-        background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.1), transparent 30%), #0a0e14;
+        background: radial-gradient(circle at 50% 40%, rgba(var(--text-rgb), 0.1), transparent 30%), #e0e6f0;
         border-radius: 28px;
         position: relative;
         overflow: hidden;
@@ -1970,8 +2388,8 @@
         top: 50%;
         transform: translateY(-50%);
         background: rgba(13, 19, 26, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: var(--text);
+        border: 1px solid rgba(var(--text-rgb), 0.2);
+        color: #ffffff;
         width: 48px;
         height: 48px;
         border-radius: 50%;
@@ -1989,8 +2407,8 @@
       .modal-arrow:hover {
         background: var(--accent);
         border-color: var(--accent);
-        color: #0d131a;
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        color: #ffffff;
+        box-shadow: 0 0 15px rgba(26, 79, 168, 0.4);
         transform: translateY(-50%) scale(1.08);
       }
 
@@ -2031,7 +2449,7 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(var(--text-rgb), 0.3);
         transition: background 0.15s ease;
       }
 
@@ -2055,7 +2473,7 @@
         background: transparent;
       }
       .modal-details::-webkit-scrollbar-thumb {
-        background: rgba(212, 175, 55, 0.2);
+        background: rgba(26, 79, 168, 0.2);
         border-radius: 999px;
       }
 
@@ -2086,8 +2504,8 @@
         gap: 12px;
         padding: 14px 20px;
         border-radius: 999px;
-        background: rgba(212, 175, 55, 0.1);
-        border: 1px solid rgba(212, 175, 55, 0.2);
+        background: rgba(26, 79, 168, 0.1);
+        border: 1px solid rgba(26, 79, 168, 0.2);
         width: fit-content;
         font-family: 'Oswald', sans-serif;
         letter-spacing: 0.18em;
@@ -2121,8 +2539,8 @@
         align-items: center;
         gap: 8px;
         padding: 10px 16px;
-        background: rgba(212, 175, 55, 0.08);
-        border: 1px dashed rgba(212, 175, 55, 0.4);
+        background: rgba(26, 79, 168, 0.08);
+        border: 1px dashed rgba(26, 79, 168, 0.4);
         border-radius: 14px;
         color: var(--accent);
         font-size: 0.85rem;
@@ -2143,11 +2561,11 @@
       .toast {
         min-width: 280px;
         background: rgba(13, 19, 26, 0.95);
-        border: 1px solid rgba(212, 175, 55, 0.25);
+        border: 1px solid rgba(26, 79, 168, 0.25);
         padding: 16px 18px;
         border-radius: 18px;
         color: var(--text);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 14px 40px rgba(16, 24, 38, 0.14);
         animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
@@ -2158,11 +2576,11 @@
 
       /* MEDIA QUERIES OPTIMIZADAS */
       @media (max-width: 1140px) {
-        body { padding-top: 180px; }
         .site-header { padding: 20px 24px; }
         .brand-text { font-size: 1.8rem; }
         .brand-logo-header { height: 50px; }
-        .hero-section { grid-template-columns: 1fr; }
+        .hero-section { grid-template-columns: 1fr; padding: 40px 24px; }
+        .hero-copy, .hero-visual { margin-left: 0; margin-right: 0; max-width: 100%; }
         .feature-card { margin: 0 auto; }
         .catalog-title-row { flex-direction: column; align-items: center; gap: 16px; }
         .catalog-search-inline { width: 100%; justify-content: center; }
@@ -2172,7 +2590,8 @@
       }
 
       @media (max-width: 740px) {
-        body { padding-top: 220px; }
+        .utility-bar { display: none; }
+        .collections-grid { grid-template-columns: repeat(2, 1fr); }
         .site-header { grid-template-columns: 1fr; text-align: center; gap: 16px; padding: 20px 16px; }
         .actions-panel { justify-content: center; gap: 8px; }
         .quick-actions { gap: 8px; }
@@ -2194,13 +2613,9 @@
       }
 
       @media (max-width: 480px) {
-        body {
-          padding-top: 200px !important;
-        }
-
         .promo-bar {
           font-size: 0.72rem;
-          padding: 6px 12px;
+          padding: 8px 12px;
         }
 
         .site-header {
@@ -2231,8 +2646,13 @@
         }
 
         .hero-section {
-          padding: 10px 0 20px !important;
+          padding: 32px 20px !important;
           gap: 24px !important;
+        }
+
+        .hero-copy, .hero-visual {
+          margin-left: 0 !important;
+          margin-right: 0 !important;
         }
 
         .hero-copy h1 {
@@ -2294,6 +2714,11 @@
           width: 100%;
         }
 
+        .btn-reset-category {
+          width: 100%;
+          min-width: 0;
+        }
+
         .product-grid {
           grid-template-columns: 1fr !important;
         }
@@ -2351,7 +2776,7 @@
           height: 42vh !important;
           border-radius: 0 !important;
           flex-shrink: 0;
-          background-color: #0a0e14 !important;
+          background-color: #e0e6f0 !important;
         }
 
         /* Imagen completa, sin recortar (antes usaba object-fit:cover) */
@@ -2416,12 +2841,22 @@
     </script>
   </head>
   <body>
-    <!-- Canvas WebGL de Fondo Cáustico Neón -->
-    <canvas id="causticsCanvas"></canvas>
 
     <!-- CABECERA DE LA TIENDA CON BARRA DE PROMO INTEGRADA -->
     <header class="site-header-wrapper" id="siteHeaderWrapper">
-      <div class="promo-bar" id="promoBar"></div>
+      <div class="utility-bar">
+        <div class="utility-bar-inner">
+          <span class="utility-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3V6a1 1 0 0 1 1-1h11v12h-2M5 17a2 2 0 1 0 4 0M5 17a2 2 0 1 1 4 0m6 0a2 2 0 1 0 4 0m-4 0a2 2 0 1 1 4 0M15 9h4l3 3v5h-2"/></svg>
+            Envíos a todo Hermosillo
+          </span>
+          <a class="utility-item" href="https://www.instagram.com/retrokits.fc/" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+            Síguenos en Instagram
+          </a>
+        </div>
+      </div>
+
       <nav class="site-header">
         <a href="#" class="brand-block">
           <img class="brand-logo-header" src="imagenes/RKlogo.png" alt="RetroKits Logo" />
@@ -2449,7 +2884,8 @@
     <div class="app-shell">
       <div id="storeView">
         <main>
-          <section class="hero-section">
+          <section class="hero-section" id="heroSection">
+            <canvas class="hero-caustics-canvas" id="heroCausticsCanvas" aria-hidden="true"></canvas>
             <div class="hero-copy">
               <h1>LA <span class="accent">PASIÓN</span> SE VISTE.</h1>
               <div class="eyebrow" style="margin-top: 10px; margin-bottom: 24px;"> </div>
@@ -2471,6 +2907,38 @@
             </div>
           </section>
 
+          <section class="collections-section">
+            <div class="promo-bar" id="promoBar"></div>
+            <h2>Colecciones</h2>
+            <div class="collections-grid">
+              <button type="button" class="collection-card" data-cat="LaLiga" style="--card-gradient: linear-gradient(160deg, #7a1f2b, #4a1219); --card-image: url('imagenes/laliga.jpg');">
+                <div class="collection-card-inner">
+                  <h3>LaLiga</h3>
+                </div>
+              </button>
+              <button type="button" class="collection-card" data-cat="Premier League" style="--card-gradient: linear-gradient(160deg, #2b3a7a, #141d40); --card-image: url('imagenes/premierleague.jpg');">
+                <div class="collection-card-inner">
+                  <h3>Premier League</h3>
+                </div>
+              </button>
+              <button type="button" class="collection-card" data-cat="Serie A" style="--card-gradient: linear-gradient(160deg, #1a5a37, #0d2e1c); --card-image: url('imagenes/seriea.jpg');">
+                <div class="collection-card-inner">
+                  <h3>Serie A</h3>
+                </div>
+              </button>
+              <button type="button" class="collection-card" data-cat="Selecciones" style="--card-gradient: linear-gradient(160deg, #7a5a1f, #43310e); --card-image: url('imagenes/selecciones.jpg');">
+                <div class="collection-card-inner">
+                  <h3>Selecciones</h3>
+                </div>
+              </button>
+              <button type="button" class="collection-card" data-cat="Otras Ligas" style="--card-gradient: linear-gradient(160deg, #4a2b7a, #241340); --card-image: url('imagenes/otrasligas.jpg');">
+                <div class="collection-card-inner">
+                  <h3>Otras Ligas</h3>
+                </div>
+              </button>
+            </div>
+          </section>
+
           <section class="catalog-section" id="coleccion">
             <div class="catalog-grid" id="catalogHeaderRow">
               <div class="catalog-title-row">
@@ -2478,9 +2946,13 @@
                   <h2><a href="javascript:void(0)" onclick="resetToAllCategories();">COLECCIÓN</a></h2>
                 </div>
                 
-                <!-- DROPDOWN DE CATEGORÍAS ESTILIZADO -->
-                <div class="custom-select-wrapper">
-                  <select id="categorySelect" class="category-select">
+                <!-- El filtrado por liga ya se hace desde las tarjetas de
+                     "Colecciones" arriba. Este select se mantiene oculto
+                     únicamente como estado interno (lo usa el JS de
+                     filtrado/búsqueda); en su lugar mostramos un botón que
+                     resetea el filtro y avisa qué categoría está activa. -->
+                <div class="custom-select-wrapper" style="display:none;" aria-hidden="true">
+                  <select id="categorySelect" class="category-select" tabindex="-1">
                     <option value="Todas">Todas las Categorías</option>
                     <option value="LaLiga">LaLiga</option>
                     <option value="Premier League">Premier League</option>
@@ -2489,6 +2961,9 @@
                     <option value="Otras Ligas">Otras Ligas</option>
                   </select>
                 </div>
+                <button type="button" id="resetCategoryBtn" class="btn-reset-category">
+                  <span id="resetCategoryLabel">Todas las categorías</span>
+                </button>
 
                 <div class="catalog-search-inline">
                   <input id="searchInput" type="search" placeholder="Buscar camiseta..." />
@@ -2521,7 +2996,7 @@
           <div class="footer-brand">
             <div class="footer-logo-wrap">
               <img src="imagenes/RKlogo.png" alt="RetroKits Logo" loading="lazy" decoding="async" />
-              <span>RETRO<span style="color: var(--accent);">KITS</span></span>
+              <span>RETRO<span style="color: #dcae54;">KITS</span></span>
             </div>
             <p>Especialistas en la venta y curaduría de camisetas de fútbol retro, de colección y piezas icónicas que hicieron historia en la cancha.</p>
           </div>
@@ -2567,6 +3042,10 @@
           </div>
 
         </div>
+        <button type="button" class="dark-mode-toggle" id="darkModeToggle" aria-label="Cambiar modo oscuro">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
       </footer>
     </div>
 
@@ -2581,11 +3060,11 @@
       <div class="cart-items" id="cartItems"></div>
       <div class="cart-footer-block">
         <div class="cart-summary">
-          <div class="summary-row">
+          <div class="summary-row summary-row-hidden">
             <span>Subtotal</span>
             <strong id="cartSubtotal">$0</strong>
           </div>
-          <div class="summary-row" id="discountRow" style="display: none; color: var(--success);">
+          <div class="summary-row summary-row-hidden" id="discountRow" style="display: none; color: var(--success);">
             <span style="color: var(--success);">Descuento</span>
             <strong id="cartDiscount" style="color: var(--success);">-$0</strong>
           </div>
@@ -2788,170 +3267,6 @@
 
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- SCRIPT DE SHADER WEBGL PARA FONDO CÁUSTICO NEÓN OPTIMIZADO -->
-    <script>
-      (function() {
-        const canvas = document.getElementById('causticsCanvas');
-        const gl = canvas.getContext('webgl', { powerPreference: "high-performance", alpha: false }) || canvas.getContext('experimental-webgl');
-
-        if (!gl) return;
-
-        const vsSource = `
-          attribute vec2 a_position;
-          void main() {
-            gl_Position = vec4(a_position, 0.0, 1.0);
-          }
-        `;
-
-        const fsSource = `
-          precision mediump float;
-
-          uniform vec2 u_resolution;
-          uniform vec2 u_mouse;
-          uniform float u_time;
-
-          float complexRays(vec2 uv, float time) {
-            vec2 p = uv * 4.5;
-            vec2 i = p;
-            float c = 0.0;
-            
-            for (int n = 0; n < 5; n++) {
-              float t = time * 0.2 + float(n) * 1.3;
-              i = p + vec2(
-                cos(t - i.x) + sin(t + i.y * 1.5),
-                sin(t - i.y) + cos(t + i.x * 1.5)
-              );
-              
-              c += 1.0 / length(vec2(
-                p.x / (sin(i.x + t) / 0.25),
-                p.y / (cos(i.y + t) / 0.25)
-              ));
-            }
-            
-            c /= 5.0;
-            return pow(clamp(c * 0.4, 0.0, 1.0), 2.2);
-          }
-
-          void main() {
-            vec2 st = gl_FragCoord.xy / u_resolution.xy;
-            st.x *= u_resolution.x / u_resolution.y;
-
-            vec2 mouseSt = u_mouse / u_resolution.xy;
-            mouseSt.x *= u_resolution.x / u_resolution.y;
-
-            float distToMouse = distance(st, mouseSt);
-            float mouseInteraction = smoothstep(0.5, 0.0, distToMouse); 
-            vec2 distortedSt = st + (st - mouseSt) * mouseInteraction * 0.32; 
-
-            float rayPattern1 = complexRays(distortedSt, u_time);
-            float rayPattern2 = complexRays(distortedSt * 1.6 + vec2(1.5, -2.0), u_time * 0.8);
-
-            vec3 deepAbyss    = vec3(0.01, 0.04, 0.10);
-            vec3 cobaltBlue   = vec3(0.05, 0.18, 0.45);
-            vec3 electricCyan = vec3(0.00, 0.55, 0.75);
-            vec3 turquoiseGlow= vec3(0.25, 0.88, 0.95);
-
-            vec3 color = mix(deepAbyss, cobaltBlue, st.y * 0.5 + 0.2);
-            color += mix(cobaltBlue, electricCyan, rayPattern1) * rayPattern1 * 0.8;
-            color += mix(electricCyan, turquoiseGlow, rayPattern2) * rayPattern2 * 0.6;
-
-            float intersections = rayPattern1 * rayPattern2;
-            color += turquoiseGlow * intersections * 1.2;
-            color += turquoiseGlow * mouseInteraction * 0.15 * (rayPattern1 + 0.2);
-
-            gl_FragColor = vec4(color, 1.0);
-          }
-        `;
-
-        function createShader(gl, type, source) {
-          const shader = gl.createShader(type);
-          gl.shaderSource(shader, source);
-          gl.compileShader(shader);
-          if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            console.error(gl.getShaderInfoLog(shader));
-            gl.deleteShader(shader);
-            return null;
-          }
-          return shader;
-        }
-
-        const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
-        const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
-
-        const program = gl.createProgram();
-        gl.attachShader(program, vertexShader);
-        gl.attachShader(program, fragmentShader);
-        gl.linkProgram(program);
-        gl.useProgram(program);
-
-        const positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-          -1, -1,
-           1, -1,
-          -1,  1,
-          -1,  1,
-           1, -1,
-           1,  1,
-        ]), gl.STATIC_DRAW);
-
-        const positionLocation = gl.getAttribLocation(program, "a_position");
-        gl.enableVertexAttribArray(positionLocation);
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-        const resLocation = gl.getUniformLocation(program, "u_resolution");
-        const mouseLocation = gl.getUniformLocation(program, "u_mouse");
-        const timeLocation = gl.getUniformLocation(program, "u_time");
-
-        let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-        let targetMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-
-        function resizeCanvas() {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-          gl.viewport(0, 0, canvas.width, canvas.height);
-        }
-
-        window.addEventListener('resize', resizeCanvas, { passive: true });
-        window.addEventListener('mousemove', (e) => {
-          targetMouse.x = e.clientX;
-          targetMouse.y = canvas.height - e.clientY;
-        }, { passive: true });
-
-        resizeCanvas();
-
-        let causticsRafId = null;
-
-        function renderCaustics(time) {
-          mouse.x += (targetMouse.x - mouse.x) * 0.03;
-          mouse.y += (targetMouse.y - mouse.y) * 0.03;
-
-          gl.uniform2f(resLocation, canvas.width, canvas.height);
-          gl.uniform2f(mouseLocation, mouse.x, mouse.y);
-          gl.uniform1f(timeLocation, time * 0.001);
-
-          gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-          causticsRafId = requestAnimationFrame(renderCaustics);
-        }
-
-        // Pausar el shader cuando la pestaña no está visible: no se ve ningún
-        // cambio (la pestaña está oculta) pero se libera GPU/CPU para que el
-        // resto del sitio (imágenes, scroll, modal) responda más fluido.
-        document.addEventListener('visibilitychange', () => {
-          if (document.hidden) {
-            if (causticsRafId !== null) {
-              cancelAnimationFrame(causticsRafId);
-              causticsRafId = null;
-            }
-          } else if (causticsRafId === null) {
-            causticsRafId = requestAnimationFrame(renderCaustics);
-          }
-        });
-
-        causticsRafId = requestAnimationFrame(renderCaustics);
-      })();
-    </script>
 
     <!-- SCRIPT PRINCIPAL DE LA TIENDA Y SUPABASE OPTIMIZADO -->
     <script>
@@ -3032,6 +3347,13 @@
 
       // CACHÉ DE ELEMENTOS DOM
       const siteHeaderWrapper = document.getElementById('siteHeaderWrapper');
+
+      // Asegura que la página siempre arranque mostrando el inicio (hero),
+      // no un scroll heredado de una visita anterior.
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
       const catalogHeaderRow = document.getElementById('catalogHeaderRow');
       const productGrid = document.getElementById('productGrid');
       const paginationControls = document.getElementById('paginationControls');
@@ -3050,6 +3372,8 @@
       const searchInput = document.getElementById('searchInput');
       const searchSubmit = document.getElementById('searchSubmit');
       const categorySelect = document.getElementById('categorySelect');
+      const resetCategoryBtn = document.getElementById('resetCategoryBtn');
+      const resetCategoryLabel = document.getElementById('resetCategoryLabel');
 
       const productModal = document.getElementById('productModal');
       const modalBackdrop = document.getElementById('modalBackdrop');
@@ -3288,11 +3612,24 @@
         window.requestAnimationFrame(step);
       }
 
+      // Refleja en el botón "Todas las categorías" cuál es el filtro
+      // activo (viene de las tarjetas de Colecciones, del select oculto,
+      // o de una búsqueda). Al hacer clic siempre vuelve a "Todas".
+      function updateCategoryButtonLabel() {
+        const cat = categorySelect.value;
+        const isFiltered = !!cat && cat !== 'Todas';
+        resetCategoryLabel.textContent = isFiltered ? cat : 'Todas las categorías';
+        resetCategoryBtn.classList.toggle('is-filtered', isFiltered);
+      }
+
       function resetToAllCategories() {
         categorySelect.value = 'Todas';
         searchInput.value = '';
         renderProductsSmooth(products);
+        updateCategoryButtonLabel();
       }
+
+      resetCategoryBtn.addEventListener('click', resetToAllCategories);
 
       async function loadPromoFromSupabase() {
         try {
@@ -4375,6 +4712,7 @@
 
         if (cleanQuery.length > 0) {
           categorySelect.value = 'Todas';
+          updateCategoryButtonLabel();
         }
 
         if (cleanQuery === '') {
@@ -4427,6 +4765,19 @@
           const filtered = products.filter(p => p.category === cat);
           renderProductsSmooth(filtered);
         }
+        updateCategoryButtonLabel();
+      });
+
+      updateCategoryButtonLabel();
+
+      // Tarjetas de la franja "Colecciones" (arriba del catálogo): usan el
+      // mismo atributo data-cat y disparan el mismo evento de filtrado.
+      document.querySelectorAll('.collection-card').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const cat = btn.getAttribute('data-cat');
+          categorySelect.value = cat;
+          categorySelect.dispatchEvent(new Event('change'));
+        });
       });
 
       closeModalBtn.addEventListener('click', closeModal);
@@ -4944,6 +5295,220 @@
 
       loadPromoFromSupabase();
       loadProductsFromSupabase();
+
+      // MODO OSCURO
+      (function () {
+        const toggleBtn = document.getElementById('darkModeToggle');
+        if (!toggleBtn) return;
+
+        function applyTheme(isDark) {
+          document.documentElement.classList.toggle('dark-mode', isDark);
+        }
+
+        const saved = localStorage.getItem('rk-dark-mode');
+        applyTheme(saved === 'true');
+
+        toggleBtn.addEventListener('click', () => {
+          const isDark = !document.documentElement.classList.contains('dark-mode');
+          applyTheme(isDark);
+          localStorage.setItem('rk-dark-mode', String(isDark));
+        });
+      })();
+    </script>
+
+    <!-- ============================================================
+         FONDO CÁUSTICO NEÓN (WebGL) — acotado a la hero-section
+         ("LA PASIÓN SE VISTE"), no a toda la ventana.
+         ============================================================ -->
+    <script>
+      (function () {
+        const heroSection = document.getElementById('heroSection');
+        const canvas = document.getElementById('heroCausticsCanvas');
+        if (!heroSection || !canvas) return;
+
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) return; // Sin WebGL disponible: se queda el color de fondo sólido de respaldo.
+
+        const vsSource = `
+          attribute vec2 a_position;
+          void main() {
+            gl_Position = vec4(a_position, 0.0, 1.0);
+          }
+        `;
+
+        const fsSource = `
+          precision mediump float;
+
+          uniform vec2 u_resolution;
+          uniform vec2 u_mouse;
+          uniform float u_time;
+
+          float complexRays(vec2 uv, float time) {
+            vec2 p = uv * 4.5;
+            vec2 i = p;
+            float c = 0.0;
+
+            for (int n = 0; n < 5; n++) {
+              float t = time * 0.2 + float(n) * 1.3;
+              i = p + vec2(
+                cos(t - i.x) + sin(t + i.y * 1.5),
+                sin(t - i.y) + cos(t + i.x * 1.5)
+              );
+
+              c += 1.0 / length(vec2(
+                p.x / (sin(i.x + t) / 0.25),
+                p.y / (cos(i.y + t) / 0.25)
+              ));
+            }
+
+            c /= 5.0;
+            return pow(clamp(c * 0.4, 0.0, 1.0), 2.2);
+          }
+
+          void main() {
+            vec2 st = gl_FragCoord.xy / u_resolution.xy;
+            st.x *= u_resolution.x / u_resolution.y;
+
+            vec2 mouseSt = u_mouse / u_resolution.xy;
+            mouseSt.x *= u_resolution.x / u_resolution.y;
+
+            float distToMouse = distance(st, mouseSt);
+            float mouseInteraction = smoothstep(0.5, 0.0, distToMouse);
+            vec2 distortedSt = st + (st - mouseSt) * mouseInteraction * 0.32;
+
+            float rayPattern1 = complexRays(distortedSt, u_time);
+            float rayPattern2 = complexRays(distortedSt * 1.6 + vec2(1.5, -2.0), u_time * 0.8);
+
+            vec3 deepAbyss    = vec3(0.01, 0.04, 0.10);
+            vec3 cobaltBlue   = vec3(0.05, 0.18, 0.45);
+            vec3 electricCyan = vec3(0.00, 0.55, 0.75);
+            vec3 turquoiseGlow= vec3(0.25, 0.88, 0.95);
+
+            vec3 color = mix(deepAbyss, cobaltBlue, st.y * 0.5 + 0.2);
+
+            color += mix(cobaltBlue, electricCyan, rayPattern1) * rayPattern1 * 0.8;
+            color += mix(electricCyan, turquoiseGlow, rayPattern2) * rayPattern2 * 0.6;
+
+            float intersections = rayPattern1 * rayPattern2;
+            color += turquoiseGlow * intersections * 1.2;
+
+            color += turquoiseGlow * mouseInteraction * 0.15 * (rayPattern1 + 0.2);
+
+            gl_FragColor = vec4(color, 1.0);
+          }
+        `;
+
+        function createShader(gl, type, source) {
+          const shader = gl.createShader(type);
+          gl.shaderSource(shader, source);
+          gl.compileShader(shader);
+          if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.error(gl.getShaderInfoLog(shader));
+            gl.deleteShader(shader);
+            return null;
+          }
+          return shader;
+        }
+
+        const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
+        const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+        if (!vertexShader || !fragmentShader) return;
+
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        gl.useProgram(program);
+
+        const positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+          -1, -1,
+           1, -1,
+          -1,  1,
+          -1,  1,
+           1, -1,
+           1,  1,
+        ]), gl.STATIC_DRAW);
+
+        const positionLocation = gl.getAttribLocation(program, 'a_position');
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        const resLocation = gl.getUniformLocation(program, 'u_resolution');
+        const mouseLocation = gl.getUniformLocation(program, 'u_mouse');
+        const timeLocation = gl.getUniformLocation(program, 'u_time');
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        let mouse = { x: 0, y: 0 };
+        let targetMouse = { x: 0, y: 0 };
+
+        function resize() {
+          const rect = heroSection.getBoundingClientRect();
+          const w = Math.max(1, Math.round(rect.width * dpr));
+          const h = Math.max(1, Math.round(rect.height * dpr));
+          if (canvas.width !== w || canvas.height !== h) {
+            canvas.width = w;
+            canvas.height = h;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+          }
+          if (targetMouse.x === 0 && targetMouse.y === 0) {
+            targetMouse.x = canvas.width / 2;
+            targetMouse.y = canvas.height / 2;
+            mouse.x = targetMouse.x;
+            mouse.y = targetMouse.y;
+          }
+        }
+
+        window.addEventListener('resize', resize);
+        if (window.ResizeObserver) {
+          new ResizeObserver(resize).observe(heroSection);
+        }
+
+        heroSection.addEventListener('mousemove', (e) => {
+          const rect = heroSection.getBoundingClientRect();
+          targetMouse.x = (e.clientX - rect.left) * dpr;
+          targetMouse.y = (rect.height - (e.clientY - rect.top)) * dpr;
+        });
+
+        resize();
+
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        let rafId;
+        function render(time) {
+          mouse.x += (targetMouse.x - mouse.x) * 0.03;
+          mouse.y += (targetMouse.y - mouse.y) * 0.03;
+
+          gl.uniform2f(resLocation, canvas.width, canvas.height);
+          gl.uniform2f(mouseLocation, mouse.x, mouse.y);
+          gl.uniform1f(timeLocation, time * 0.001);
+
+          gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+          if (!prefersReducedMotion) {
+            rafId = requestAnimationFrame(render);
+          }
+        }
+
+        if (prefersReducedMotion) {
+          requestAnimationFrame(render);
+        } else if (window.IntersectionObserver) {
+          const io = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                if (!rafId) rafId = requestAnimationFrame(render);
+              } else if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+              }
+            });
+          }, { threshold: 0.01 });
+          io.observe(heroSection);
+        } else {
+          rafId = requestAnimationFrame(render);
+        }
+      })();
     </script>
   </body>
 </html>
