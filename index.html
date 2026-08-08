@@ -804,6 +804,45 @@
         .collections-grid { grid-template-columns: 1fr; }
       }
 
+      /* BARRA DE CATEGORÍAS SOLO PARA MÓVIL: lista normal de pills,
+         oculta en desktop/tablet (ahí se usan las tarjetas grandes). */
+      .mobile-category-bar {
+        display: none;
+      }
+
+      .mobile-category-pill {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--text);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        padding: 9px 16px;
+        border-radius: 999px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+      }
+
+      .mobile-category-pill:active {
+        transform: scale(0.96);
+      }
+
+      .mobile-category-pill.is-active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #ffffff;
+      }
+
+      @media (max-width: 740px) {
+        .mobile-category-bar {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 4px;
+        }
+      }
+
       /* CATÁLOGO Y CATEGORÍAS */
       .catalog-grid {
         scroll-margin-top: 170px; 
@@ -2653,43 +2692,9 @@
 
       @media (max-width: 740px) {
         .utility-bar { display: none; }
-        .collections-grid {
-          display: flex;
-          flex-wrap: nowrap;
-          overflow-x: auto;
-          overscroll-behavior-x: contain;
-          scroll-snap-type: x proximity;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          gap: 10px;
-          margin: 0 -24px;
-          padding: 2px 24px 10px;
-        }
-        .collections-grid::-webkit-scrollbar { display: none; }
-        .collection-card {
-          flex: 0 0 auto;
-          min-height: unset;
-          width: auto;
-          padding: 10px 18px;
-          border-radius: 999px;
-          align-items: center;
-          scroll-snap-align: start;
-          transition: transform 0.15s ease;
-        }
-        .collection-card:hover,
-        .collection-card:active {
-          transform: none;
-        }
-        .collection-card::before { background-image: none; }
-        .collection-card::after { display: none; }
-        .collection-card-inner span.tag { display: none; }
-        .collection-card-inner h3 {
-          margin: 0;
-          font-size: 0.82rem;
-          white-space: nowrap;
-          letter-spacing: 0;
-        }
-        .collection-card-cta { display: none; }
+        /* En móvil se oculta el grid de tarjetas grandes (poco legible e
+           inescalable) y se usa en su lugar #mobileCategoryBar (más abajo). */
+        .collections-grid { display: none; }
         .site-header { grid-template-columns: 1fr; text-align: center; gap: 16px; padding: 20px 16px; }
         .actions-panel { justify-content: center; gap: 8px; }
         .quick-actions { gap: 8px; }
@@ -3001,7 +3006,6 @@
 
           <section class="collections-section">
             <div class="promo-bar" id="promoBar"></div>
-            <h2>Colecciones</h2>
             <div class="collections-grid">
               <button type="button" class="collection-card" data-cat="LaLiga" style="--card-gradient: linear-gradient(160deg, #7a1f2b, #4a1219); --card-image: url('imagenes/laliga.jpg');">
                 <div class="collection-card-inner">
@@ -3028,6 +3032,19 @@
                   <h3>Otras Ligas</h3>
                 </div>
               </button>
+            </div>
+
+            <!-- Barra de categorías SOLO para móvil: reemplaza las tarjetas
+                 grandes (ilegibles/poco intuitivas en pantalla chica) por
+                 una lista normal de pills que se puede leer y tocar de
+                 corrido, sin depender de scroll horizontal oculto. -->
+            <div class="mobile-category-bar" id="mobileCategoryBar">
+              <button type="button" class="mobile-category-pill is-active" data-cat="Todas">Todas</button>
+              <button type="button" class="mobile-category-pill" data-cat="LaLiga">LaLiga</button>
+              <button type="button" class="mobile-category-pill" data-cat="Premier League">Premier League</button>
+              <button type="button" class="mobile-category-pill" data-cat="Serie A">Serie A</button>
+              <button type="button" class="mobile-category-pill" data-cat="Selecciones">Selecciones</button>
+              <button type="button" class="mobile-category-pill" data-cat="Otras Ligas">Otras Ligas</button>
             </div>
           </section>
 
@@ -3740,6 +3757,9 @@
         const isFiltered = !!cat && cat !== 'Todas';
         resetCategoryLabel.textContent = isFiltered ? cat : 'Todas las categorías';
         resetCategoryBtn.classList.toggle('is-filtered', isFiltered);
+        document.querySelectorAll('.mobile-category-pill').forEach((pill) => {
+          pill.classList.toggle('is-active', pill.getAttribute('data-cat') === (isFiltered ? cat : 'Todas'));
+        });
       }
 
       function resetToAllCategories() {
@@ -4896,6 +4916,21 @@
           const cat = btn.getAttribute('data-cat');
           categorySelect.value = cat;
           categorySelect.dispatchEvent(new Event('change'));
+        });
+      });
+
+      // Barra de categorías de móvil (pills): mismo mecanismo, más el
+      // botón "Todas" que resetea el filtro.
+      const mobileCategoryPills = document.querySelectorAll('.mobile-category-pill');
+      mobileCategoryPills.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const cat = btn.getAttribute('data-cat');
+          if (cat === 'Todas') {
+            resetToAllCategories();
+          } else {
+            categorySelect.value = cat;
+            categorySelect.dispatchEvent(new Event('change'));
+          }
         });
       });
 
