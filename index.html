@@ -2984,7 +2984,7 @@
           <section class="hero-section" id="heroSection">
             <canvas class="hero-caustics-canvas" id="heroCausticsCanvas" aria-hidden="true"></canvas>
             <div class="hero-copy">
-              <h1>LA <span class="accent">PASIÓN</span> SE VISTE.</h1>
+              <h1>LA <span class="accent">PASIÓN</span> SE VISTE</h1>
               <div class="eyebrow" style="margin-top: 10px; margin-bottom: 24px;"> </div>
               <p>Las jerseys que marcaron los momentos más grandes del fútbol, hechas para quienes siguen viviendo cada partido con la misma pasión de siempre.</p>
               <div class="hero-buttons">
@@ -3126,7 +3126,7 @@
             <ul class="footer-links">
               <li><a href="https://www.instagram.com/retrokits.fc/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
               <li><a href="mailto:retrokitshmo@gmail.com">retrokitshmo@gmail.com</a></li>
-              <li><span style="color: var(--muted); font-size: 0.9rem;">Basados en Hermosillo</span></li>
+              <li><span style="color: rgba(255, 255, 255, 0.65); font-size: 0.9rem;">Basados en Hermosillo</span></li>
             </ul>
           </div>
 
@@ -3454,6 +3454,7 @@
       }
 
       let currentHeroIndex = 0;
+      let currentFeaturedProduct = null;
       let heroInterval = null;
 
       // CACHÉ DE ELEMENTOS DOM
@@ -3527,6 +3528,16 @@
       const heroImage = document.getElementById('heroImage');
       const featureTitle = document.getElementById('feature-title');
       const heroDescription = document.getElementById('heroDescription');
+
+      // Al hacer clic en la camisa destacada del hero, se abre exactamente
+      // como si se hubiera clickeado desde la grilla/menú de productos.
+      const heroFeatureCard = document.querySelector('.hero-visual .feature-card');
+      if (heroFeatureCard) {
+        heroFeatureCard.style.cursor = 'pointer';
+        heroFeatureCard.addEventListener('click', () => {
+          if (currentFeaturedProduct) openModal(currentFeaturedProduct);
+        });
+      }
       const heroMeta = document.getElementById('heroMeta');
       const promoBar = document.getElementById('promoBar');
 
@@ -4251,6 +4262,7 @@
 
       function updateHeroFeature(featured) {
         if (!featured) return;
+        currentFeaturedProduct = featured;
         const heroPrimaryRaw = featured.image_id || featured.image_url;
         const heroFallbackRaw = (featured.image_id && featured.image_url && featured.image_id !== featured.image_url) ? featured.image_url : null;
         heroImage.dataset.baseSrc = getProductImage(heroPrimaryRaw, IMG_SIZES.hero) || fallbackPlaceholder;
