@@ -101,6 +101,7 @@
       }
 
       html.dark-mode .modal-wishlist-heart {
+        background: rgba(238, 241, 246, 0.06);
         border-color: rgba(238, 241, 246, 0.18);
       }
 
@@ -2142,29 +2143,102 @@
         stroke: var(--discount-tag);
       }
 
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Fila que agrupa el título con el ícono de favoritos (estilo
+         "bookmark" arriba a la derecha), como en las referencias. */
+      .modal-title-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .modal-title-row h2 {
+        margin: 0;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .modal-divider {
+        width: 100%;
+        border: none;
+        border-top: 1px solid var(--line);
+        margin: 4px 0;
+      }
+
+      /* Miniaturas de las fotos del producto, debajo de la descripción,
+         para saltar directo a una imagen sin depender solo de las
+         flechas/puntos sobre la imagen grande. */
+      .modal-thumbs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .modal-thumb {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        overflow: hidden;
+        padding: 0;
+        cursor: pointer;
+        background: #edf1f7;
+        border: 2px solid transparent;
+        flex-shrink: 0;
+        transition: border-color 0.15s ease, opacity 0.15s ease;
+      }
+
+      .modal-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .modal-thumb:hover {
+        border-color: rgba(26, 79, 168, 0.4);
+      }
+
+      .modal-thumb.active {
+        border-color: var(--accent);
+      }
+
       .modal-wishlist-heart {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        background: transparent;
-        border: 1px solid rgba(var(--text-rgb), 0.14);
+        justify-content: center;
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        background: rgba(var(--text-rgb), 0.05);
+        border: 1px solid rgba(var(--text-rgb), 0.16);
         color: var(--text);
-        border-radius: 999px;
-        padding: 10px 16px;
+        border-radius: 50%;
         cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 600;
-        width: fit-content;
-        transition: border-color 0.15s ease, background 0.15s ease;
+        box-shadow: 0 2px 8px rgba(16, 24, 38, 0.06);
+        transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
       }
 
       .modal-wishlist-heart:hover {
+        background: rgba(214, 31, 60, 0.1);
         border-color: var(--discount-tag);
+        transform: translate3d(0, -1px, 0);
       }
 
       .modal-wishlist-heart svg {
-        width: 18px;
-        height: 18px;
+        width: 19px;
+        height: 19px;
         stroke: currentColor;
         fill: none;
         transition: fill 0.15s ease;
@@ -2176,6 +2250,7 @@
       }
 
       .modal-wishlist-heart.active {
+        background: rgba(214, 31, 60, 0.12);
         border-color: var(--discount-tag);
         color: var(--discount-tag);
       }
@@ -2614,13 +2689,6 @@
       /* Fila que agrupa precio + botón de favoritos: van juntos porque
          ambos son acciones/datos relacionados a la decisión de compra,
          a diferencia del tag de dorsal que es info del producto. */
-      .modal-top-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
 
       .modal-price-pill strong {
         color: var(--text);
@@ -2647,6 +2715,10 @@
         font-weight: 600;
         letter-spacing: 0.02em;
         width: fit-content;
+      }
+
+      #addToCartModal {
+        margin-top: 20px;
       }
 
       .toast-container {
@@ -3345,19 +3417,21 @@
         </div>
         <div class="modal-details">
           <span class="modal-tag" id="modalCategory"></span>
-          <h2 id="modalTitle"></h2>
-          <p id="modalDescription"></p>
-          <div class="modal-top-row">
-            <div class="modal-price-pill">
-              <strong id="modalPrice"></strong>
-            </div>
 
-            <button type="button" class="modal-wishlist-heart" id="modalWishlistBtn">
+          <div class="modal-title-row">
+            <h2 id="modalTitle"></h2>
+            <button type="button" class="modal-wishlist-heart" id="modalWishlistBtn" aria-label="Guardar en favoritos">
               <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-              <span id="modalWishlistLabel">Guardar en favoritos</span>
+              <span id="modalWishlistLabel" class="sr-only">Guardar en favoritos</span>
             </button>
           </div>
-          
+
+          <div class="modal-price-pill">
+            <strong id="modalPrice"></strong>
+          </div>
+
+          <hr class="modal-divider" />
+
           <div class="modal-dorsal-tag" id="modalDorsalTag">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="20 6 9 17 4 12"></polyline>
@@ -3372,6 +3446,10 @@
             </div>
           </div>
           <button class="btn btn-primary" id="addToCartModal">AÑADIR AL CARRITO</button>
+
+          <p id="modalDescription"></p>
+
+          <div class="modal-thumbs" id="modalThumbsContainer"></div>
         </div>
       </div>
     </div>
@@ -3391,6 +3469,49 @@
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase();
+      }
+
+      /* =========================================================
+         FILTRO DE NOMBRES NO PERMITIDOS
+         La lista completa vive en su propio archivo de texto
+         (malas-palabras.txt), no aquí en el código, para poder
+         agregar/quitar palabras sin tocar el JS. Además se precarga
+         esta lista mínima de respaldo (las más comunes) para que el
+         filtro NUNCA quede desactivado, aunque el .txt no se haya
+         subido al servidor o falle la carga por cualquier motivo.
+         ========================================================= */
+      const FALLBACK_BAD_WORDS = [
+        'puto', 'puta', 'pendejo', 'pendeja', 'cabron', 'cabrona', 'verga',
+        'pinche', 'mierda', 'chinga', 'chingada', 'culero', 'culera',
+        'maricon', 'estupido', 'estupida', 'idiota', 'imbecil', 'perra',
+        'nmms', 'fuck', 'shit', 'bitch', 'asshole', 'cunt', 'nigger', 'faggot'
+      ];
+
+      const badWordsSet = new Set(FALLBACK_BAD_WORDS.map((w) => normalizeText(w)));
+
+      async function loadBadWords() {
+        try {
+          const res = await fetch('malas-palabras.txt');
+          if (!res.ok) return;
+          const text = await res.text();
+          text.split('\n').forEach((line) => {
+            const clean = line.trim();
+            if (!clean || clean.startsWith('#')) return;
+            badWordsSet.add(normalizeText(clean));
+          });
+        } catch (err) {
+          // La lista de respaldo (arriba) ya está cargada, así que el
+          // filtro sigue funcionando aunque esto falle.
+          console.error('No se pudo cargar la lista completa de palabras no permitidas (se sigue usando la lista de respaldo):', err.message);
+        }
+      }
+
+      // Revisa el nombre palabra por palabra (no como substring) para
+      // evitar falsos positivos, por ejemplo que "Puttnam" active la
+      // regla de "puta". Ignora acentos/mayúsculas al comparar.
+      function containsBadWord(name) {
+        const tokens = normalizeText(name).split(/[^a-z0-9]+/).filter(Boolean);
+        return tokens.some((token) => badWordsSet.has(token));
       }
 
       let products = [];
@@ -3524,6 +3645,7 @@
       const modalPrevBtn = document.getElementById('modalPrevBtn');
       const modalNextBtn = document.getElementById('modalNextBtn');
       const modalDotsContainer = document.getElementById('modalDotsContainer');
+      const modalThumbsContainer = document.getElementById('modalThumbsContainer');
 
       const heroImage = document.getElementById('heroImage');
       const featureTitle = document.getElementById('feature-title');
@@ -4403,6 +4525,7 @@
         
         modalProductImg.className = 'rk-optimized-img';
         setModalImageSrc(0);
+        renderModalThumbs();
         updateModalCarouselUI();
 
         const optionsContainer = document.getElementById('sizeOptionsContainer');
@@ -4494,6 +4617,31 @@
         });
       }
 
+      function renderModalThumbs() {
+        modalThumbsContainer.innerHTML = '';
+        if (modalImagesList.length <= 1) {
+          modalThumbsContainer.style.display = 'none';
+          return;
+        }
+        modalThumbsContainer.style.display = 'flex';
+
+        const fragment = document.createDocumentFragment();
+        modalImagesList.forEach((src, idx) => {
+          const thumb = document.createElement('button');
+          thumb.type = 'button';
+          thumb.className = `modal-thumb ${idx === currentModalImgIndex ? 'active' : ''}`;
+          thumb.setAttribute('aria-label', `Ver imagen ${idx + 1}`);
+          thumb.innerHTML = `<img class="rk-optimized-img" src="${src}" alt="" />`;
+          thumb.addEventListener('click', () => {
+            if (idx !== currentModalImgIndex && !isModalImageTransitioning) {
+              transitionModalImage(idx);
+            }
+          });
+          fragment.appendChild(thumb);
+        });
+        modalThumbsContainer.appendChild(fragment);
+      }
+
       function updateModalCarouselUI() {
         if (modalImagesList.length <= 1) {
           modalPrevBtn.style.display = 'none';
@@ -4513,6 +4661,10 @@
           });
           modalDotsContainer.appendChild(dotsFragment);
         }
+
+        modalThumbsContainer.querySelectorAll('.modal-thumb').forEach((thumb, idx) => {
+          thumb.classList.toggle('active', idx === currentModalImgIndex);
+        });
       }
 
       function transitionModalImage(nextIndex) {
@@ -5086,6 +5238,13 @@
         const newPassword = settingsNewPasswordInput.value;
         const emailChanged = newEmail && newEmail !== currentUser.email;
 
+        if (containsBadWord(fullName)) {
+          settingsError.textContent = 'Por favor usa un nombre apropiado.';
+          settingsSubmitBtn.disabled = false;
+          settingsSubmitBtn.textContent = 'Guardar cambios';
+          return;
+        }
+
         try {
           // Actualiza los metadatos del usuario en Auth (de aquí lee el
           // sitio el nombre a mostrar), y si cambió, el correo y/o la
@@ -5185,6 +5344,13 @@
         const phone = document.getElementById('registerPhone').value.trim();
         const email = document.getElementById('registerEmail').value.trim();
         const password = document.getElementById('registerPassword').value;
+
+        if (containsBadWord(fullName)) {
+          registerError.textContent = 'Por favor usa un nombre apropiado.';
+          registerSubmitBtn.disabled = false;
+          registerSubmitBtn.textContent = 'Crear cuenta';
+          return;
+        }
 
         try {
           const { data, error } = await supabaseClient.auth.signUp({
@@ -5461,6 +5627,7 @@
 
       loadPromoFromSupabase();
       loadProductsFromSupabase();
+      loadBadWords();
 
       // MODO OSCURO
       (function () {

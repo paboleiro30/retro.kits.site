@@ -1,0 +1,66 @@
+# Lista de palabras no permitidas para el campo "Nombre completo" al
+# registrarse o editar el perfil. Una palabra por línea, en minúsculas
+# y sin acentos (el sitio normaliza el nombre antes de comparar, así
+# que no hace falta repetir variantes con acento).
+#
+# Para agregar o quitar palabras, solo edita este archivo: no requiere
+# tocar el código de index.html.
+
+puto
+puta
+pendejo
+pendeja
+cabron
+cabrona
+verga
+pinche
+mierda
+chinga
+chingada
+chingar
+culero
+culera
+pito
+joto
+maricon
+marica
+pendejadas
+estupido
+estupida
+idiota
+imbecil
+gilipollas
+cagada
+cabrones
+hijueputa
+hijodeputa
+malparido
+malparida
+zorra
+perra
+puñetas
+coño
+carajo
+mamada
+mamahuevo
+pajero
+concha
+boludo
+weon
+huevon
+fuck
+shit
+bitch
+asshole
+bastard
+dick
+pussy
+whore
+slut
+cunt
+nigger
+faggot
+retard
+rape
+nazi
+hitler
