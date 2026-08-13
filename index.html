@@ -2015,6 +2015,155 @@
         color: var(--accent);
       }
 
+      /* ============================================================
+         RESUMEN DE COMPRA EN EL PAGO
+         Muestra exactamente qué se está comprando (imagen, talla,
+         cantidad y precio) antes de pedir los datos de la tarjeta.
+         Se llena dinámicamente vía renderPaymentSummary().
+         ============================================================ */
+      .payment-summary-box {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 18px;
+        border-radius: 20px;
+        background: rgba(var(--text-rgb), 0.03);
+        border: 1px solid var(--line);
+      }
+
+      .payment-summary-box .payment-section-title {
+        margin: 0;
+      }
+
+      .payment-summary-items {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-height: 340px;
+        overflow-y: auto;
+        padding-right: 2px;
+      }
+
+      .payment-summary-items::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .payment-summary-items::-webkit-scrollbar-thumb {
+        background: rgba(26, 79, 168, 0.3);
+        border-radius: 99px;
+      }
+
+      .payment-summary-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px;
+        background: var(--card-bg);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+      }
+
+      .payment-summary-item-thumb {
+        width: 56px;
+        height: 56px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        background: #edf1f7;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      html.dark-mode .payment-summary-item-thumb {
+        background: #1c2433;
+      }
+
+      .payment-summary-item-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .payment-summary-item-info {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .payment-summary-item-name {
+        font-size: 0.88rem;
+        font-weight: 600;
+        line-height: 1.25;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .payment-summary-item-meta {
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+
+      .payment-summary-item-promo {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: var(--success);
+      }
+
+      .payment-summary-item-price {
+        flex-shrink: 0;
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text);
+        text-align: right;
+      }
+
+      .payment-summary-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--line);
+      }
+
+      .payment-summary-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .payment-summary-line.hidden {
+        display: none;
+      }
+
+      .payment-summary-line.discount-line {
+        color: var(--success);
+        font-weight: 600;
+      }
+
+      .payment-summary-line.total-line {
+        margin-top: 2px;
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.05rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text);
+      }
+
+      .payment-summary-line.total-line strong {
+        font-size: 1.25rem;
+        color: var(--accent);
+      }
+
       .payment-secure-note {
         display: flex;
         align-items: center;
@@ -2143,6 +2292,7 @@
       }
 
       .payment-form-grid .payment-summary-total,
+      .payment-form-grid .payment-summary-box,
       .payment-form-grid .auth-error,
       .payment-form-grid .payment-btn-row,
       .payment-form-grid .payment-secure-note {
@@ -3024,6 +3174,15 @@
 
       #addToCartModal {
         margin-top: 20px;
+      }
+
+      /* Botón "Pagar con tarjeta" dentro del modal de producto: mismo
+         alto y ancho que "Añadir al carrito" para que ambos queden
+         simétricos, uno debajo del otro. */
+      .btn-card-pay-modal {
+        width: 100% !important;
+        margin-top: 12px !important;
+        height: 52px !important;
       }
 
       .toast-container {
@@ -3953,12 +4112,6 @@
             </svg>
             Pagar con tarjeta
           </button>
-          <a class="btn-whatsapp" id="whatsappOrder" href="https://wa.me/526624677901" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24">
-              <path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.77.46 3.45 1.27 4.9L2 22l5.25-1.38c1.4.76 2.99 1.19 4.79 1.19 5.52 0 10-4.48 10-10s-4.48-10-10-10zm5.86 14.29c-.25.7-1.23 1.28-2 1.44-.55.11-1.26.2-3.66-.79-2.99-1.24-4.91-4.24-5.06-4.44-.15-.19-1.2-1.6-1.2-3.06 0-1.46.76-2.17 1.03-2.47.27-.3.6-.37.8-.37.2 0 .4 0 .58.01.19.01.43-.07.67.51.25.6.85 2.07.92 2.22.07.15.12.32.02.51-.1.19-.15.3-.3.46-.15.16-.31.36-.44.48-.15.14-.3.3-.13.59.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.05.17-.18.72-.84.91-1.13.19-.29.38-.24.64-.15.26.1 1.65.78 1.94.92.29.14.48.21.55.33.07.12.07.68-.18 1.38z"/>
-            </svg>
-            Hacer pedido vía WhatsApp
-          </a>
         </div>
       </div>
       </div>
@@ -4092,9 +4245,26 @@
 
           <!-- VISTA: FORMULARIO DE PAGO -->
           <form class="auth-view payment-form-grid" id="paymentFormView">
-            <div class="payment-summary-total">
-              <span>Total a pagar</span>
-              <strong id="paymentTotalDisplay">$0</strong>
+            <!-- Resumen dinámico: exactamente qué se está comprando
+                 (imagen, talla, cantidad, precio y promo si aplica),
+                 antes de pedir los datos de la tarjeta. -->
+            <div class="payment-summary-box">
+              <p class="payment-section-title">Tu pedido</p>
+              <div class="payment-summary-items" id="paymentSummaryItems"></div>
+              <div class="payment-summary-lines">
+                <div class="payment-summary-line">
+                  <span>Subtotal</span>
+                  <span id="paymentSubtotalDisplay">$0</span>
+                </div>
+                <div class="payment-summary-line discount-line hidden" id="paymentDiscountLine">
+                  <span id="paymentDiscountLabel">Descuento</span>
+                  <span id="paymentDiscountDisplay">-$0</span>
+                </div>
+                <div class="payment-summary-line total-line">
+                  <span>Total a pagar</span>
+                  <strong id="paymentTotalDisplay">$0</strong>
+                </div>
+              </div>
             </div>
 
             <!-- COLUMNA IZQUIERDA: dirección de envío -->
@@ -4276,6 +4446,12 @@
             </div>
           </div>
           <button class="btn btn-primary" id="addToCartModal">AÑADIR AL CARRITO</button>
+          <button class="btn-card-pay btn-card-pay-modal" id="buyNowModalBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+              <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+            Pagar con tarjeta
+          </button>
           <button type="button" class="modal-buybox-wishlist" id="modalWishlistBtn" aria-label="Guardar en favoritos">
             <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
             <span id="modalWishlistLabel">Guardar en favoritos</span>
@@ -4552,6 +4728,9 @@
       }
       let selectedProduct = null;
       let selectedSize = '';
+      // Cuando no es null, el panel de pago cobra SOLO este producto
+      // (comprado directo desde el modal) en vez del carrito completo.
+      let quickBuyItem = null;
       const cart = [];
       let activePromoCode = null;
       const wishlistIds = new Set(); // ids (como string) de los productos que el usuario tiene en favoritos
@@ -4631,8 +4810,6 @@
       const cartTotal = document.getElementById('cartTotal');
       const cartCount = document.getElementById('cartCount');
       const clearCartBtn = document.getElementById('clearCart');
-      const whatsappOrderBtn = document.getElementById('whatsappOrder');
-
       const cardPayBtn = document.getElementById('cardPayBtn');
       const paymentDrawer = document.getElementById('paymentDrawer');
       const closePaymentBtn = document.getElementById('closePayment');
@@ -4652,6 +4829,7 @@
       const modalBackdrop = document.getElementById('modalBackdrop');
       const closeModalBtn = document.getElementById('closeModal');
       const addToCartModalBtn = document.getElementById('addToCartModal');
+      const buyNowModalBtn = document.getElementById('buyNowModalBtn');
       const modalWishlistBtn = document.getElementById('modalWishlistBtn');
       const modalWishlistLabel = document.getElementById('modalWishlistLabel');
 
@@ -5584,10 +5762,12 @@
           }
           addToCartModalBtn.disabled = false;
           addToCartModalBtn.textContent = 'AÑADIR AL CARRITO';
+          buyNowModalBtn.disabled = false;
         } else {
           selectedSize = '';
           addToCartModalBtn.disabled = true;
           addToCartModalBtn.textContent = 'AGOTADO';
+          buyNowModalBtn.disabled = true;
         }
 
         lockBackgroundScroll();
@@ -5828,6 +6008,38 @@
         closeModal();
       });
 
+      // "Pagar con tarjeta" en el modal: compra directa de este producto,
+      // sin pasar por el carrito ni tocar lo que ya tenga el usuario ahí.
+      buyNowModalBtn.addEventListener('click', () => {
+        if (!selectedProduct || !selectedSize) return;
+
+        if (!currentUser) {
+          showToast("Inicia sesión para completar tu compra.");
+          closeModal();
+          showLoginView();
+          openAccountDrawer();
+          return;
+        }
+
+        const finalPrice = (selectedProduct.discount_price && parseFloat(selectedProduct.discount_price) > 0)
+          ? parseFloat(selectedProduct.discount_price)
+          : parseFloat(selectedProduct.price);
+
+        quickBuyItem = {
+          id: selectedProduct.id,
+          name: selectedProduct.name,
+          price: finalPrice,
+          size: selectedSize,
+          image: getProductImage(selectedProduct.image_id || selectedProduct.image_url, IMG_SIZES.cartThumb),
+          quantity: 1,
+        };
+
+        renderPaymentSummary([quickBuyItem], { subtotal: finalPrice, discount: 0, total: finalPrice, promo: null });
+
+        closeModal();
+        openPaymentDrawer();
+      });
+
       function updateCartUI() {
         cartItems.innerHTML = '';
         let subtotal = 0;
@@ -5986,47 +6198,50 @@
         return { subtotal, calculatedDiscount, total };
       }
 
-      whatsappOrderBtn.addEventListener('click', async (event) => {
-        event.preventDefault();
+      // Pinta en el panel de pago exactamente qué se está comprando:
+      // imagen, talla, cantidad y precio de cada artículo, más el
+      // desglose de subtotal / descuento (si hay promo activa) / total.
+      // Se usa tanto en "Pagar con tarjeta" del carrito como en la
+      // compra directa de un solo producto desde el modal.
+      function renderPaymentSummary(items, { subtotal, discount = 0, total, promo = null } = {}) {
+        const itemsBox = document.getElementById('paymentSummaryItems');
+        itemsBox.innerHTML = '';
 
-        if (cart.length === 0) {
-          showToast("El carrito está vacío.");
-          return;
-        }
+        items.forEach((item, index) => {
+          const isTargetedByPromoProduct = promo && promo.product_id && String(promo.product_id).toLowerCase() === String(item.id).toLowerCase();
+          const isFirstItemGeneralPromo = promo && !promo.product_id && index === 0;
+          const showPromoTag = isTargetedByPromoProduct || isFirstItemGeneralPromo;
+          const lineTotal = item.price * item.quantity;
 
-        if (!currentUser) {
-          showToast("Inicia sesión para completar tu compra.");
-          showLoginView();
-          openAccountDrawer();
-          return;
-        }
-
-        const { subtotal, calculatedDiscount, total } = calculateCartTotals();
-
-        let msg = `¡Hola! Me gustaría hacer un pedido de Retrokits:\n\n`;
-        cart.forEach((item) => {
-          const itemSub = item.price * item.quantity;
-          msg += `• ${item.quantity}x ${item.name} [Talla ${item.size}] ($${itemSub})\n`;
+          const row = document.createElement('div');
+          row.className = 'payment-summary-item';
+          row.innerHTML = `
+            <div class="payment-summary-item-thumb">
+              <img src="${item.image || ''}" alt="${item.name}" loading="lazy" />
+            </div>
+            <div class="payment-summary-item-info">
+              <span class="payment-summary-item-name">${item.name}</span>
+              <span class="payment-summary-item-meta">Talla ${item.size} · x${item.quantity}</span>
+              ${showPromoTag ? `<span class="payment-summary-item-promo">Cupón aplicado</span>` : ''}
+            </div>
+            <div class="payment-summary-item-price">$${lineTotal.toFixed(2)}</div>
+          `;
+          itemsBox.appendChild(row);
         });
 
-        if (activePromoCode && calculatedDiscount > 0) {
-          msg += `\n*Código de Descuento (${activePromoCode.code}): -$${calculatedDiscount.toFixed(2)}*`;
+        document.getElementById('paymentSubtotalDisplay').textContent = `$${subtotal.toFixed(2)}`;
+
+        const discountLine = document.getElementById('paymentDiscountLine');
+        if (discount > 0) {
+          discountLine.classList.remove('hidden');
+          document.getElementById('paymentDiscountLabel').textContent = promo ? `Descuento (${promo.code})` : 'Descuento';
+          document.getElementById('paymentDiscountDisplay').textContent = `-$${discount.toFixed(2)}`;
+        } else {
+          discountLine.classList.add('hidden');
         }
 
-        msg += `\n*Total a pagar: $${total.toFixed(2)}*`;
-
-        // Si el cliente inició sesión, guardamos el pedido en Supabase (para
-        // que quede registrado). Si no inició sesión, el pedido se sigue
-        // enviando por WhatsApp normalmente, solo que no queda registrado
-        // (no hay a qué usuario asociarlo).
-        if (currentUser) {
-          await saveOrderToSupabase(cart, subtotal, calculatedDiscount, total, activePromoCode);
-        }
-
-        const whatsappUrl = `https://wa.me/526624677901?text=${encodeURIComponent(msg)}`;
-        showToast("¡Abriendo WhatsApp con tu pedido!");
-        window.open(whatsappUrl, '_blank');
-      });
+        paymentTotalDisplay.textContent = `$${total.toFixed(2)}`;
+      }
 
       cardPayBtn.addEventListener('click', () => {
         if (cart.length === 0) {
@@ -6039,8 +6254,9 @@
           openAccountDrawer();
           return;
         }
-        const { total } = calculateCartTotals();
-        paymentTotalDisplay.textContent = `$${total.toFixed(2)}`;
+        quickBuyItem = null;
+        const { subtotal, calculatedDiscount, total } = calculateCartTotals();
+        renderPaymentSummary(cart, { subtotal, discount: calculatedDiscount, total, promo: activePromoCode });
 
         openPaymentDrawer();
       });
@@ -6148,7 +6364,9 @@
         event.preventDefault();
         paymentError.textContent = '';
 
-        if (cart.length === 0) {
+        // Si quickBuyItem está definido, se está pagando UN solo producto
+        // desde el modal (no el carrito completo).
+        if (!quickBuyItem && cart.length === 0) {
           showToast("El carrito está vacío.");
           return;
         }
@@ -6165,7 +6383,12 @@
         paymentSubmitBtn.textContent = 'Procesando...';
 
         try {
-          const { subtotal, calculatedDiscount, total } = calculateCartTotals();
+          const purchaseItems = quickBuyItem ? [quickBuyItem] : cart;
+          const subtotal = purchaseItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+          // El código promocional solo aplica al flujo de carrito normal,
+          // nunca a una compra directa de un solo producto.
+          const calculatedDiscount = quickBuyItem ? 0 : calculateCartTotals().calculatedDiscount;
+          const total = Math.max(0, subtotal - calculatedDiscount);
 
           const tokenId = await tokenizeCard();
 
@@ -6175,7 +6398,7 @@
             phone: document.getElementById('paymentPhone').value.replace(/\s+/g, ''),
           };
 
-          const itemsPayload = cart.map((i) => ({
+          const itemsPayload = purchaseItems.map((i) => ({
             product_id: i.id,
             name: i.name,
             size: i.size,
@@ -6204,7 +6427,7 @@
               user_id: currentUser ? currentUser.id : null,
               subtotal,
               discount: calculatedDiscount,
-              promo_code: activePromoCode ? activePromoCode.code : null,
+              promo_code: (!quickBuyItem && activePromoCode) ? activePromoCode.code : null,
             },
           });
 
@@ -6213,8 +6436,13 @@
             throw new Error((data && data.message) || 'El pago fue rechazado. Verifica los datos de tu tarjeta.');
           }
 
-          cart.length = 0;
-          updateCartUI();
+          // Solo vaciamos el carrito si el pago fue del carrito completo;
+          // una compra directa de un producto no debe tocarlo.
+          if (!quickBuyItem) {
+            cart.length = 0;
+            updateCartUI();
+          }
+          quickBuyItem = null;
           paymentFormView.reset();
           paymentFormView.classList.add('hidden');
           paymentSuccessView.classList.remove('hidden');
@@ -6380,6 +6608,9 @@
       function closePaymentDrawer() {
         paymentDrawer.classList.remove('open');
         unlockBackgroundScroll();
+        // Si se cierra sin completar el pago, no dejamos una compra
+        // directa "pendiente" que contamine el próximo pago del carrito.
+        quickBuyItem = null;
       }
 
       // Cambia entre las pestañas "Perfil" y "Ajustes" del panel de cuenta
