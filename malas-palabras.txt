@@ -1,66 +1,91 @@
-# Lista de palabras no permitidas para el campo "Nombre completo" al
-# registrarse o editar el perfil. Una palabra por línea, en minúsculas
-# y sin acentos (el sitio normaliza el nombre antes de comparar, así
-# que no hace falta repetir variantes con acento).
-#
-# Para agregar o quitar palabras, solo edita este archivo: no requiere
-# tocar el código de index.html.
+# ==============================================================================
+# LISTA PROHIBIDA PARA "NOMBRE COMPLETO"
+# Criterio: Coincidencia por subcadena/patrón (evita bypasses por sufijos/fusión)
+# ==============================================================================
 
+# ------------------------------------------------------------------------------
+# 1. INSULTOS Y GROSERÍAS CORE (Español)
+# ------------------------------------------------------------------------------
 puto
 puta
-pendejo
-pendeja
+pendej
 cabron
-cabrona
 verga
+vergu
 pinche
 mierda
-chinga
-chingada
-chingar
-culero
-culera
+ching
+culer
 pito
 joto
-maricon
-marica
-pendejadas
-estupido
-estupida
-idiota
-imbecil
-gilipollas
-cagada
-cabrones
-hijueputa
-hijodeputa
-malparido
-malparida
-zorra
-perra
-puñetas
+maric
+cagad
+hijueput
+hijodeput
+malparid
+zorr
+puñeta
 coño
 carajo
-mamada
-mamahuevo
-pajero
+mamad
+mamahuev
+pajer
 concha
-boludo
+bolud
 weon
 huevon
+
+# ------------------------------------------------------------------------------
+# 2. OFENSAS CAPACITISTAS Y GENERALES (Español)
+# ------------------------------------------------------------------------------
+estupid
+idiot
+imbecil
+gilipoll
+mongol
+
+# ------------------------------------------------------------------------------
+# 3. INSULTOS Y GROSERÍAS CORE (Inglés)
+# ------------------------------------------------------------------------------
 fuck
 shit
 bitch
 asshole
 bastard
 dick
-pussy
-whore
+puss
+whor
 slut
 cunt
-nigger
+nigg
 faggot
 retard
+
+# ------------------------------------------------------------------------------
+# 4. VIOLENCIA, TERRORISMO Y CRIMEN
+# ------------------------------------------------------------------------------
 rape
+rapist
+violac
 nazi
 hitler
+terroris
+pedofil
+paedofil
+
+# ------------------------------------------------------------------------------
+# 5. ROLES DE SISTEMA Y USUARIOS RESERVADOS (Prevención de Suplantación)
+# ------------------------------------------------------------------------------
+admin
+root
+system
+support
+soporte
+moderator
+moderador
+official
+oficial
+null
+undefined
+anonymous
+anonimo

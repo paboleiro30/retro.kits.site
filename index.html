@@ -100,9 +100,14 @@
         border-color: rgba(238, 241, 246, 0.14);
       }
 
-      html.dark-mode .modal-wishlist-heart {
+      html.dark-mode .modal-buybox-wishlist {
         background: rgba(238, 241, 246, 0.06);
         border-color: rgba(238, 241, 246, 0.18);
+      }
+
+      html.dark-mode .modal-buybox {
+        background: rgba(238, 241, 246, 0.03);
+        border-color: rgba(238, 241, 246, 0.1);
       }
 
       html.dark-mode .option-chip {
@@ -2155,21 +2160,6 @@
         border: 0;
       }
 
-      /* Fila que agrupa el título con el ícono de favoritos (estilo
-         "bookmark" arriba a la derecha), como en las referencias. */
-      .modal-title-row {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
-      .modal-title-row h2 {
-        margin: 0;
-        flex: 1;
-        min-width: 0;
-      }
-
       .modal-divider {
         width: 100%;
         border: none;
@@ -2177,13 +2167,30 @@
         margin: 4px 0;
       }
 
-      /* Miniaturas de las fotos del producto, debajo de la descripción,
-         para saltar directo a una imagen sin depender solo de las
-         flechas/puntos sobre la imagen grande. */
-      .modal-thumbs {
+      /* MEDIA: imagen grande del producto. Las miniaturas ahora viven
+         debajo de la descripción, como una fila horizontal. */
+      .modal-media {
         display: flex;
+        height: 100%;
+        min-height: 0;
+      }
+
+      .modal-thumbs-row {
+        display: flex;
+        flex-direction: row;
         flex-wrap: wrap;
         gap: 10px;
+        overflow-x: auto;
+        padding: 2px;
+        margin-top: -4px;
+      }
+
+      .modal-thumbs-row::-webkit-scrollbar {
+        height: 4px;
+      }
+      .modal-thumbs-row::-webkit-scrollbar-thumb {
+        background: rgba(26, 79, 168, 0.2);
+        border-radius: 999px;
       }
 
       .modal-thumb {
@@ -2214,45 +2221,74 @@
         border-color: var(--accent);
       }
 
-      .modal-wishlist-heart {
+      /* BUYBOX: tarjeta lateral con precio y acciones de compra,
+         separada de la info del producto (como en Amazon). */
+      .modal-buybox {
+        align-self: start;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: rgba(var(--text-rgb), 0.02);
+      }
+
+      .modal-buybox .modal-price-pill {
+        width: fit-content;
+      }
+
+      .modal-buybox-stock {
+        color: var(--success);
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+      }
+
+      .modal-buybox-stock.is-out {
+        color: #ef4444;
+      }
+
+      .modal-buybox-wishlist {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        flex-shrink: 0;
-        width: 44px;
-        height: 44px;
-        background: rgba(var(--text-rgb), 0.05);
+        gap: 8px;
+        width: 100%;
+        padding: 12px 16px;
+        background: rgba(var(--text-rgb), 0.04);
         border: 1px solid rgba(var(--text-rgb), 0.16);
         color: var(--text);
-        border-radius: 50%;
+        border-radius: 999px;
         cursor: pointer;
-        box-shadow: 0 2px 8px rgba(16, 24, 38, 0.06);
-        transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
       }
 
-      .modal-wishlist-heart:hover {
+      .modal-buybox-wishlist:hover {
         background: rgba(214, 31, 60, 0.1);
         border-color: var(--discount-tag);
-        transform: translate3d(0, -1px, 0);
       }
 
-      .modal-wishlist-heart svg {
-        width: 19px;
-        height: 19px;
+      .modal-buybox-wishlist svg {
+        width: 18px;
+        height: 18px;
         stroke: currentColor;
         fill: none;
+        flex-shrink: 0;
         transition: fill 0.15s ease;
       }
 
-      .modal-wishlist-heart.active svg {
-        fill: var(--discount-tag);
-        stroke: var(--discount-tag);
-      }
-
-      .modal-wishlist-heart.active {
+      .modal-buybox-wishlist.active {
         background: rgba(214, 31, 60, 0.12);
         border-color: var(--discount-tag);
         color: var(--discount-tag);
+      }
+
+      .modal-buybox-wishlist.active svg {
+        fill: var(--discount-tag);
+        stroke: var(--discount-tag);
       }
 
       .wishlist-card {
@@ -2376,15 +2412,16 @@
       .product-modal {
         position: fixed;
         inset: 0;
-        margin: auto;
-        width: min(1350px, calc(100% - 32px));
-        height: min(92vh, 850px);
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
         background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(var(--text-rgb), 0.08);
-        border-radius: 30px;
-        box-shadow: 0 30px 80px rgba(16, 24, 38, 0.22);
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
         z-index: 1005;
         opacity: 0;
         pointer-events: none;
@@ -2392,6 +2429,7 @@
         visibility: hidden;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
       }
 
       .product-options {
@@ -2491,8 +2529,8 @@
       #sizeOptionsContainer {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-        max-width: 340px;
+        gap: 8px;
+        width: 100%;
       }
 
       #sizeOptionsContainer .option-chip {
@@ -2525,9 +2563,10 @@
 
       .modal-content {
         display: grid;
-        grid-template-columns: 1.2fr 1fr;
-        gap: 36px;
-        padding: 36px 42px;
+        grid-template-columns: 1fr 0.95fr 320px;
+        gap: 44px;
+        padding: 48px 5vw;
+        max-width: none;
         height: 100%;
         box-sizing: border-box;
       }
@@ -2542,6 +2581,7 @@
         justify-content: center;
         height: 100%;
         width: 100%;
+        min-width: 0;
       }
 
       .modal-image img {
@@ -2632,22 +2672,22 @@
         background: var(--accent);
       }
 
-      .modal-details {
+      .modal-info {
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 20px;
         overflow-y: auto;
         max-height: 100%;
         padding-right: 10px;
       }
 
-      .modal-details::-webkit-scrollbar {
+      .modal-info::-webkit-scrollbar {
         width: 4px;
       }
-      .modal-details::-webkit-scrollbar-track {
+      .modal-info::-webkit-scrollbar-track {
         background: transparent;
       }
-      .modal-details::-webkit-scrollbar-thumb {
+      .modal-info::-webkit-scrollbar-thumb {
         background: rgba(26, 79, 168, 0.2);
         border-radius: 999px;
       }
@@ -2659,14 +2699,14 @@
         font-size: 0.78rem;
       }
 
-      .modal-details h2 {
+      .modal-info h2 {
         margin: 0;
         font-family: 'Oswald', sans-serif;
-        font-size: 3rem;
-        line-height: 1;
+        font-size: 2.2rem;
+        line-height: 1.1;
       }
 
-      .modal-details p {
+      .modal-info p {
         margin: 0;
         color: var(--muted);
         line-height: 1.9;
@@ -2760,6 +2800,16 @@
         .catalog-search-inline input { min-width: 0; flex: 1; }
         .footer-grid { grid-template-columns: 1fr 1fr; }
         .product-grid { grid-template-columns: repeat(2, 1fr); }
+
+        /* El layout de 3 columnas (miniaturas+imagen / info / buybox)
+           necesita ancho de escritorio; en tablet se apila en una sola
+           columna, con el precio y el botón de compra justo debajo de
+           la imagen (antes de la descripción/reseñas). */
+        .modal-content { grid-template-columns: 1fr; }
+        .modal-media { order: 1; height: auto; }
+        .modal-buybox { order: 2; }
+        .modal-info { order: 3; height: auto; overflow-y: visible; }
+        .modal-image { height: 60vh; }
       }
 
       @media (max-width: 740px) {
@@ -2781,7 +2831,6 @@
         .account-action span { display: none; }
         .account-action svg { width: 20px !important; height: 20px !important; }
         .catalog-title-row { grid-template-columns: 1fr; justify-items: center; }
-        .modal-content { grid-template-columns: 1fr; }
         .brand-logo-hero { height: 45px; top: 16px; right: 16px; }
         .footer-grid { grid-template-columns: 1fr; gap: 32px; }
         .product-grid { grid-template-columns: 1fr; }
@@ -2940,12 +2989,27 @@
           overflow: hidden !important;
         }
 
+        .modal-media {
+          flex-shrink: 0;
+        }
+
+        .modal-thumbs-row {
+          display: none;
+        }
+
         .modal-image {
           min-height: 42vh !important;
           height: 42vh !important;
           border-radius: 0 !important;
           flex-shrink: 0;
           background-color: #e0e6f0 !important;
+        }
+
+        .modal-buybox {
+          border-radius: 0;
+          border-left: none;
+          border-right: none;
+          padding: 16px;
         }
 
         /* Imagen completa, sin recortar (antes usaba object-fit:cover) */
@@ -2958,7 +3022,7 @@
           right: max(18px, env(safe-area-inset-right)) !important;
         }
 
-        .modal-details {
+        .modal-info {
           flex: 1 !important;
           overflow-y: auto !important;
           padding: 20px 16px calc(20px + env(safe-area-inset-bottom)) !important; 
@@ -2968,7 +3032,7 @@
           gap: 14px;
         }
 
-        .modal-details h2 {
+        .modal-info h2 {
           font-size: 1.8rem !important;
         }
 
@@ -2988,6 +3052,365 @@
           z-index: 1 !important;
           box-shadow: 0 10px 30px rgba(13, 19, 26, 0.95);
         }
+
+        .reviews-section-header {
+          flex-direction: column !important;
+          align-items: flex-start !important;
+        }
+      }
+
+      /* =========================================================
+         SISTEMA DE RESEÑAS (ESTRELLAS)
+         Resumen de calificación bajo el título, formulario para
+         dejar reseña (con el mismo filtro de malas palabras que se
+         usa en nombres) y listado de reseñas de clientes.
+         ========================================================= */
+
+      .star-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        line-height: 0;
+      }
+
+      .star-row svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        stroke: #dcae54;
+        stroke-width: 1.5;
+        fill: none;
+        transition: fill 0.12s ease, stroke 0.12s ease, transform 0.1s ease;
+      }
+
+      .star-row svg.is-filled {
+        fill: #dcae54;
+      }
+
+      /* Estrellas clicables del formulario: un poco más grandes y con
+         cursor/hover propios para que se note que son interactivas. */
+      .star-row.interactive svg {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+      }
+
+      .star-row.interactive svg:hover {
+        transform: scale(1.12);
+      }
+
+      .rating-summary-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: -6px;
+      }
+
+      .rating-summary-row .rating-avg-number {
+        font-family: 'Oswald', sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+
+      .rating-summary-row .rating-count-text {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .rating-summary-row .rating-count-text.is-link {
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .reviews-section {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .reviews-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .reviews-section-header h3 {
+        margin: 0;
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 0.02em;
+      }
+
+      /* Calificación en línea dentro del encabezado de reseñas: sustituye
+         a la caja grande que repetía el mismo promedio ya mostrado junto
+         al título del producto. */
+      .reviews-header-rating {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(220, 174, 84, 0.12);
+        border: 1px solid rgba(220, 174, 84, 0.35);
+        animation: ratingPillIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .reviews-header-rating strong {
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+
+      @keyframes ratingPillIn {
+        from { opacity: 0; transform: translate3d(0, -4px, 0) scale(0.94); }
+        to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+      }
+
+      /* Estrellas: pequeño "pop" escalonado al pintarse, en vez de
+         aparecer todas de golpe estáticas. */
+      .star-row svg {
+        animation: starPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+      }
+
+      .star-row svg:nth-child(1) { animation-delay: 0ms; }
+      .star-row svg:nth-child(2) { animation-delay: 30ms; }
+      .star-row svg:nth-child(3) { animation-delay: 60ms; }
+      .star-row svg:nth-child(4) { animation-delay: 90ms; }
+      .star-row svg:nth-child(5) { animation-delay: 120ms; }
+
+      @keyframes starPop {
+        from { opacity: 0; transform: scale(0.4); }
+        to { opacity: 1; transform: scale(1); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .reviews-header-rating, .star-row svg { animation: none; }
+      }
+
+      /* Tarjetas de reseña: entrada escalonada suave (fade + slide),
+         igual que las product-card del catálogo, para que la lista se
+         sienta viva en vez de aparecer de golpe. */
+      .review-card {
+        animation: reviewCardIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        animation-delay: var(--review-delay, 0ms);
+      }
+
+      @keyframes reviewCardIn {
+        from { opacity: 0; transform: translate3d(0, 10px, 0); }
+        to { opacity: 1; transform: translate3d(0, 0, 0); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .review-card { animation: none; }
+      }
+
+      .review-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: rgba(var(--text-rgb), 0.03);
+        border: 1px solid var(--line);
+      }
+
+      .review-form-title {
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .review-form textarea {
+        background: rgba(var(--text-rgb), 0.04);
+        border: 1px solid rgba(var(--text-rgb), 0.14);
+        border-radius: 12px;
+        padding: 10px 12px;
+        color: var(--text);
+        font-size: 0.9rem;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 70px;
+      }
+
+      .review-form textarea:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      .review-form-error {
+        font-size: 0.85rem;
+        color: #d61f3c;
+        min-height: 0;
+      }
+
+      .review-form-success {
+        font-size: 0.85rem;
+        color: var(--success);
+        min-height: 0;
+      }
+
+      .review-form-btn {
+        padding: 9px 18px;
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        min-width: 130px;
+        flex: 0 0 auto;
+      }
+
+      .review-form-btn.is-danger {
+        color: #d61f3c;
+        border-color: rgba(214, 31, 60, 0.35);
+        background: rgba(214, 31, 60, 0.08);
+      }
+
+      .review-form-btn.is-danger:hover {
+        background: rgba(214, 31, 60, 0.16);
+        border-color: rgba(214, 31, 60, 0.7);
+      }
+
+      /* Fila de acciones de la reseña propia (fuera del formulario de
+         edición): agrupa "Actualizar reseña" y "Eliminar mi reseña"
+         como botones simétricos, sin heredar el estilo de link
+         subrayado que usan otras acciones de tarjeta. */
+      .review-own-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+
+      .review-login-prompt {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 16px 18px;
+        border-radius: 16px;
+        background: rgba(var(--text-rgb), 0.03);
+        border: 1px dashed var(--line);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .review-login-prompt button {
+        padding: 10px 20px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
+
+      .reviews-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .review-card {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 16px 18px;
+        border-radius: 16px;
+        background: var(--card-bg);
+        border: 1px solid var(--line);
+      }
+
+      .review-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .review-card-author {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .review-card-name {
+        font-weight: 700;
+        font-size: 0.92rem;
+      }
+
+      .review-card-badge {
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--success);
+        background: rgba(26, 90, 55, 0.12);
+        border: 1px solid rgba(26, 90, 55, 0.3);
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+
+      .review-card-date {
+        font-size: 0.78rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .review-card-comment {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 0.92rem;
+        white-space: pre-line;
+      }
+
+      .review-card-own-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 2px;
+      }
+
+      .review-card-own-actions button {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 0.78rem;
+        color: var(--accent);
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .review-card-own-actions button.is-danger {
+        color: #d61f3c;
+      }
+
+      .reviews-empty-state {
+        padding: 24px 18px;
+        text-align: center;
+        border-radius: 16px;
+        background: rgba(var(--text-rgb), 0.03);
+        border: 1px dashed var(--line);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .reviews-loading-state {
+        padding: 18px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .reviews-show-more-btn {
+        align-self: center;
+        padding: 10px 24px;
+        font-size: 0.8rem;
+      }
+
+      .reviews-show-more-btn.hidden {
+        display: none;
       }
     </style>
 
@@ -3017,7 +3440,7 @@
         <div class="utility-bar-inner">
           <span class="utility-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3V6a1 1 0 0 1 1-1h11v12h-2M5 17a2 2 0 1 0 4 0M5 17a2 2 0 1 1 4 0m6 0a2 2 0 1 0 4 0m-4 0a2 2 0 1 1 4 0M15 9h4l3 3v5h-2"/></svg>
-            Envíos a todo Hermosillo
+            Entregas a todo Hermosillo
           </span>
           <a class="utility-item" href="https://www.instagram.com/retrokits.fc/" target="_blank" rel="noopener noreferrer">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
@@ -3409,25 +3832,23 @@
     <div class="product-modal" id="productModal" tabindex="-1">
       <button class="modal-close" id="closeModal" aria-label="Cerrar">×</button>
       <div class="modal-content">
-        <div class="modal-image" id="modalImageContainer">
-          <button class="modal-arrow prev" id="modalPrevBtn" aria-label="Anterior imagen">‹</button>
-          <img id="modalProductImg" class="rk-optimized-img" src="" alt="Camiseta" decoding="async" fetchpriority="high" />
-          <button class="modal-arrow next" id="modalNextBtn" aria-label="Siguiente imagen">›</button>
-          <div class="modal-dots" id="modalDotsContainer"></div>
-        </div>
-        <div class="modal-details">
-          <span class="modal-tag" id="modalCategory"></span>
-
-          <div class="modal-title-row">
-            <h2 id="modalTitle"></h2>
-            <button type="button" class="modal-wishlist-heart" id="modalWishlistBtn" aria-label="Guardar en favoritos">
-              <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-              <span id="modalWishlistLabel" class="sr-only">Guardar en favoritos</span>
-            </button>
+        <div class="modal-media">
+          <div class="modal-image" id="modalImageContainer">
+            <button class="modal-arrow prev" id="modalPrevBtn" aria-label="Anterior imagen">‹</button>
+            <img id="modalProductImg" class="rk-optimized-img" src="" alt="Camiseta" decoding="async" fetchpriority="high" />
+            <button class="modal-arrow next" id="modalNextBtn" aria-label="Siguiente imagen">›</button>
+            <div class="modal-dots" id="modalDotsContainer"></div>
           </div>
+        </div>
 
-          <div class="modal-price-pill">
-            <strong id="modalPrice"></strong>
+        <div class="modal-info">
+          <span class="modal-tag" id="modalCategory"></span>
+          <h2 id="modalTitle"></h2>
+
+          <div class="rating-summary-row" id="modalRatingSummary" style="display: none;">
+            <span class="star-row" id="modalRatingStars"></span>
+            <span class="rating-avg-number" id="modalRatingAvgNumber"></span>
+            <span class="rating-count-text is-link" id="modalRatingCountText"></span>
           </div>
 
           <hr class="modal-divider" />
@@ -3439,6 +3860,36 @@
             <span id="dorsalText">Incluye dorsal de jugador de leyenda</span>
           </div>
 
+          <p id="modalDescription"></p>
+
+          <div class="modal-thumbs-row" id="modalThumbsContainer"></div>
+
+          <hr class="modal-divider" />
+
+          <div class="reviews-section" id="reviewsSection">
+            <div class="reviews-section-header">
+              <h3>Reseñas de clientes</h3>
+              <span class="reviews-header-rating" id="reviewsHeaderRating" style="display:none;">
+                <span class="star-row" id="reviewsHeaderStars"></span>
+                <strong id="reviewsHeaderAvgNumber"></strong>
+              </span>
+            </div>
+
+            <div id="reviewFormArea"></div>
+
+            <div class="reviews-list" id="reviewsList">
+              <div class="reviews-loading-state">Cargando reseñas...</div>
+            </div>
+
+            <button type="button" class="btn reviews-show-more-btn hidden" id="reviewsShowMoreBtn">Ver más reseñas</button>
+          </div>
+        </div>
+
+        <aside class="modal-buybox">
+          <div class="modal-price-pill">
+            <strong id="modalPrice"></strong>
+          </div>
+          <span class="modal-buybox-stock" id="modalBuyboxStock">Disponible</span>
           <div class="product-options">
             <div class="product-option">
               <span class="product-option-label" id="sizeSelectorLabel">Talla</span>
@@ -3446,11 +3897,11 @@
             </div>
           </div>
           <button class="btn btn-primary" id="addToCartModal">AÑADIR AL CARRITO</button>
-
-          <p id="modalDescription"></p>
-
-          <div class="modal-thumbs" id="modalThumbsContainer"></div>
-        </div>
+          <button type="button" class="modal-buybox-wishlist" id="modalWishlistBtn" aria-label="Guardar en favoritos">
+            <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+            <span id="modalWishlistLabel">Guardar en favoritos</span>
+          </button>
+        </aside>
       </div>
     </div>
 
@@ -3469,6 +3920,28 @@
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase();
+      }
+
+      /* =========================================================
+         NORMALIZACIÓN ESPECÍFICA PARA EL FILTRO DE PALABRAS
+         (no se usa en normalizeText general para no afectar la
+         búsqueda de productos ni otras partes del sitio)
+         ---------------------------------------------------------
+         Cierra los bypass más comunes para camuflar una grosería:
+           1) "Leetspeak": p3ndejo, pu7o, c4bron, e5tupido, etc.
+           2) Letras repetidas para estirar la palabra: pendejooo,
+              puuuuto, mmmierda.
+         ========================================================= */
+      const LEET_SUBSTITUTIONS = {
+        '0': 'o', '1': 'i', '3': 'e', '4': 'a',
+        '5': 's', '7': 't', '8': 'b', '$': 's', '@': 'a', '+': 't'
+      };
+
+      function normalizeForModeration(str) {
+        let s = normalizeText(str);
+        s = s.replace(/[0134578$@+]/g, (ch) => LEET_SUBSTITUTIONS[ch] || ch);
+        s = s.replace(/([a-z])\1{2,}/g, '$1'); // aaa -> a (letras estiradas)
+        return s;
       }
 
       /* =========================================================
@@ -3506,12 +3979,157 @@
         }
       }
 
-      // Revisa el nombre palabra por palabra (no como substring) para
-      // evitar falsos positivos, por ejemplo que "Puttnam" active la
-      // regla de "puta". Ignora acentos/mayúsculas al comparar.
+      // Revisa el texto palabra por palabra (no como substring genérico)
+      // para evitar falsos positivos, por ejemplo que "Puttnam" active la
+      // regla de "puta". Ignora acentos/mayúsculas, y además:
+      //   - Convierte leetspeak (p3nd3jo, c4bron) antes de comparar.
+      //   - Colapsa letras repetidas (pendejooo -> pendejo).
+      //   - Detecta la grosería escrita "espaciada" o separada con
+      //     símbolos, letra por letra o en fragmentos cortos
+      //     (p u t o / p.u.t.o / p-u-t-o), uniendo fragmentos
+      //     consecutivos de 1-2 caracteres y comparando el resultado.
+      //   - Los dígitos que no son leetspeak (2, 6, 9...) actúan como
+      //     separadores, así que agregar números pegados a la palabra
+      //     ("puto123") ya no la esconde del filtro.
       function containsBadWord(name) {
-        const tokens = normalizeText(name).split(/[^a-z0-9]+/).filter(Boolean);
-        return tokens.some((token) => badWordsSet.has(token));
+        const normalized = normalizeForModeration(name);
+        const tokens = normalized.split(/[^a-z]+/).filter(Boolean);
+
+        if (tokens.some((token) => badWordsSet.has(token))) return true;
+
+        for (let i = 0; i < tokens.length; i++) {
+          if (tokens[i].length > 2) continue;
+          let combined = '';
+          for (let j = i; j < tokens.length && (j - i) < 12; j++) {
+            if (tokens[j].length > 2) break;
+            combined += tokens[j];
+            if (combined.length >= 3 && badWordsSet.has(combined)) return true;
+            if (combined.length > 24) break;
+          }
+        }
+
+        return false;
+      }
+
+      // Misma lógica que containsBadWord (palabra por palabra, no
+      // substring) pero pensada para texto largo como el comentario de
+      // una reseña, en vez de un solo nombre.
+      function containsBadWordInText(text) {
+        return containsBadWord(text);
+      }
+
+      // Escapa HTML antes de insertar texto escrito por clientes (nombre
+      // de reseñador, comentario) para que nunca se interprete como
+      // etiquetas/scripts. A diferencia de los nombres de producto (que
+      // solo el dueño de la tienda carga), el texto de una reseña lo
+      // escribe cualquier cliente, así que aquí sí es indispensable.
+      function escapeHtml(str) {
+        return (str || "").replace(/[&<>"']/g, (ch) => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[ch]));
+      }
+
+      /* =========================================================
+         ANTISPAM DE RESEÑAS
+         Tres capas independientes del filtro de groserías:
+           1) Gibberish: texto sin sentido (relleno de teclado, la
+              misma letra repetida, casi sin vocales).
+           2) Promoción/enlaces: links, "sígueme en", @usuarios, etc.
+           3) Límite de frecuencia: un cliente no puede publicar o
+              editar reseñas una tras otra sin esperar.
+         ========================================================= */
+
+      // Detecta comentarios que no son texto real: muy pocas vocales,
+      // casi ninguna variedad de letras (aaaaaa, jajajajaja al extremo),
+      // o una sola "palabra" gigante que ocupa casi todo el comentario.
+      function looksLikeGibberish(text) {
+        const clean = normalizeText(text).replace(/[^a-z\s]/g, ' ').trim();
+        if (!clean) return true;
+
+        const letters = clean.replace(/\s+/g, '');
+        if (letters.length < 8) return false; // muy corto; ya se valida el mínimo aparte
+
+        const vowelCount = (letters.match(/[aeiou]/g) || []).length;
+        const vowelRatio = vowelCount / letters.length;
+        if (vowelRatio < 0.15) return true; // el español real ronda 35-50% de vocales
+
+        const uniqueLetters = new Set(letters).size;
+        if (letters.length >= 12 && uniqueLetters <= 3) return true; // ej. "aaaaaaaaaaaa"
+
+        const words = clean.split(/\s+/).filter(Boolean);
+        const longestWord = words.reduce((a, b) => (b.length > a.length ? b : a), '');
+        if (words.length <= 2 && longestWord.length >= 25) return true; // una palabra gigante sin espacios
+
+        return false;
+      }
+
+      // Detecta enlaces, dominios, "handles" tipo @usuario y frases
+      // típicas de autopromoción dentro del comentario.
+      function containsPromotionalContent(text) {
+        const lower = normalizeText(text);
+
+        const urlPattern = /(https?:\/\/|www\.|\b[a-z0-9-]+\.(com|mx|net|org|shop|store|xyz|info|co)\b)/i;
+        if (urlPattern.test(lower)) return true;
+
+        const handlePattern = /@[a-z0-9_.]{3,}/i;
+        if (handlePattern.test(lower)) return true;
+
+        const promoPhrases = [
+          'sigueme en', 'visita mi', 'visiten mi', 'compra en',
+          'mejor precio en', 'descuento en', 'promocion en',
+          'contactame al', 'pedidos al', 'envio gratis en'
+        ];
+        return promoPhrases.some((phrase) => lower.includes(phrase));
+      }
+
+      // Enfría cuántas reseñas/ediciones puede mandar un cliente seguidas.
+      // Se guarda en localStorage para que persista aunque recargue la
+      // página, y es independiente por navegador (no requiere backend).
+      const REVIEW_COOLDOWN_MS = 30000; // 30 segundos entre publicaciones
+      const REVIEW_COOLDOWN_KEY = 'rk_last_review_submit';
+
+      function getReviewCooldownRemaining() {
+        try {
+          const last = parseInt(localStorage.getItem(REVIEW_COOLDOWN_KEY) || '0', 10);
+          return Math.max(0, REVIEW_COOLDOWN_MS - (Date.now() - last));
+        } catch (err) {
+          return 0; // si localStorage falla, no bloqueamos por esto
+        }
+      }
+
+      function markReviewSubmitted() {
+        try {
+          localStorage.setItem(REVIEW_COOLDOWN_KEY, String(Date.now()));
+        } catch (err) {
+          // Sin localStorage no hay forma de recordar el cooldown; no es
+          // crítico, solo se pierde esta protección puntual.
+        }
+      }
+
+      // Si el cliente ya publicó/editó una reseña hace poco, deshabilita
+      // el botón y muestra una cuenta regresiva en vivo, en vez de
+      // dejarlo enviar y recién ahí avisarle que debe esperar.
+      function applyReviewCooldownUI(button, defaultLabel) {
+        let remaining = getReviewCooldownRemaining();
+        if (remaining <= 0) return;
+
+        button.disabled = true;
+        let timer = null;
+
+        function tick() {
+          remaining = getReviewCooldownRemaining();
+          if (remaining <= 0) {
+            button.disabled = false;
+            button.textContent = defaultLabel;
+            clearInterval(timer);
+            return;
+          }
+          const seconds = Math.ceil(remaining / 1000);
+          button.textContent = `Espera ${seconds}s...`;
+        }
+
+        tick();
+        timer = setInterval(tick, 500);
       }
 
       let products = [];
@@ -4469,6 +5087,11 @@
         document.getElementById('modalCategory').textContent = `${product.category}`;
         document.getElementById('modalTitle').textContent = product.name;
         document.getElementById('modalDescription').textContent = product.description || 'Sin descripción disponible.';
+
+        const buyboxStockEl = document.getElementById('modalBuyboxStock');
+        const hasAnyStock = product.stock && Object.values(product.stock).some((qty) => qty > 0);
+        buyboxStockEl.textContent = hasAnyStock ? 'Disponible' : 'Agotado';
+        buyboxStockEl.classList.toggle('is-out', !hasAnyStock);
         
         const dorsalTextSpan = document.getElementById('dorsalText');
         if (product.legendary_player && product.legendary_player.trim() !== "") {
@@ -4576,6 +5199,8 @@
         productModal.classList.add('visible');
         modalBackdrop.classList.add('visible');
         productModal.focus();
+
+        loadReviewsForProduct(product.id);
       }
 
       // Bloquea el scroll de la página de fondo mientras el modal de
@@ -5208,6 +5833,13 @@
           updateWishlistBadge();
           updateWishlistGuestUI();
         }
+
+        // Si el modal de producto está abierto, refresca el formulario de
+        // reseña (por ejemplo, si el cliente acaba de iniciar sesión desde
+        // el prompt "Inicia sesión para dejar tu reseña").
+        if (productModal.classList.contains('visible') && modalReviewsProductId) {
+          renderReviewFormArea();
+        }
       }
 
       accountButton.addEventListener('click', () => {
@@ -5622,6 +6254,485 @@
         openAccountDrawer();
         showLoginView();
       });
+
+      /* =========================================================
+         RESEÑAS CON ESTRELLAS (tabla "reviews" de Supabase, con
+         RLS: cualquiera puede leer, solo el dueño puede escribir su
+         propia fila). Un cliente logueado puede dejar una sola
+         reseña por producto (upsert sobre product_id + user_id);
+         puede editarla o eliminarla después. El texto del comentario
+         pasa por el mismo filtro de malas palabras que ya se usa
+         para los nombres de cuenta.
+         ========================================================= */
+
+      const REVIEWS_PAGE_SIZE = 5;
+      let modalReviews = [];
+      let modalReviewsProductId = null;
+      let modalReviewsVisibleCount = REVIEWS_PAGE_SIZE;
+      let modalReviewsLoadToken = 0;
+      let editingOwnReview = false; // true mientras el cliente está editando su propia reseña
+
+      const modalRatingSummary = document.getElementById('modalRatingSummary');
+      const modalRatingStars = document.getElementById('modalRatingStars');
+      const modalRatingAvgNumber = document.getElementById('modalRatingAvgNumber');
+      const modalRatingCountText = document.getElementById('modalRatingCountText');
+      const reviewsSectionEl = document.getElementById('reviewsSection');
+      const reviewsHeaderRating = document.getElementById('reviewsHeaderRating');
+      const reviewsHeaderStars = document.getElementById('reviewsHeaderStars');
+      const reviewsHeaderAvgNumber = document.getElementById('reviewsHeaderAvgNumber');
+      const reviewFormArea = document.getElementById('reviewFormArea');
+      const reviewsListEl = document.getElementById('reviewsList');
+      const reviewsShowMoreBtn = document.getElementById('reviewsShowMoreBtn');
+
+      const STAR_POLYGON_POINTS = '12 2 15.09 8.63 22 9.24 16.5 14.14 18.18 21 12 17.27 5.82 21 7.5 14.14 2 9.24 8.91 8.63 12 2';
+
+      function starsMarkupStatic(rating) {
+        const rounded = Math.round(Number(rating) || 0);
+        let html = '';
+        for (let i = 1; i <= 5; i++) {
+          html += `<svg viewBox="0 0 24 24" class="${i <= rounded ? 'is-filled' : ''}"><polygon points="${STAR_POLYGON_POINTS}"/></svg>`;
+        }
+        return html;
+      }
+
+      // Selector de estrellas interactivo para el formulario: 5 <svg>
+      // clicables/navegables por teclado, con vista previa al pasar el
+      // mouse. Devuelve el elemento contenedor con un método getValue().
+      function createStarPicker(initialValue) {
+        const wrap = document.createElement('span');
+        wrap.className = 'star-row interactive';
+        wrap.setAttribute('role', 'radiogroup');
+        wrap.setAttribute('aria-label', 'Calificación en estrellas');
+
+        let value = initialValue || 0;
+
+        function paint(previewValue) {
+          const v = previewValue != null ? previewValue : value;
+          Array.from(wrap.children).forEach((svg, idx) => {
+            svg.classList.toggle('is-filled', idx < v);
+            svg.setAttribute('aria-checked', String(idx + 1 === value));
+          });
+        }
+
+        for (let i = 1; i <= 5; i++) {
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('viewBox', '0 0 24 24');
+          svg.setAttribute('role', 'radio');
+          svg.setAttribute('aria-checked', 'false');
+          svg.setAttribute('aria-label', `${i} estrella${i > 1 ? 's' : ''}`);
+          svg.tabIndex = 0;
+          const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+          poly.setAttribute('points', STAR_POLYGON_POINTS);
+          svg.appendChild(poly);
+
+          svg.addEventListener('mouseenter', () => paint(i));
+          svg.addEventListener('mouseleave', () => paint());
+          svg.addEventListener('click', () => { value = i; paint(); });
+          svg.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              value = i;
+              paint();
+            }
+          });
+
+          wrap.appendChild(svg);
+        }
+
+        paint();
+        wrap.getValue = () => value;
+        return wrap;
+      }
+
+      function reviewDateLabel(iso) {
+        try {
+          return new Date(iso).toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
+        } catch (err) {
+          return '';
+        }
+      }
+
+      // Anima un número de 0 hasta su valor final (ej. el promedio de
+      // estrellas) en unos cuantos frames, para que el dato se sienta
+      // vivo en vez de aparecer plantado de golpe.
+      function animateNumberTo(el, target, duration = 450) {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          el.textContent = target.toFixed(1);
+          return;
+        }
+        const start = performance.now();
+        function tick(now) {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = (target * eased).toFixed(1);
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      function renderRatingSummary() {
+        if (!modalReviews.length) {
+          modalRatingSummary.style.display = 'none';
+          reviewsHeaderRating.style.display = 'none';
+          return;
+        }
+
+        const count = modalReviews.length;
+        const avg = modalReviews.reduce((sum, r) => sum + Number(r.rating || 0), 0) / count;
+
+        modalRatingSummary.style.display = 'flex';
+        modalRatingStars.innerHTML = starsMarkupStatic(avg);
+        animateNumberTo(modalRatingAvgNumber, avg);
+        modalRatingCountText.textContent = `(${count} reseña${count === 1 ? '' : 's'})`;
+        modalRatingCountText.onclick = () => {
+          reviewsSectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        // La calificación ya se muestra junto al título; aquí solo se
+        // repite en su forma mínima (estrellas + número), integrada al
+        // encabezado de la sección, en vez de una caja aparte con el
+        // mismo dato completo.
+        reviewsHeaderRating.style.display = 'inline-flex';
+        reviewsHeaderStars.innerHTML = starsMarkupStatic(avg);
+        reviewsHeaderAvgNumber.textContent = avg.toFixed(1);
+      }
+
+      // Construye la tarjeta de "Tu reseña": solo la ve el propio autor,
+      // en vez del formulario grande de edición. Trae los botones
+      // "Actualizar reseña" y "Eliminar mi reseña", del mismo tamaño.
+      function buildOwnReviewCard(existing) {
+        const card = document.createElement('div');
+        card.className = 'review-card';
+
+        const header = document.createElement('div');
+        header.className = 'review-card-header';
+        header.innerHTML = `
+          <div class="review-card-author">
+            <span class="review-card-name">Tu reseña</span>
+          </div>
+          <span class="review-card-date">${reviewDateLabel(existing.created_at)}</span>
+        `;
+        card.appendChild(header);
+
+        const stars = document.createElement('span');
+        stars.className = 'star-row';
+        stars.innerHTML = starsMarkupStatic(existing.rating);
+        card.appendChild(stars);
+
+        const comment = document.createElement('p');
+        comment.className = 'review-card-comment';
+        comment.textContent = existing.comment || '';
+        card.appendChild(comment);
+
+        const actionsRow = document.createElement('div');
+        actionsRow.className = 'review-own-actions';
+
+        const editBtn = document.createElement('button');
+        editBtn.type = 'button';
+        editBtn.className = 'btn review-form-btn';
+        editBtn.textContent = 'Actualizar reseña';
+        editBtn.addEventListener('click', () => {
+          editingOwnReview = true;
+          renderReviewFormArea();
+        });
+        actionsRow.appendChild(editBtn);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'btn review-form-btn is-danger';
+        deleteBtn.textContent = 'Eliminar mi reseña';
+        deleteBtn.addEventListener('click', () => handleDeleteReview(existing.id));
+        actionsRow.appendChild(deleteBtn);
+
+        card.appendChild(actionsRow);
+        return card;
+      }
+
+      function renderReviewFormArea() {
+        reviewFormArea.innerHTML = '';
+
+        if (!currentUser) {
+          const prompt = document.createElement('div');
+          prompt.className = 'review-login-prompt';
+
+          const label = document.createElement('span');
+          label.textContent = 'Inicia sesión para calificar y dejar tu reseña de esta camiseta.';
+          prompt.appendChild(label);
+
+          const loginBtn = document.createElement('button');
+          loginBtn.type = 'button';
+          loginBtn.className = 'btn btn-primary';
+          loginBtn.textContent = 'Iniciar sesión';
+          loginBtn.addEventListener('click', () => {
+            openAccountDrawer();
+            showLoginView();
+          });
+          prompt.appendChild(loginBtn);
+
+          reviewFormArea.appendChild(prompt);
+          return;
+        }
+
+        const productId = modalReviewsProductId;
+        const existing = modalReviews.find((r) => String(r.user_id) === String(currentUser.id));
+
+        // Si ya existe una reseña propia y no está en modo edición, se
+        // muestra como una tarjeta compacta (con sus botones), no como
+        // el formulario grande.
+        if (existing && !editingOwnReview) {
+          reviewFormArea.appendChild(buildOwnReviewCard(existing));
+          return;
+        }
+
+        const form = document.createElement('form');
+        form.className = 'review-form';
+
+        const title = document.createElement('div');
+        title.className = 'review-form-title';
+        title.textContent = existing ? 'Edita tu reseña' : 'Deja tu reseña';
+        form.appendChild(title);
+
+        const starPicker = createStarPicker(existing ? existing.rating : 0);
+        form.appendChild(starPicker);
+
+        const textarea = document.createElement('textarea');
+        textarea.maxLength = 600;
+        textarea.placeholder = 'Cuéntale a otros clientes qué te pareció la calidad, la talla, el envío...';
+        textarea.value = existing ? (existing.comment || '') : '';
+        form.appendChild(textarea);
+
+        const errorEl = document.createElement('div');
+        errorEl.className = 'review-form-error';
+        form.appendChild(errorEl);
+
+        const successEl = document.createElement('div');
+        successEl.className = 'review-form-success';
+        form.appendChild(successEl);
+
+        const actionsRow = document.createElement('div');
+        actionsRow.className = 'review-own-actions';
+
+        const submitBtn = document.createElement('button');
+        submitBtn.type = 'submit';
+        submitBtn.className = 'btn btn-primary review-form-btn';
+        submitBtn.textContent = existing ? 'Actualizar reseña' : 'Publicar reseña';
+        applyReviewCooldownUI(submitBtn, submitBtn.textContent);
+        actionsRow.appendChild(submitBtn);
+
+        if (existing) {
+          // Modo edición: en vez de "Eliminar", se ofrece "Cancelar"
+          // para volver a la tarjeta compacta sin guardar cambios.
+          const cancelBtn = document.createElement('button');
+          cancelBtn.type = 'button';
+          cancelBtn.className = 'btn review-form-btn';
+          cancelBtn.textContent = 'Cancelar';
+          cancelBtn.addEventListener('click', () => {
+            editingOwnReview = false;
+            renderReviewFormArea();
+          });
+          actionsRow.appendChild(cancelBtn);
+        }
+
+        form.appendChild(actionsRow);
+
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          handleReviewSubmit({
+            productId,
+            rating: starPicker.getValue(),
+            comment: textarea.value,
+            errorEl,
+            successEl,
+            submitBtn,
+            isEdit: !!existing
+          });
+        });
+
+        reviewFormArea.appendChild(form);
+      }
+
+      async function handleReviewSubmit(ctx) {
+        const { productId, rating, comment, errorEl, successEl, submitBtn, isEdit } = ctx;
+        errorEl.textContent = '';
+        successEl.textContent = '';
+
+        const commentTrimmed = (comment || '').trim();
+
+        if (!rating || rating < 1 || rating > 5) {
+          errorEl.textContent = 'Selecciona una calificación de 1 a 5 estrellas.';
+          return;
+        }
+        if (commentTrimmed.length < 10) {
+          errorEl.textContent = 'Escribe un comentario de al menos 10 caracteres.';
+          return;
+        }
+        if (commentTrimmed.length > 600) {
+          errorEl.textContent = 'Tu comentario es demasiado largo (máximo 600 caracteres).';
+          return;
+        }
+        if (containsBadWordInText(commentTrimmed)) {
+          errorEl.textContent = 'Tu comentario incluye palabras no permitidas. Por favor edítalo.';
+          return;
+        }
+        if (looksLikeGibberish(commentTrimmed)) {
+          errorEl.textContent = 'Tu comentario no parece tener texto real. Cuéntanos qué te pareció la camiseta.';
+          return;
+        }
+        if (containsPromotionalContent(commentTrimmed)) {
+          errorEl.textContent = 'No se permiten enlaces ni promoción de otros negocios en las reseñas.';
+          return;
+        }
+        const cooldownRemaining = getReviewCooldownRemaining();
+        if (cooldownRemaining > 0) {
+          const seconds = Math.ceil(cooldownRemaining / 1000);
+          errorEl.textContent = `Espera ${seconds} segundo${seconds === 1 ? '' : 's'} antes de publicar otra reseña.`;
+          return;
+        }
+        if (!currentUser) {
+          errorEl.textContent = 'Tu sesión expiró. Inicia sesión de nuevo.';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = isEdit ? 'Actualizando...' : 'Publicando...';
+
+        const meta = currentUser.user_metadata || {};
+        const displayName = (meta.full_name && meta.full_name.trim())
+          ? meta.full_name.trim()
+          : (currentUser.email ? currentUser.email.split('@')[0] : 'Cliente Retro Kits');
+
+        try {
+          const { error } = await supabaseClient
+            .from('reviews')
+            .upsert({
+              product_id: productId,
+              user_id: currentUser.id,
+              user_name: displayName,
+              rating: rating,
+              comment: commentTrimmed
+            }, { onConflict: 'product_id,user_id' });
+
+          if (error) throw error;
+
+          markReviewSubmitted();
+          editingOwnReview = false;
+          showToast(isEdit ? 'Tu reseña se actualizó.' : '¡Gracias por tu reseña!');
+          await loadReviewsForProduct(productId);
+        } catch (err) {
+          console.error('Error guardando la reseña:', err.message);
+          errorEl.textContent = 'No se pudo guardar tu reseña. Intenta de nuevo.';
+          submitBtn.disabled = false;
+          submitBtn.textContent = isEdit ? 'Actualizar reseña' : 'Publicar reseña';
+        }
+      }
+
+      async function handleDeleteReview(reviewId) {
+        if (!currentUser) return;
+        if (!confirm('¿Seguro que quieres eliminar tu reseña?')) return;
+
+        try {
+          const { error } = await supabaseClient
+            .from('reviews')
+            .delete()
+            .eq('id', reviewId)
+            .eq('user_id', currentUser.id);
+
+          if (error) throw error;
+
+          showToast('Reseña eliminada.');
+          await loadReviewsForProduct(modalReviewsProductId);
+        } catch (err) {
+          console.error('Error eliminando la reseña:', err.message);
+          showToast('No se pudo eliminar tu reseña. Intenta de nuevo.');
+        }
+      }
+
+      // La reseña propia del cliente ya se muestra arriba, en su propia
+      // tarjeta (ver buildOwnReviewCard); aquí solo se listan las de
+      // los demás clientes, para no duplicarla.
+      function renderReviewsList() {
+        const otherReviews = modalReviews.filter(
+          (r) => !(currentUser && String(r.user_id) === String(currentUser.id))
+        );
+
+        if (!otherReviews.length) {
+          const hasOwn = currentUser && modalReviews.some((r) => String(r.user_id) === String(currentUser.id));
+          reviewsListEl.innerHTML = `<div class="reviews-empty-state">${
+            hasOwn
+              ? 'Todavía no hay reseñas de otros clientes.'
+              : 'Todavía no hay reseñas para esta camiseta. ¡Sé el primero en dejar la tuya!'
+          }</div>`;
+          reviewsShowMoreBtn.classList.add('hidden');
+          return;
+        }
+
+        const visible = otherReviews.slice(0, modalReviewsVisibleCount);
+
+        reviewsListEl.innerHTML = visible.map((r, idx) => {
+          const name = escapeHtml(r.user_name || 'Cliente Retro Kits');
+          const comment = escapeHtml(r.comment || '');
+          const dateStr = reviewDateLabel(r.created_at);
+          const delay = Math.min(idx * 60, 300);
+
+          return `
+            <div class="review-card" style="--review-delay: ${delay}ms;">
+              <div class="review-card-header">
+                <div class="review-card-author">
+                  <span class="review-card-name">${name}</span>
+                </div>
+                <span class="review-card-date">${dateStr}</span>
+              </div>
+              <span class="star-row">${starsMarkupStatic(r.rating)}</span>
+              <p class="review-card-comment">${comment}</p>
+            </div>
+          `;
+        }).join('');
+
+        reviewsShowMoreBtn.classList.toggle('hidden', modalReviewsVisibleCount >= otherReviews.length);
+      }
+
+      reviewsShowMoreBtn.addEventListener('click', () => {
+        modalReviewsVisibleCount += REVIEWS_PAGE_SIZE;
+        renderReviewsList();
+      });
+
+      // Se llama cada vez que se abre el modal de un producto. Usa un
+      // "token" para ignorar respuestas tardías si el cliente cierra o
+      // cambia de producto antes de que Supabase responda.
+      async function loadReviewsForProduct(productId) {
+        modalReviewsProductId = productId;
+        modalReviewsVisibleCount = REVIEWS_PAGE_SIZE;
+        editingOwnReview = false;
+        const token = ++modalReviewsLoadToken;
+
+        reviewsListEl.innerHTML = '<div class="reviews-loading-state">Cargando reseñas...</div>';
+        reviewsShowMoreBtn.classList.add('hidden');
+        modalRatingSummary.style.display = 'none';
+        reviewsHeaderRating.style.display = 'none';
+        reviewFormArea.innerHTML = '';
+
+        try {
+          const { data, error } = await supabaseClient
+            .from('reviews')
+            .select('id, product_id, user_id, user_name, rating, comment, created_at')
+            .eq('product_id', productId)
+            .order('created_at', { ascending: false });
+
+          if (token !== modalReviewsLoadToken) return;
+          if (error) throw error;
+
+          modalReviews = data || [];
+          renderRatingSummary();
+          renderReviewFormArea();
+          renderReviewsList();
+        } catch (err) {
+          if (token !== modalReviewsLoadToken) return;
+          console.error('Error cargando reseñas:', err.message);
+          modalReviews = [];
+          reviewsListEl.innerHTML = '<div class="reviews-empty-state">No se pudieron cargar las reseñas. Intenta de nuevo más tarde.</div>';
+          renderReviewFormArea();
+        }
+      }
 
       initAuth();
 
