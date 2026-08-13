@@ -2203,6 +2203,21 @@
         }
       }
 
+      @media (max-width: 480px) {
+        /* En celulares angostos, 3 campos en una sola fila (Ciudad /
+           Estado / C.P.) quedan demasiado apretados y el texto se
+           corta. Los dejamos envolver dinámicamente: cada campo pide
+           un ancho mínimo cómodo y salta de línea solo si no cabe. */
+        .payment-form-grid .auth-field-row {
+          flex-wrap: wrap;
+          row-gap: 14px;
+        }
+
+        .payment-form-grid .auth-field-row .auth-field {
+          flex: 1 1 130px;
+        }
+      }
+
       @media (max-width: 640px) {
         .payment-fullscreen-header,
         .payment-fullscreen-body {
@@ -4109,7 +4124,7 @@
               </div>
               <div class="auth-field">
                 <label for="paymentPhone">Teléfono de contacto</label>
-                <input type="tel" id="paymentPhone" autocomplete="tel" placeholder="10 dígitos" required />
+                <input type="tel" id="paymentPhone" autocomplete="tel" placeholder="662 123 4567" maxlength="12" required />
               </div>
               <div class="auth-field">
                 <label for="paymentAddressRefs">Referencias (opcional)</label>
@@ -4281,7 +4296,7 @@
 
       // Llave PÚBLICA de Conekta (segura de exponer en el navegador).
       // La llave privada NUNCA va aquí: vive solo como secreto en la Edge Function.
-      const CONEKTA_PUBLIC_KEY = "key_U8cBo32vbHDTjNQqalRJnB0";
+      const CONEKTA_PUBLIC_KEY = "key_Vt2uYoHtFvYQK9GwNeMt6wS";
       if (window.Conekta) {
         Conekta.setPublicKey(CONEKTA_PUBLIC_KEY);
       }
@@ -6078,7 +6093,30 @@
         });
       }
 
+      function formatPhoneInput(input) {
+        input.addEventListener('keypress', (e) => {
+          if (!/[0-9]/.test(e.key)) e.preventDefault();
+        });
+        input.addEventListener('input', () => {
+          const caretAtEnd = input.selectionStart === input.value.length;
+          const digitsOnly = input.value.replace(/\D/g, '').slice(0, 10);
+          const parts = [digitsOnly.slice(0, 3), digitsOnly.slice(3, 6), digitsOnly.slice(6, 10)].filter(Boolean);
+          input.value = parts.join(' ');
+          if (caretAtEnd) input.setSelectionRange(input.value.length, input.value.length);
+        });
+        input.addEventListener('paste', (e) => {
+          const pasted = (e.clipboardData || window.clipboardData).getData('text');
+          if (/\D/.test(pasted)) {
+            e.preventDefault();
+            const digitsOnly = pasted.replace(/\D/g, '').slice(0, 10);
+            const parts = [digitsOnly.slice(0, 3), digitsOnly.slice(3, 6), digitsOnly.slice(6, 10)].filter(Boolean);
+            input.value = parts.join(' ');
+          }
+        });
+      }
+
       formatCardNumberInput(document.getElementById('cardNumber'));
+      formatPhoneInput(document.getElementById('paymentPhone'));
       restrictToDigits(document.getElementById('cardExpMonth'), 2);
       restrictToDigits(document.getElementById('cardExpYear'), 2);
       restrictToDigits(document.getElementById('cardCvc'), 4);
@@ -6134,7 +6172,7 @@
           const customerInfo = {
             name: currentUser.user_metadata && currentUser.user_metadata.full_name ? currentUser.user_metadata.full_name : (currentUser.email || 'Cliente'),
             email: currentUser.email,
-            phone: document.getElementById('paymentPhone').value.trim(),
+            phone: document.getElementById('paymentPhone').value.replace(/\s+/g, ''),
           };
 
           const itemsPayload = cart.map((i) => ({
