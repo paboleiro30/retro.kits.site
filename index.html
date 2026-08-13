@@ -2071,6 +2071,145 @@
         font-size: 0.92rem;
       }
 
+      /* ============================================================
+         PAGO CON TARJETA — PANTALLA COMPLETA
+         A diferencia de los demás paneles (carrito/cuenta/wishlist),
+         que son drawers angostos deslizando desde la derecha, el pago
+         cubre toda la pantalla con un fundido + leve escala. Da lugar
+         a un layout de dos columnas (contacto/dirección | tarjeta)
+         que se reordena solo a una columna en pantallas chicas.
+         ============================================================ */
+      #paymentDrawer {
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        max-width: none !important;
+        border-left: none !important;
+        background: var(--bg) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        padding: 0 !important;
+        display: flex !important;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: scale(0.98);
+        transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
+        z-index: 1200;
+      }
+
+      #paymentDrawer.open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: scale(1);
+        box-shadow: none !important;
+      }
+
+      .payment-fullscreen-inner {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+      }
+
+      .payment-fullscreen-header {
+        flex-shrink: 0;
+        max-width: 1080px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 22px 28px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .payment-fullscreen-body {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 36px 28px 64px;
+      }
+
+      .payment-form-grid {
+        max-width: 1080px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px 56px;
+        align-items: start;
+        padding: 4px 2px 16px;
+      }
+
+      .payment-form-grid .payment-summary-total,
+      .payment-form-grid .auth-error,
+      .payment-form-grid .payment-btn-row,
+      .payment-form-grid .payment-secure-note {
+        grid-column: 1 / -1;
+      }
+
+      .payment-col {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-width: 0;
+      }
+
+      .payment-section-title {
+        margin: 10px 0 -2px;
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.82rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .payment-col .payment-section-title:first-child,
+      .payment-col > div:first-child .payment-section-title {
+        margin-top: 0;
+      }
+
+      /* Fila de botones simétricos: mismo alto y mismo ancho para
+         cancelar / confirmar, para que ninguno domine visualmente. */
+      .payment-btn-row {
+        display: flex;
+        gap: 14px;
+        margin-top: 4px;
+      }
+
+      .payment-btn-row .auth-submit-btn {
+        flex: 1;
+        margin-top: 0;
+      }
+
+      .payment-btn-cancel {
+        background: transparent;
+        border: 1px solid rgba(var(--text-rgb), 0.2);
+        color: var(--text);
+      }
+
+      .payment-btn-cancel:hover {
+        border-color: var(--accent);
+        background: rgba(var(--text-rgb), 0.05);
+        filter: none;
+      }
+
+      @media (max-width: 860px) {
+        .payment-form-grid {
+          grid-template-columns: 1fr;
+          gap: 22px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .payment-fullscreen-header,
+        .payment-fullscreen-body {
+          padding-left: 18px;
+          padding-right: 18px;
+        }
+      }
+
       .account-logged-view.hidden {
         display: none;
       }
@@ -3923,83 +4062,124 @@
       </div>
     </aside>
 
-    <!-- PANEL DE PAGO CON TARJETA (Conekta) -->
-    <aside class="cart-drawer" id="paymentDrawer">
-      <div class="cart-header">
-        <h3>Pagar con tarjeta</h3>
-        <button class="close-drawer" id="closePayment">
-          <span>Cerrar</span>
-        </button>
-      </div>
-
-      <div class="cart-items" id="paymentDrawerBody">
-
-        <!-- VISTA: FORMULARIO DE PAGO -->
-        <form class="auth-view" id="paymentFormView">
-          <div class="payment-summary-total">
-            <span>Total a pagar</span>
-            <strong id="paymentTotalDisplay">$0</strong>
-          </div>
-
-          <!-- Datos de contacto: solo se muestran si el cliente no inició sesión -->
-          <div id="paymentGuestFields">
-            <div class="auth-field">
-              <label for="paymentName">Nombre completo</label>
-              <input type="text" id="paymentName" autocomplete="name" required />
-            </div>
-            <div class="auth-field">
-              <label for="paymentEmail">Correo</label>
-              <input type="email" id="paymentEmail" autocomplete="email" required />
-            </div>
-            <div class="auth-field">
-              <label for="paymentPhone">Teléfono</label>
-              <input type="tel" id="paymentPhone" autocomplete="tel" required />
-            </div>
-          </div>
-
-          <div class="auth-field">
-            <label for="cardNumber">Número de tarjeta</label>
-            <input type="text" id="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" maxlength="19" required />
-          </div>
-          <div class="auth-field">
-            <label for="cardName">Nombre en la tarjeta</label>
-            <input type="text" id="cardName" autocomplete="cc-name" required />
-          </div>
-          <div class="auth-field-row">
-            <div class="auth-field">
-              <label for="cardExpMonth">Mes</label>
-              <input type="text" id="cardExpMonth" inputmode="numeric" autocomplete="cc-exp-month" placeholder="MM" maxlength="2" required />
-            </div>
-            <div class="auth-field">
-              <label for="cardExpYear">Año</label>
-              <input type="text" id="cardExpYear" inputmode="numeric" autocomplete="cc-exp-year" placeholder="AA" maxlength="2" required />
-            </div>
-            <div class="auth-field">
-              <label for="cardCvc">CVC</label>
-              <input type="text" id="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" required />
-            </div>
-          </div>
-
-          <p class="auth-error" id="paymentError"></p>
-
-          <button type="submit" class="auth-submit-btn" id="paymentSubmitBtn">Pagar ahora</button>
-
-          <p class="payment-secure-note">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Pago seguro procesado por Conekta. No guardamos los datos de tu tarjeta.
-          </p>
-        </form>
-
-        <!-- VISTA: PAGO EXITOSO -->
-        <div class="payment-success-view hidden" id="paymentSuccessView">
-          <div class="success-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <h4>¡Pago realizado!</h4>
-          <p>Tu pedido fue confirmado y pagado correctamente. Te contactaremos pronto para coordinar el envío.</p>
-          <button type="button" class="auth-submit-btn" id="paymentDoneBtn">Cerrar</button>
+    <!-- PANEL DE PAGO CON TARJETA (Conekta) — pantalla completa -->
+    <aside class="cart-drawer payment-fullscreen" id="paymentDrawer">
+      <div class="payment-fullscreen-inner">
+        <div class="cart-header payment-fullscreen-header">
+          <h3>Pagar con tarjeta</h3>
+          <button class="close-drawer" id="closePayment">
+            <span>Cerrar</span>
+          </button>
         </div>
 
+        <div class="cart-items payment-fullscreen-body" id="paymentDrawerBody">
+
+          <!-- VISTA: FORMULARIO DE PAGO -->
+          <form class="auth-view payment-form-grid" id="paymentFormView">
+            <div class="payment-summary-total">
+              <span>Total a pagar</span>
+              <strong id="paymentTotalDisplay">$0</strong>
+            </div>
+
+            <!-- COLUMNA IZQUIERDA: contacto + dirección de envío -->
+            <div class="payment-col">
+              <!-- Datos de contacto: solo se muestran si el cliente no inició sesión -->
+              <div id="paymentGuestFields">
+                <p class="payment-section-title">Datos de contacto</p>
+                <div class="auth-field">
+                  <label for="paymentName">Nombre completo</label>
+                  <input type="text" id="paymentName" autocomplete="name" required />
+                </div>
+                <div class="auth-field">
+                  <label for="paymentEmail">Correo</label>
+                  <input type="email" id="paymentEmail" autocomplete="email" required />
+                </div>
+                <div class="auth-field">
+                  <label for="paymentPhone">Teléfono</label>
+                  <input type="tel" id="paymentPhone" autocomplete="tel" required />
+                </div>
+              </div>
+
+              <p class="payment-section-title">Dirección de envío</p>
+              <div class="auth-field">
+                <label for="paymentAddressStreet">Calle y número</label>
+                <input type="text" id="paymentAddressStreet" autocomplete="address-line1" placeholder="Calle, número exterior e interior" required />
+              </div>
+              <div class="auth-field">
+                <label for="paymentAddressColonia">Colonia</label>
+                <input type="text" id="paymentAddressColonia" autocomplete="address-line2" required />
+              </div>
+              <div class="auth-field-row">
+                <div class="auth-field">
+                  <label for="paymentCity">Ciudad</label>
+                  <input type="text" id="paymentCity" autocomplete="address-level2" required />
+                </div>
+                <div class="auth-field">
+                  <label for="paymentState">Estado</label>
+                  <input type="text" id="paymentState" autocomplete="address-level1" required />
+                </div>
+                <div class="auth-field">
+                  <label for="paymentZip">C.P.</label>
+                  <input type="text" id="paymentZip" inputmode="numeric" autocomplete="postal-code" maxlength="5" required />
+                </div>
+              </div>
+              <div class="auth-field">
+                <label for="paymentAddressRefs">Referencias (opcional)</label>
+                <input type="text" id="paymentAddressRefs" placeholder="Entre calles, color de fachada, etc." />
+              </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: datos de la tarjeta -->
+            <div class="payment-col">
+              <p class="payment-section-title">Datos de la tarjeta</p>
+              <div class="auth-field">
+                <label for="cardNumber">Número de tarjeta</label>
+                <input type="text" id="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" maxlength="19" required />
+              </div>
+              <div class="auth-field">
+                <label for="cardName">Nombre en la tarjeta</label>
+                <input type="text" id="cardName" autocomplete="cc-name" required />
+              </div>
+              <div class="auth-field-row">
+                <div class="auth-field">
+                  <label for="cardExpMonth">Mes</label>
+                  <input type="text" id="cardExpMonth" inputmode="numeric" autocomplete="cc-exp-month" placeholder="MM" maxlength="2" required />
+                </div>
+                <div class="auth-field">
+                  <label for="cardExpYear">Año</label>
+                  <input type="text" id="cardExpYear" inputmode="numeric" autocomplete="cc-exp-year" placeholder="AA" maxlength="2" required />
+                </div>
+                <div class="auth-field">
+                  <label for="cardCvc">CVC</label>
+                  <input type="text" id="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" required />
+                </div>
+              </div>
+            </div>
+
+            <p class="auth-error" id="paymentError"></p>
+
+            <div class="payment-btn-row">
+              <button type="button" class="auth-submit-btn payment-btn-cancel" id="paymentCancelBtn">Cancelar</button>
+              <button type="submit" class="auth-submit-btn" id="paymentSubmitBtn">Pagar ahora</button>
+            </div>
+
+            <p class="payment-secure-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Pago seguro procesado por Conekta. No guardamos los datos de tu tarjeta.
+            </p>
+          </form>
+
+          <!-- VISTA: PAGO EXITOSO -->
+          <div class="payment-success-view hidden" id="paymentSuccessView">
+            <div class="success-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h4>¡Pago realizado!</h4>
+            <p>Tu pedido fue confirmado y pagado correctamente. Te contactaremos pronto para coordinar el envío.</p>
+            <button type="button" class="auth-submit-btn" id="paymentDoneBtn">Cerrar</button>
+          </div>
+
+        </div>
       </div>
     </aside>
 
@@ -5858,6 +6038,7 @@
 
       closePaymentBtn.addEventListener('click', closePaymentDrawer);
       paymentDoneBtn.addEventListener('click', closePaymentDrawer);
+      document.getElementById('paymentCancelBtn').addEventListener('click', closePaymentDrawer);
 
       // Tokeniza la tarjeta en el navegador con Conekta.js (los datos de la
       // tarjeta nunca tocan nuestro servidor) y devuelve un token de un solo uso.
@@ -5918,6 +6099,15 @@
             quantity: i.quantity,
           }));
 
+          const shippingAddress = {
+            street: document.getElementById('paymentAddressStreet').value.trim(),
+            colonia: document.getElementById('paymentAddressColonia').value.trim(),
+            city: document.getElementById('paymentCity').value.trim(),
+            state: document.getElementById('paymentState').value.trim(),
+            zip: document.getElementById('paymentZip').value.trim(),
+            references: document.getElementById('paymentAddressRefs').value.trim() || undefined,
+          };
+
           // La Edge Function hace el cobro real con la llave PRIVADA de Conekta
           // (nunca expuesta aquí) y registra el pedido en la tabla `orders`.
           const { data, error } = await supabaseClient.functions.invoke('conekta-charge', {
@@ -5925,6 +6115,7 @@
               token_id: tokenId,
               amount: total,
               customer: customerInfo,
+              shipping_address: shippingAddress,
               items: itemsPayload,
               user_id: currentUser ? currentUser.id : null,
               subtotal,
@@ -6097,10 +6288,14 @@
         paymentSuccessView.classList.add('hidden');
         paymentError.textContent = '';
         paymentDrawer.classList.add('open');
+        // El panel de pago es pantalla completa: bloqueamos el scroll
+        // de fondo igual que en el modal de producto.
+        lockBackgroundScroll();
       }
 
       function closePaymentDrawer() {
         paymentDrawer.classList.remove('open');
+        unlockBackgroundScroll();
       }
 
       // Cambia entre las pestañas "Perfil" y "Ajustes" del panel de cuenta
