@@ -2159,10 +2159,11 @@
       .payment-section-title {
         margin: 10px 0 -2px;
         font-family: 'Oswald', sans-serif;
-        font-size: 0.82rem;
-        letter-spacing: 0.14em;
+        font-size: 1.15rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: var(--muted);
+        color: var(--text);
       }
 
       .payment-col .payment-section-title:first-child,
@@ -4081,51 +4082,38 @@
               <strong id="paymentTotalDisplay">$0</strong>
             </div>
 
-            <!-- COLUMNA IZQUIERDA: contacto + dirección de envío -->
+            <!-- COLUMNA IZQUIERDA: dirección de envío -->
             <div class="payment-col">
-              <!-- Datos de contacto: solo se muestran si el cliente no inició sesión -->
-              <div id="paymentGuestFields">
-                <p class="payment-section-title">Datos de contacto</p>
-                <div class="auth-field">
-                  <label for="paymentName">Nombre completo</label>
-                  <input type="text" id="paymentName" autocomplete="name" required />
-                </div>
-                <div class="auth-field">
-                  <label for="paymentEmail">Correo</label>
-                  <input type="email" id="paymentEmail" autocomplete="email" required />
-                </div>
-                <div class="auth-field">
-                  <label for="paymentPhone">Teléfono</label>
-                  <input type="tel" id="paymentPhone" autocomplete="tel" required />
-                </div>
-              </div>
-
               <p class="payment-section-title">Dirección de envío</p>
               <div class="auth-field">
                 <label for="paymentAddressStreet">Calle y número</label>
-                <input type="text" id="paymentAddressStreet" autocomplete="address-line1" placeholder="Calle, número exterior e interior" required />
+                <input type="text" id="paymentAddressStreet" autocomplete="address-line1" placeholder="Ej. Blvd. Luis Encinas 123" required />
               </div>
               <div class="auth-field">
                 <label for="paymentAddressColonia">Colonia</label>
-                <input type="text" id="paymentAddressColonia" autocomplete="address-line2" required />
+                <input type="text" id="paymentAddressColonia" autocomplete="address-line2" placeholder="Ej. Centro" required />
               </div>
               <div class="auth-field-row">
                 <div class="auth-field">
                   <label for="paymentCity">Ciudad</label>
-                  <input type="text" id="paymentCity" autocomplete="address-level2" required />
+                  <input type="text" id="paymentCity" autocomplete="address-level2" placeholder="Ej. Hermosillo" required />
                 </div>
                 <div class="auth-field">
                   <label for="paymentState">Estado</label>
-                  <input type="text" id="paymentState" autocomplete="address-level1" required />
+                  <input type="text" id="paymentState" autocomplete="address-level1" placeholder="Ej. Sonora" required />
                 </div>
                 <div class="auth-field">
                   <label for="paymentZip">C.P.</label>
-                  <input type="text" id="paymentZip" inputmode="numeric" autocomplete="postal-code" maxlength="5" required />
+                  <input type="text" id="paymentZip" inputmode="numeric" autocomplete="postal-code" placeholder="83000" maxlength="5" required />
                 </div>
               </div>
               <div class="auth-field">
+                <label for="paymentPhone">Teléfono de contacto</label>
+                <input type="tel" id="paymentPhone" autocomplete="tel" placeholder="10 dígitos" required />
+              </div>
+              <div class="auth-field">
                 <label for="paymentAddressRefs">Referencias (opcional)</label>
-                <input type="text" id="paymentAddressRefs" placeholder="Entre calles, color de fachada, etc." />
+                <input type="text" id="paymentAddressRefs" placeholder="Ej. Entre calles, color de fachada, portón negro" />
               </div>
             </div>
 
@@ -4138,7 +4126,7 @@
               </div>
               <div class="auth-field">
                 <label for="cardName">Nombre en la tarjeta</label>
-                <input type="text" id="cardName" autocomplete="cc-name" required />
+                <input type="text" id="cardName" autocomplete="cc-name" placeholder="Como aparece en tu tarjeta" required />
               </div>
               <div class="auth-field-row">
                 <div class="auth-field">
@@ -4635,7 +4623,6 @@
       const closePaymentBtn = document.getElementById('closePayment');
       const paymentFormView = document.getElementById('paymentFormView');
       const paymentSuccessView = document.getElementById('paymentSuccessView');
-      const paymentGuestFields = document.getElementById('paymentGuestFields');
       const paymentTotalDisplay = document.getElementById('paymentTotalDisplay');
       const paymentError = document.getElementById('paymentError');
       const paymentSubmitBtn = document.getElementById('paymentSubmitBtn');
@@ -5992,6 +5979,13 @@
           return;
         }
 
+        if (!currentUser) {
+          showToast("Inicia sesión para completar tu compra.");
+          showLoginView();
+          openAccountDrawer();
+          return;
+        }
+
         const { subtotal, calculatedDiscount, total } = calculateCartTotals();
 
         let msg = `¡Hola! Me gustaría hacer un pedido de Retrokits:\n\n`;
@@ -6024,14 +6018,14 @@
           showToast("El carrito está vacío.");
           return;
         }
+        if (!currentUser) {
+          showToast("Inicia sesión para completar tu compra.");
+          showLoginView();
+          openAccountDrawer();
+          return;
+        }
         const { total } = calculateCartTotals();
         paymentTotalDisplay.textContent = `$${total.toFixed(2)}`;
-
-        // Si el cliente ya inició sesión, no le pedimos otra vez nombre/correo/teléfono.
-        paymentGuestFields.style.display = currentUser ? 'none' : '';
-        document.getElementById('paymentName').required = !currentUser;
-        document.getElementById('paymentEmail').required = !currentUser;
-        document.getElementById('paymentPhone').required = !currentUser;
 
         openPaymentDrawer();
       });
@@ -6039,6 +6033,56 @@
       closePaymentBtn.addEventListener('click', closePaymentDrawer);
       paymentDoneBtn.addEventListener('click', closePaymentDrawer);
       document.getElementById('paymentCancelBtn').addEventListener('click', closePaymentDrawer);
+
+      // ------------------------------------------------------------
+      // Formato en vivo de los campos numéricos del pago: no dejan
+      // escribir nada que no sea dígito y, en el número de tarjeta,
+      // van agregando el espacio cada 4 dígitos automáticamente
+      // (0000 0000 0000 0000) sin que el usuario tenga que hacerlo.
+      // ------------------------------------------------------------
+      function restrictToDigits(input, maxDigits) {
+        input.addEventListener('input', () => {
+          const digitsOnly = input.value.replace(/\D/g, '').slice(0, maxDigits);
+          if (digitsOnly !== input.value) input.value = digitsOnly;
+        });
+        input.addEventListener('keypress', (e) => {
+          if (!/[0-9]/.test(e.key)) e.preventDefault();
+        });
+        input.addEventListener('paste', (e) => {
+          const pasted = (e.clipboardData || window.clipboardData).getData('text');
+          if (/\D/.test(pasted)) {
+            e.preventDefault();
+            input.value = pasted.replace(/\D/g, '').slice(0, maxDigits);
+          }
+        });
+      }
+
+      function formatCardNumberInput(input) {
+        input.addEventListener('keypress', (e) => {
+          if (!/[0-9]/.test(e.key)) e.preventDefault();
+        });
+        input.addEventListener('input', () => {
+          const caretAtEnd = input.selectionStart === input.value.length;
+          const digitsOnly = input.value.replace(/\D/g, '').slice(0, 16);
+          const grouped = digitsOnly.replace(/(.{4})/g, '$1 ').trim();
+          input.value = grouped;
+          if (caretAtEnd) input.setSelectionRange(input.value.length, input.value.length);
+        });
+        input.addEventListener('paste', (e) => {
+          const pasted = (e.clipboardData || window.clipboardData).getData('text');
+          if (/\D/.test(pasted)) {
+            e.preventDefault();
+            const digitsOnly = pasted.replace(/\D/g, '').slice(0, 16);
+            input.value = digitsOnly.replace(/(.{4})/g, '$1 ').trim();
+          }
+        });
+      }
+
+      formatCardNumberInput(document.getElementById('cardNumber'));
+      restrictToDigits(document.getElementById('cardExpMonth'), 2);
+      restrictToDigits(document.getElementById('cardExpYear'), 2);
+      restrictToDigits(document.getElementById('cardCvc'), 4);
+      restrictToDigits(document.getElementById('paymentZip'), 5);
 
       // Tokeniza la tarjeta en el navegador con Conekta.js (los datos de la
       // tarjeta nunca tocan nuestro servidor) y devuelve un token de un solo uso.
@@ -6071,6 +6115,14 @@
           return;
         }
 
+        if (!currentUser) {
+          showToast("Inicia sesión para completar tu compra.");
+          closePaymentDrawer();
+          showLoginView();
+          openAccountDrawer();
+          return;
+        }
+
         paymentSubmitBtn.disabled = true;
         paymentSubmitBtn.textContent = 'Procesando...';
 
@@ -6079,17 +6131,11 @@
 
           const tokenId = await tokenizeCard();
 
-          const customerInfo = currentUser
-            ? {
-                name: currentUser.user_metadata && currentUser.user_metadata.full_name ? currentUser.user_metadata.full_name : (currentUser.email || 'Cliente'),
-                email: currentUser.email,
-                phone: document.getElementById('paymentPhone').value.trim() || undefined,
-              }
-            : {
-                name: document.getElementById('paymentName').value.trim(),
-                email: document.getElementById('paymentEmail').value.trim(),
-                phone: document.getElementById('paymentPhone').value.trim(),
-              };
+          const customerInfo = {
+            name: currentUser.user_metadata && currentUser.user_metadata.full_name ? currentUser.user_metadata.full_name : (currentUser.email || 'Cliente'),
+            email: currentUser.email,
+            phone: document.getElementById('paymentPhone').value.trim(),
+          };
 
           const itemsPayload = cart.map((i) => ({
             product_id: i.id,
