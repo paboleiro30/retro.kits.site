@@ -30,6 +30,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.conekta.io/js/latest/conekta.js"></script>
     <style>
       :root {
         color-scheme: light;
@@ -1725,7 +1726,7 @@
         width: 100%;
       }
 
-      #clearCart, .btn-whatsapp, #logoutBtn {
+      #clearCart, .btn-whatsapp, #logoutBtn, .btn-card-pay {
         width: 100% !important;
         height: 52px !important;
         min-height: 52px !important;
@@ -1764,6 +1765,30 @@
         gap: 10px !important;
         box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3) !important;
         text-decoration: none !important;
+      }
+
+      .btn-card-pay {
+        border: none !important;
+        background: var(--accent) !important;
+        color: #ffffff !important;
+        gap: 10px !important;
+        box-shadow: 0 8px 24px var(--accent-glow) !important;
+      }
+
+      .btn-card-pay svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .btn-card-pay:hover {
+        transform: translate3d(0, -2px, 0);
+        filter: brightness(1.08);
+      }
+
+      .btn-card-pay:disabled {
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+        transform: none !important;
       }
 
       .btn-whatsapp svg {
@@ -1959,6 +1984,91 @@
 
       .auth-success:empty {
         display: none;
+      }
+
+      .auth-field-row {
+        display: flex;
+        gap: 12px;
+      }
+
+      .auth-field-row .auth-field {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .payment-summary-total {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: rgba(var(--text-rgb), 0.05);
+        border: 1px solid var(--line);
+        font-family: 'Oswald', sans-serif;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .payment-summary-total strong {
+        font-size: 1.2rem;
+        color: var(--accent);
+      }
+
+      .payment-secure-note {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 0.8rem;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .payment-secure-note svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+      }
+
+      .payment-success-view.hidden {
+        display: none;
+      }
+
+      .payment-success-view {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+        padding: 40px 12px;
+      }
+
+      .payment-success-view .success-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: rgba(74, 222, 128, 0.15);
+        color: var(--success, #4ade80);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .payment-success-view .success-icon svg {
+        width: 32px;
+        height: 32px;
+      }
+
+      .payment-success-view h4 {
+        margin: 0;
+        font-family: 'League Spartan', sans-serif;
+      }
+
+      .payment-success-view p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
       }
 
       .account-logged-view.hidden {
@@ -3682,6 +3792,12 @@
        </div>
         <div class="cart-actions">
           <button id="clearCart" type="button">Limpiar carrito</button>
+          <button class="btn-card-pay" id="cardPayBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+              <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+            Pagar con tarjeta
+          </button>
           <a class="btn-whatsapp" id="whatsappOrder" href="https://wa.me/526624677901" target="_blank" rel="noopener noreferrer">
             <svg viewBox="0 0 24 24">
               <path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.77.46 3.45 1.27 4.9L2 22l5.25-1.38c1.4.76 2.99 1.19 4.79 1.19 5.52 0 10-4.48 10-10s-4.48-10-10-10zm5.86 14.29c-.25.7-1.23 1.28-2 1.44-.55.11-1.26.2-3.66-.79-2.99-1.24-4.91-4.24-5.06-4.44-.15-.19-1.2-1.6-1.2-3.06 0-1.46.76-2.17 1.03-2.47.27-.3.6-.37.8-.37.2 0 .4 0 .58.01.19.01.43-.07.67.51.25.6.85 2.07.92 2.22.07.15.12.32.02.51-.1.19-.15.3-.3.46-.15.16-.31.36-.44.48-.15.14-.3.3-.13.59.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.05.17-.18.72-.84.91-1.13.19-.29.38-.24.64-.15.26.1 1.65.78 1.94.92.29.14.48.21.55.33.07.12.07.68-.18 1.38z"/>
@@ -3807,6 +3923,86 @@
       </div>
     </aside>
 
+    <!-- PANEL DE PAGO CON TARJETA (Conekta) -->
+    <aside class="cart-drawer" id="paymentDrawer">
+      <div class="cart-header">
+        <h3>Pagar con tarjeta</h3>
+        <button class="close-drawer" id="closePayment">
+          <span>Cerrar</span>
+        </button>
+      </div>
+
+      <div class="cart-items" id="paymentDrawerBody">
+
+        <!-- VISTA: FORMULARIO DE PAGO -->
+        <form class="auth-view" id="paymentFormView">
+          <div class="payment-summary-total">
+            <span>Total a pagar</span>
+            <strong id="paymentTotalDisplay">$0</strong>
+          </div>
+
+          <!-- Datos de contacto: solo se muestran si el cliente no inició sesión -->
+          <div id="paymentGuestFields">
+            <div class="auth-field">
+              <label for="paymentName">Nombre completo</label>
+              <input type="text" id="paymentName" autocomplete="name" required />
+            </div>
+            <div class="auth-field">
+              <label for="paymentEmail">Correo</label>
+              <input type="email" id="paymentEmail" autocomplete="email" required />
+            </div>
+            <div class="auth-field">
+              <label for="paymentPhone">Teléfono</label>
+              <input type="tel" id="paymentPhone" autocomplete="tel" required />
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="cardNumber">Número de tarjeta</label>
+            <input type="text" id="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" maxlength="19" required />
+          </div>
+          <div class="auth-field">
+            <label for="cardName">Nombre en la tarjeta</label>
+            <input type="text" id="cardName" autocomplete="cc-name" required />
+          </div>
+          <div class="auth-field-row">
+            <div class="auth-field">
+              <label for="cardExpMonth">Mes</label>
+              <input type="text" id="cardExpMonth" inputmode="numeric" autocomplete="cc-exp-month" placeholder="MM" maxlength="2" required />
+            </div>
+            <div class="auth-field">
+              <label for="cardExpYear">Año</label>
+              <input type="text" id="cardExpYear" inputmode="numeric" autocomplete="cc-exp-year" placeholder="AA" maxlength="2" required />
+            </div>
+            <div class="auth-field">
+              <label for="cardCvc">CVC</label>
+              <input type="text" id="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" required />
+            </div>
+          </div>
+
+          <p class="auth-error" id="paymentError"></p>
+
+          <button type="submit" class="auth-submit-btn" id="paymentSubmitBtn">Pagar ahora</button>
+
+          <p class="payment-secure-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Pago seguro procesado por Conekta. No guardamos los datos de tu tarjeta.
+          </p>
+        </form>
+
+        <!-- VISTA: PAGO EXITOSO -->
+        <div class="payment-success-view hidden" id="paymentSuccessView">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h4>¡Pago realizado!</h4>
+          <p>Tu pedido fue confirmado y pagado correctamente. Te contactaremos pronto para coordinar el envío.</p>
+          <button type="button" class="auth-submit-btn" id="paymentDoneBtn">Cerrar</button>
+        </div>
+
+      </div>
+    </aside>
+
     <!-- PANEL DE WISHLIST: independiente del panel de cuenta -->
     <aside class="cart-drawer wishlist-drawer" id="wishlistDrawer">
       <div class="cart-header">
@@ -3914,6 +4110,13 @@
       const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0YnB3b2d0bWd4a2hlcmlqZHJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQxNTI5MzUsImV4cCI6MjA5OTcyODkzNX0.i-Mg2T7q8-Dw9Cj1GJx1JJjrcZi5tmSoKWxIjQsleNw";
 
       const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      // Llave PÚBLICA de Conekta (segura de exponer en el navegador).
+      // La llave privada NUNCA va aquí: vive solo como secreto en la Edge Function.
+      const CONEKTA_PUBLIC_KEY = "key_U8cBo32vbHDTjNQqalRJnB0";
+      if (window.Conekta) {
+        Conekta.setPublicKey(CONEKTA_PUBLIC_KEY);
+      }
 
       function normalizeText(str) {
         return (str || "")
@@ -4246,6 +4449,17 @@
       const cartCount = document.getElementById('cartCount');
       const clearCartBtn = document.getElementById('clearCart');
       const whatsappOrderBtn = document.getElementById('whatsappOrder');
+
+      const cardPayBtn = document.getElementById('cardPayBtn');
+      const paymentDrawer = document.getElementById('paymentDrawer');
+      const closePaymentBtn = document.getElementById('closePayment');
+      const paymentFormView = document.getElementById('paymentFormView');
+      const paymentSuccessView = document.getElementById('paymentSuccessView');
+      const paymentGuestFields = document.getElementById('paymentGuestFields');
+      const paymentTotalDisplay = document.getElementById('paymentTotalDisplay');
+      const paymentError = document.getElementById('paymentError');
+      const paymentSubmitBtn = document.getElementById('paymentSubmitBtn');
+      const paymentDoneBtn = document.getElementById('paymentDoneBtn');
       
       const searchInput = document.getElementById('searchInput');
       const categorySelect = document.getElementById('categorySelect');
@@ -5625,6 +5839,118 @@
         window.open(whatsappUrl, '_blank');
       });
 
+      cardPayBtn.addEventListener('click', () => {
+        if (cart.length === 0) {
+          showToast("El carrito está vacío.");
+          return;
+        }
+        const { total } = calculateCartTotals();
+        paymentTotalDisplay.textContent = `$${total.toFixed(2)}`;
+
+        // Si el cliente ya inició sesión, no le pedimos otra vez nombre/correo/teléfono.
+        paymentGuestFields.style.display = currentUser ? 'none' : '';
+        document.getElementById('paymentName').required = !currentUser;
+        document.getElementById('paymentEmail').required = !currentUser;
+        document.getElementById('paymentPhone').required = !currentUser;
+
+        openPaymentDrawer();
+      });
+
+      closePaymentBtn.addEventListener('click', closePaymentDrawer);
+      paymentDoneBtn.addEventListener('click', closePaymentDrawer);
+
+      // Tokeniza la tarjeta en el navegador con Conekta.js (los datos de la
+      // tarjeta nunca tocan nuestro servidor) y devuelve un token de un solo uso.
+      function tokenizeCard() {
+        return new Promise((resolve, reject) => {
+          const tokenParams = {
+            card: {
+              number: document.getElementById('cardNumber').value.replace(/\s+/g, ''),
+              name: document.getElementById('cardName').value.trim(),
+              exp_year: document.getElementById('cardExpYear').value.trim(),
+              exp_month: document.getElementById('cardExpMonth').value.trim(),
+              cvc: document.getElementById('cardCvc').value.trim(),
+            },
+          };
+
+          Conekta.Token.create(
+            tokenParams,
+            (token) => resolve(token.id),
+            (err) => reject(new Error(err && err.message_to_purchaser ? err.message_to_purchaser : 'No se pudo validar la tarjeta.'))
+          );
+        });
+      }
+
+      paymentFormView.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        paymentError.textContent = '';
+
+        if (cart.length === 0) {
+          showToast("El carrito está vacío.");
+          return;
+        }
+
+        paymentSubmitBtn.disabled = true;
+        paymentSubmitBtn.textContent = 'Procesando...';
+
+        try {
+          const { subtotal, calculatedDiscount, total } = calculateCartTotals();
+
+          const tokenId = await tokenizeCard();
+
+          const customerInfo = currentUser
+            ? {
+                name: currentUser.user_metadata && currentUser.user_metadata.full_name ? currentUser.user_metadata.full_name : (currentUser.email || 'Cliente'),
+                email: currentUser.email,
+                phone: document.getElementById('paymentPhone').value.trim() || undefined,
+              }
+            : {
+                name: document.getElementById('paymentName').value.trim(),
+                email: document.getElementById('paymentEmail').value.trim(),
+                phone: document.getElementById('paymentPhone').value.trim(),
+              };
+
+          const itemsPayload = cart.map((i) => ({
+            product_id: i.id,
+            name: i.name,
+            size: i.size,
+            price: i.price,
+            quantity: i.quantity,
+          }));
+
+          // La Edge Function hace el cobro real con la llave PRIVADA de Conekta
+          // (nunca expuesta aquí) y registra el pedido en la tabla `orders`.
+          const { data, error } = await supabaseClient.functions.invoke('conekta-charge', {
+            body: {
+              token_id: tokenId,
+              amount: total,
+              customer: customerInfo,
+              items: itemsPayload,
+              user_id: currentUser ? currentUser.id : null,
+              subtotal,
+              discount: calculatedDiscount,
+              promo_code: activePromoCode ? activePromoCode.code : null,
+            },
+          });
+
+          if (error) throw new Error(error.message || 'No se pudo procesar el pago.');
+          if (!data || data.status !== 'paid') {
+            throw new Error((data && data.message) || 'El pago fue rechazado. Verifica los datos de tu tarjeta.');
+          }
+
+          cart.length = 0;
+          updateCartUI();
+          paymentFormView.reset();
+          paymentFormView.classList.add('hidden');
+          paymentSuccessView.classList.remove('hidden');
+        } catch (err) {
+          paymentError.textContent = err.message || 'Ocurrió un error al procesar el pago.';
+        } finally {
+          paymentSubmitBtn.disabled = false;
+          paymentSubmitBtn.textContent = 'Pagar ahora';
+        }
+      });
+
       cartButton.addEventListener('click', () => {
         closeAccountDrawer();
         closeWishlistDrawer();
@@ -5761,6 +6087,20 @@
 
       function closeWishlistDrawer() {
         wishlistDrawer.classList.remove('open');
+      }
+
+      function openPaymentDrawer() {
+        closeAccountDrawer();
+        closeWishlistDrawer();
+        cartDrawer.classList.remove('open');
+        paymentFormView.classList.remove('hidden');
+        paymentSuccessView.classList.add('hidden');
+        paymentError.textContent = '';
+        paymentDrawer.classList.add('open');
+      }
+
+      function closePaymentDrawer() {
+        paymentDrawer.classList.remove('open');
       }
 
       // Cambia entre las pestañas "Perfil" y "Ajustes" del panel de cuenta
