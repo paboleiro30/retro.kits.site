@@ -159,6 +159,15 @@
            scroll de nuevo y produce un parpadeo/loop del header al
            detenerte cerca del punto donde se encoge. */
         overflow-anchor: none;
+        /* Igual que en <body>: si algún elemento se desborda un poco
+           del ancho de pantalla en móvil, sin esto el <html> se
+           estira para contenerlo y todo el "viewport" del sitio se
+           agranda (ej. 390px pasa a calcularse como ~418px), lo que
+           descuadra header, carrito, cuenta, wishlist, etc. Con esto
+           cualquier desbordamiento leve simplemente se recorta en vez
+           de inflar el layout completo. */
+        overflow-x: hidden;
+        width: 100%;
       }
 
       body {
@@ -3242,7 +3251,12 @@
            inescalable) y se usa en su lugar #mobileCategoryBar (más abajo). */
         .collections-grid { display: none; }
         .site-header { grid-template-columns: 1fr; text-align: center; gap: 16px; padding: 20px 16px; }
-        .actions-panel { justify-content: center; gap: 8px; }
+        /* Con el header en una sola columna, "grid-column: 3" (heredado
+           de escritorio) obliga al grid a crear columnas implícitas
+           extra para alcanzar la 3, ensanchando el header más allá del
+           ancho de pantalla y cortando los íconos. Se resetea a auto
+           para que el panel simplemente ocupe la única columna. */
+        .actions-panel { grid-column: auto; justify-content: center; gap: 8px; width: 100%; }
         .quick-actions { gap: 8px; }
         .brand-text { font-size: 1.5rem !important; }
         .brand-logo-header { height: 42px !important; }
@@ -3434,6 +3448,14 @@
           border-left: none;
           border-right: none;
           padding: 16px;
+          /* En escritorio "align-self: start" evita que la caja de
+             compra se estire a la altura de sus hermanos en el grid.
+             En móvil, .modal-content pasa a flex-column y ese mismo
+             align-self hacía que la caja se encogiera al ancho de su
+             contenido (dejando una franja en blanco a la derecha) en
+             vez de ocupar todo el ancho disponible. */
+          align-self: stretch;
+          width: 100%;
         }
 
         /* Imagen completa, sin recortar (antes usaba object-fit:cover) */
@@ -4472,7 +4494,7 @@
 
       // Llave PÚBLICA de Conekta (segura de exponer en el navegador).
       // La llave privada NUNCA va aquí: vive solo como secreto en la Edge Function.
-      const CONEKTA_PUBLIC_KEY = "key_Vt2uYoHtFvYQK9GwNeMt6wS";
+      const CONEKTA_PUBLIC_KEY = "key_NI7JADCVAATPK4RWOzc9f9V";
       if (window.Conekta) {
         Conekta.setPublicKey(CONEKTA_PUBLIC_KEY);
       }
