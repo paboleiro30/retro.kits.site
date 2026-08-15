@@ -4128,11 +4128,21 @@
        </div>
         <div class="cart-actions">
           <button id="clearCart" type="button">Limpiar carrito</button>
+          <!-- BOTÓN DE PAGO CON TARJETA (Conekta) — desactivado por ahora.
+               Se deja el código aquí mismo, comentado, para reactivarlo
+               fácilmente: solo hay que quitar el comentario y volver a
+               comentar/quitar el botón de WhatsApp de abajo. -->
+          <!--
           <button class="btn-card-pay" id="cardPayBtn" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
               <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
             </svg>
             Comprar Ahora
+          </button>
+          -->
+          <button class="btn-whatsapp" id="whatsappCartBtn" type="button">
+            <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.12h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.19-.31a8.22 8.22 0 0 1-1.26-4.4c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.55-3.7 8.25-8.25 8.25zm4.52-6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.04-.38-1.98-1.22-.73-.65-1.23-1.46-1.37-1.71-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43-.14-.01-.31-.01-.48-.01-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.25 3.74.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.11-.23-.17-.48-.29z"/></svg>
+            Pagar por WhatsApp
           </button>
         </div>
       </div>
@@ -4468,11 +4478,20 @@
             </div>
           </div>
           <button class="btn btn-primary" id="addToCartModal">AÑADIR AL CARRITO</button>
+          <!-- BOTÓN DE PAGO CON TARJETA (Conekta) — desactivado por ahora,
+               mismo criterio que en el carrito: código conservado y
+               comentado para poder reactivarlo cuando se pida. -->
+          <!--
           <button class="btn-card-pay btn-card-pay-modal" id="buyNowModalBtn" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
               <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
             </svg>
             Comprar Ahora
+          </button>
+          -->
+          <button class="btn-whatsapp btn-card-pay-modal" id="whatsappModalBtn" type="button">
+            <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.12h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.19-.31a8.22 8.22 0 0 1-1.26-4.4c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.55-3.7 8.25-8.25 8.25zm4.52-6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.04-.38-1.98-1.22-.73-.65-1.23-1.46-1.37-1.71-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43-.14-.01-.31-.01-.48-.01-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.25 3.74.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.11-.23-.17-.48-.29z"/></svg>
+            Pagar por WhatsApp
           </button>
           <button type="button" class="modal-buybox-wishlist" id="modalWishlistBtn" aria-label="Guardar en favoritos">
             <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
@@ -4498,6 +4517,10 @@
       if (window.Conekta) {
         Conekta.setPublicKey(CONEKTA_PUBLIC_KEY);
       }
+
+      // NÚMERO DE WHATSAPP PARA RECIBIR PEDIDOS (con lada de México, 52,
+      // requerida por wa.me para que el link abra el chat correcto).
+      const WHATSAPP_NUMBER = "526624677901";
 
       function normalizeText(str) {
         return (str || "")
@@ -4832,7 +4855,8 @@
       const cartTotal = document.getElementById('cartTotal');
       const cartCount = document.getElementById('cartCount');
       const clearCartBtn = document.getElementById('clearCart');
-      const cardPayBtn = document.getElementById('cardPayBtn');
+      const cardPayBtn = document.getElementById('cardPayBtn'); // null mientras el botón de tarjeta esté comentado en el HTML
+      const whatsappCartBtn = document.getElementById('whatsappCartBtn');
       const paymentDrawer = document.getElementById('paymentDrawer');
       const closePaymentBtn = document.getElementById('closePayment');
       const paymentFormView = document.getElementById('paymentFormView');
@@ -4851,7 +4875,8 @@
       const modalBackdrop = document.getElementById('modalBackdrop');
       const closeModalBtn = document.getElementById('closeModal');
       const addToCartModalBtn = document.getElementById('addToCartModal');
-      const buyNowModalBtn = document.getElementById('buyNowModalBtn');
+      const buyNowModalBtn = document.getElementById('buyNowModalBtn'); // null mientras el botón de tarjeta esté comentado en el HTML
+      const whatsappModalBtn = document.getElementById('whatsappModalBtn');
       const modalWishlistBtn = document.getElementById('modalWishlistBtn');
       const modalWishlistLabel = document.getElementById('modalWishlistLabel');
 
@@ -5784,12 +5809,14 @@
           }
           addToCartModalBtn.disabled = false;
           addToCartModalBtn.textContent = 'AÑADIR AL CARRITO';
-          buyNowModalBtn.disabled = false;
+          if (buyNowModalBtn) buyNowModalBtn.disabled = false;
+          if (whatsappModalBtn) whatsappModalBtn.disabled = false;
         } else {
           selectedSize = '';
           addToCartModalBtn.disabled = true;
           addToCartModalBtn.textContent = 'AGOTADO';
-          buyNowModalBtn.disabled = true;
+          if (buyNowModalBtn) buyNowModalBtn.disabled = true;
+          if (whatsappModalBtn) whatsappModalBtn.disabled = true;
         }
 
         lockBackgroundScroll();
@@ -6032,35 +6059,110 @@
 
       // "Pagar con tarjeta" en el modal: compra directa de este producto,
       // sin pasar por el carrito ni tocar lo que ya tenga el usuario ahí.
-      buyNowModalBtn.addEventListener('click', () => {
-        if (!selectedProduct || !selectedSize) return;
+      // (Desactivado mientras el botón de tarjeta esté comentado en el
+      // HTML — buyNowModalBtn es null en ese caso — pero se deja el
+      // código funcional intacto para reactivarlo fácilmente.)
+      if (buyNowModalBtn) {
+        buyNowModalBtn.addEventListener('click', () => {
+          if (!selectedProduct || !selectedSize) return;
 
-        if (!currentUser) {
-          showToast("Inicia sesión para completar tu compra.");
+          if (!currentUser) {
+            showToast("Inicia sesión para completar tu compra.");
+            closeModal();
+            showLoginView();
+            openAccountDrawer();
+            return;
+          }
+
+          const finalPrice = (selectedProduct.discount_price && parseFloat(selectedProduct.discount_price) > 0)
+            ? parseFloat(selectedProduct.discount_price)
+            : parseFloat(selectedProduct.price);
+
+          quickBuyItem = {
+            id: selectedProduct.id,
+            name: selectedProduct.name,
+            price: finalPrice,
+            size: selectedSize,
+            image: getProductImage(selectedProduct.image_id || selectedProduct.image_url, IMG_SIZES.cartThumb),
+            quantity: 1,
+          };
+
+          renderPaymentSummary([quickBuyItem], { subtotal: finalPrice, discount: 0, total: finalPrice, promo: null });
+
           closeModal();
-          showLoginView();
-          openAccountDrawer();
-          return;
+          openPaymentDrawer();
+        });
+      }
+
+      /* =========================================================
+         PAGAR POR WHATSAPP
+         Arma un mensaje con el detalle del pedido (producto, talla,
+         cantidad, precio y total) y abre WhatsApp con ese texto ya
+         cargado, listo para enviar al número de la tienda.
+         ========================================================= */
+      function buildWhatsAppOrderMessage(items, totals) {
+        const lines = [];
+        lines.push('¡Hola! Quiero hacer un pedido en RETRO KITS 🛒');
+        lines.push('');
+
+        items.forEach((item) => {
+          const lineTotal = (item.price * item.quantity).toFixed(2);
+          lines.push(`• ${item.name} — Talla ${item.size} — x${item.quantity} — $${lineTotal}`);
+        });
+
+        lines.push('');
+        lines.push(`Subtotal: $${totals.subtotal.toFixed(2)}`);
+        if (totals.discount > 0) {
+          lines.push(`Descuento: -$${totals.discount.toFixed(2)}`);
         }
+        lines.push(`Total: $${totals.total.toFixed(2)}`);
+        lines.push('');
+        lines.push('¿Me pueden confirmar disponibilidad y cómo sigo con el pago?');
 
-        const finalPrice = (selectedProduct.discount_price && parseFloat(selectedProduct.discount_price) > 0)
-          ? parseFloat(selectedProduct.discount_price)
-          : parseFloat(selectedProduct.price);
+        return lines.join('\n');
+      }
 
-        quickBuyItem = {
-          id: selectedProduct.id,
-          name: selectedProduct.name,
-          price: finalPrice,
-          size: selectedSize,
-          image: getProductImage(selectedProduct.image_id || selectedProduct.image_url, IMG_SIZES.cartThumb),
-          quantity: 1,
-        };
+      function openWhatsAppWithOrder(items, totals) {
+        const message = buildWhatsAppOrderMessage(items, totals);
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank', 'noopener');
+      }
 
-        renderPaymentSummary([quickBuyItem], { subtotal: finalPrice, discount: 0, total: finalPrice, promo: null });
+      // Botón de WhatsApp dentro del modal de producto: arma el pedido
+      // con solo ese producto/talla, sin tocar el carrito.
+      if (whatsappModalBtn) {
+        whatsappModalBtn.addEventListener('click', () => {
+          if (!selectedProduct || !selectedSize) return;
 
-        closeModal();
-        openPaymentDrawer();
-      });
+          const finalPrice = (selectedProduct.discount_price && parseFloat(selectedProduct.discount_price) > 0)
+            ? parseFloat(selectedProduct.discount_price)
+            : parseFloat(selectedProduct.price);
+
+          const item = {
+            id: selectedProduct.id,
+            name: selectedProduct.name,
+            price: finalPrice,
+            size: selectedSize,
+            quantity: 1,
+          };
+
+          openWhatsAppWithOrder([item], { subtotal: finalPrice, discount: 0, total: finalPrice });
+        });
+      }
+
+      // Botón de WhatsApp en el carrito: arma el pedido con todo el
+      // contenido del carrito (respetando el código promocional activo).
+      if (whatsappCartBtn) {
+        whatsappCartBtn.addEventListener('click', () => {
+          if (cart.length === 0) {
+            showToast("El carrito está vacío.");
+            return;
+          }
+
+          const { subtotal, calculatedDiscount, total } = calculateCartTotals();
+          openWhatsAppWithOrder(cart, { subtotal, discount: calculatedDiscount, total });
+        });
+      }
 
       function updateCartUI() {
         cartItems.innerHTML = '';
@@ -6265,23 +6367,27 @@
         paymentTotalDisplay.textContent = `$${total.toFixed(2)}`;
       }
 
-      cardPayBtn.addEventListener('click', () => {
-        if (cart.length === 0) {
-          showToast("El carrito está vacío.");
-          return;
-        }
-        if (!currentUser) {
-          showToast("Inicia sesión para completar tu compra.");
-          showLoginView();
-          openAccountDrawer();
-          return;
-        }
-        quickBuyItem = null;
-        const { subtotal, calculatedDiscount, total } = calculateCartTotals();
-        renderPaymentSummary(cart, { subtotal, discount: calculatedDiscount, total, promo: activePromoCode });
+      // Desactivado mientras el botón de tarjeta esté comentado en el HTML
+      // (cardPayBtn es null en ese caso). Código intacto para reactivar.
+      if (cardPayBtn) {
+        cardPayBtn.addEventListener('click', () => {
+          if (cart.length === 0) {
+            showToast("El carrito está vacío.");
+            return;
+          }
+          if (!currentUser) {
+            showToast("Inicia sesión para completar tu compra.");
+            showLoginView();
+            openAccountDrawer();
+            return;
+          }
+          quickBuyItem = null;
+          const { subtotal, calculatedDiscount, total } = calculateCartTotals();
+          renderPaymentSummary(cart, { subtotal, discount: calculatedDiscount, total, promo: activePromoCode });
 
-        openPaymentDrawer();
-      });
+          openPaymentDrawer();
+        });
+      }
 
       closePaymentBtn.addEventListener('click', closePaymentDrawer);
       paymentDoneBtn.addEventListener('click', closePaymentDrawer);
